@@ -13,19 +13,19 @@
                 <!-- Left Side Of Navbar -->
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link nav-link-active" href="">
+                        <a class="nav-link nav-link-active" :href="vender">
                             <i class="icon-tag"></i>
                             Vender
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="">
+                        <a class="nav-link" :href="nuevo">
                             <i class="icon-plus"></i>
                             Nuevo
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="">
+                        <a class="nav-link" :href="listado">
                             <i class="icon-list-ol"></i>
                             Listado
                         </a>
@@ -56,3 +56,8 @@
         </div>
     </nav>
 </template>
+<script>
+export default {
+    props: [ 'vender', 'nuevo', 'listado' ],
+}
+</script>

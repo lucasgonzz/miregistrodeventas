@@ -56,12 +56,36 @@
 .icon-clipboard-1:before {
   content: "\67";
 }
-.icon-share:before {
-  content: "\68";
-}
 .icon-clipboard-2:before {
   content: "\69";
 }
 .icon-clipboard-3:before {
   content: "\6a";
+}
+.icon-share:before {
+  content: "\62";
+}
+.icon-check:before {
+  content: "\6c";
+}
+.icon-cancel:before {
+  content: "\6e";
+}
+.icon-download:before {
+  content: "\6d";
+}
+.icon-edit:before {
+  content: "\68";
+}
+.icon-trash-1:before {
+  content: "\6b";
+}
+.icon-trash-2:before {
+  content: "\6f";
+}
+.icon-trash-3:before {
+  content: "\70";
+}
+.icon-trash-4:before {
+  content: "\71";
 }

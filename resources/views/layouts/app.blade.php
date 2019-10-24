@@ -20,7 +20,11 @@
 </head>
 <body>
     <div id="app">
-        <nav-component></nav-component>
+        <nav-component 
+            vender="{{ route('vender') }}" 
+            nuevo="{{ route('nuevo') }}" 
+            listado="{{ route('listado') }}">
+        </nav-component>
 
         <main class="py-4">
             @yield('content')
