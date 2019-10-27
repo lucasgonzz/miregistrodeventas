@@ -21,9 +21,17 @@ class CreateArticlesTable extends Migration
             $table->decimal('price', 7, 2);
             $table->decimal('last_price', 7, 2);
             $table->integer('stock');
-            $table->integer('user_id');
-            $table->integer('sub_user_id')->nullable();
-            $table->integer('updated_by')->nullable();
+            $table->integer('user_id')->unsigned();
+            $table->integer('sub_user_id')->nullable()->unsigned();
+            $table->integer('updated_by')->nullable()->unsigned();
+
+            $table->foreign('user_id')
+                    ->references('id')->on('users');
+            $table->foreign('sub_user_id')
+                    ->references('id')->on('users');
+            $table->foreign('updated_by')
+                    ->references('id')->on('users');
+                    
             $table->timestamps();
         });
     }

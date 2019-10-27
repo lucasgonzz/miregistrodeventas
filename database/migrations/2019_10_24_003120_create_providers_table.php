@@ -17,7 +17,10 @@ class CreateProvidersTable extends Migration
             $table->bigIncrements('id');
 
             $table->string('name', 128);
-            $table->integer('user_id');
+            $table->integer('user_id')->unsigned();
+
+            $table->foreign('user_id')
+                    ->references('id')->on('users');
 
             $table->timestamps();
         });

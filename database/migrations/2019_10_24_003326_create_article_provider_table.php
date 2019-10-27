@@ -16,8 +16,13 @@ class CreateArticleProviderTable extends Migration
         Schema::create('article_provider', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->integer('article_id');
-            $table->integer('user_id');
+            $table->integer('article_id')->unsigned();
+            $table->integer('user_id')->unsigned();
+
+            $table->foreign('article_id')
+                    ->references('id')->on('articles');
+            $table->foreign('user_id')
+                    ->references('id')->on('users');
 
             $table->timestamps();
         });
