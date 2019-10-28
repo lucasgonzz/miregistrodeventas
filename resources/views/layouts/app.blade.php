@@ -23,7 +23,9 @@
         @include('layouts.navbar')
 
         <main class="py-4">
-            @yield('content')
+            <div class="container"> 
+                @yield('content')
+            </div>
         </main>
     </div>
 <script src="{{ asset('js/app.js') }}" defer></script>

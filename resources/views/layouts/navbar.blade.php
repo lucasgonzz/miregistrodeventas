@@ -27,12 +27,22 @@
                     </a>
                 </li>
                 @endif
+                @if (Auth()->user()->hasRole('provider'))
                 <li class="nav-item">
-                    <a class="nav-link" :href="nuevo">
+                    <a class="nav-link" href="{{ route('ingresar.provider') }}">
                         <i class="icon-plus"></i>
-                        Nuevo
+                        Ingresar
                     </a>
                 </li>
+                @endif
+                @if (Auth()->user()->hasRole('commerce'))
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('ingresar.commerce') }}">
+                        <i class="icon-plus"></i>
+                        Ingresar
+                    </a>
+                </li>
+                @endif
                 <li class="nav-item">
                     <a class="nav-link" :href="listado">
                         <i class="icon-list-ol"></i>
