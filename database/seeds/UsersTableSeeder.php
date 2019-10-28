@@ -12,16 +12,18 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        User::create([
+        $lucas = User::create([
         	'name' => 'Lucas',
         	'company_name' => 'Lucas Distribuidora',
         	'password' => bcrypt('1234'),
         ]);
+        $lucas->roles()->sync([1]);
 
-        User::create([
+        $marcos = User::create([
         	'name' => 'Marcos',
         	'company_name' => 'Lo de Marcos',
         	'password' => bcrypt('1234'),
         ]);
+        $marcos->roles()->sync([2]);
     }
 }
