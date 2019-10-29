@@ -116,3 +116,12 @@
 .icon-eye-2:before {
   content: "\7a";
 }
+.icon-clock-1:before {
+  content: "\41";
+}
+.icon-calendar:before {
+  content: "\42";
+}
+.icon-clock-2:before {
+  content: "\43";
+}
