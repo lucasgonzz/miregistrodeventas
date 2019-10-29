@@ -43,18 +43,38 @@
                     </a>
                 </li>
                 @endif
+                @if (Auth()->user()->hasRole('provider'))
                 <li class="nav-item">
-                    <a class="nav-link" :href="listado">
+                    <a class="nav-link" href="{{ route('listado.provider') }}">
                         <i class="icon-list-ol"></i>
                         Listado
                     </a>
                 </li>
+                @endif
+                @if (Auth()->user()->hasRole('commerce'))
                 <li class="nav-item">
-                    <a class="nav-link" href="">
-                        <i class="icon-clipboard-2"></i>
+                    <a class="nav-link" href="{{ route('listado.commerce') }}">
+                        <i class="icon-list-ol"></i>
+                        Listado
+                    </a>
+                </li>
+                @endif
+                @if (Auth()->user()->hasRole('provider'))
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('ventas.provider') }}">
+                        <i class="icon-list-ol"></i>
                         Ventas
                     </a>
                 </li>
+                @endif
+                @if (Auth()->user()->hasRole('commerce'))
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('ventas.commerce') }}">
+                        <i class="icon-list-ol"></i>
+                        Ventas
+                    </a>
+                </li>
+                @endif
             </ul>
 
             <!-- Right Side Of Navbar -->

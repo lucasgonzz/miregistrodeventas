@@ -11128,6 +11128,14 @@ a.text-dark:focus {
   position: relative;
 }
 
+.m-0 {
+  margin: 0px !important;
+}
+
+.p-0 {
+  padding: 0px !important;
+}
+
 .m-5 {
   margin: 5px !important;
 }
@@ -11374,6 +11382,38 @@ a.text-dark:focus {
 
 .b-r-5 {
   border-right: 5px !important;
+}
+
+.m-t-0 {
+  margin-top: 0px !important;
+}
+
+.p-t-0 {
+  padding-top: 0px !important;
+}
+
+.m-b-0 {
+  margin-bottom: 0px !important;
+}
+
+.p-b-0 {
+  padding-bottom: 0px !important;
+}
+
+.m-l-0 {
+  margin-left: 0px !important;
+}
+
+.p-l-0 {
+  padding-left: 0px !important;
+}
+
+.m-r-0 {
+  margin-right: 0px !important;
+}
+
+.p-r-0 {
+  padding-right: 0px !important;
 }
 
 .m-t-5 {
@@ -11982,6 +12022,198 @@ a.text-dark:focus {
 
 .p-r-150 {
   padding-right: 150px !important;
+}
+
+@media (min-width: 576px) {
+  .m-sm-t-0 {
+    margin-top: 0px !important;
+  }
+}
+
+@media (min-width: 576px) {
+  .p-sm-t-0 {
+    padding-top: 0px !important;
+  }
+}
+
+@media (min-width: 576px) {
+  .m-sm-b-0 {
+    margin-bottom: 0px !important;
+  }
+}
+
+@media (min-width: 576px) {
+  .p-sm-b-0 {
+    padding-bottom: 0px !important;
+  }
+}
+
+@media (min-width: 576px) {
+  .m-sm-l-0 {
+    margin-left: 0px !important;
+  }
+}
+
+@media (min-width: 576px) {
+  .p-sm-l-0 {
+    padding-left: 0px !important;
+  }
+}
+
+@media (min-width: 576px) {
+  .m-sm-r-0 {
+    margin-right: 0px !important;
+  }
+}
+
+@media (min-width: 576px) {
+  .p-sm-r-0 {
+    padding-right: 0px !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .m-md-t-0 {
+    margin-top: 0px !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .p-md-t-0 {
+    padding-top: 0px !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .m-md-b-0 {
+    margin-bottom: 0px !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .p-md-b-0 {
+    padding-bottom: 0px !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .m-md-l-0 {
+    margin-left: 0px !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .p-md-l-0 {
+    padding-left: 0px !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .m-md-r-0 {
+    margin-right: 0px !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .p-md-r-0 {
+    padding-right: 0px !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .m-lg-t-0 {
+    margin-top: 0px !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .p-lg-t-0 {
+    padding-top: 0px !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .m-lg-b-0 {
+    margin-bottom: 0px !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .p-lg-b-0 {
+    padding-bottom: 0px !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .m-lg-l-0 {
+    margin-left: 0px !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .p-lg-l-0 {
+    padding-left: 0px !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .m-lg-r-0 {
+    margin-right: 0px !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .p-lg-r-0 {
+    padding-right: 0px !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .m-xl-t-0 {
+    margin-top: 0px !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .p-xl-t-0 {
+    padding-top: 0px !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .m-xl-b-0 {
+    margin-bottom: 0px !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .p-xl-b-0 {
+    padding-bottom: 0px !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .m-xl-l-0 {
+    margin-left: 0px !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .p-xl-l-0 {
+    padding-left: 0px !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .m-xl-r-0 {
+    margin-right: 0px !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .p-xl-r-0 {
+    padding-right: 0px !important;
+  }
 }
 
 @media (min-width: 576px) {
@@ -15652,15 +15884,48 @@ a.text-dark:focus {
   color: #3490dc !important;
 }
 
-.icon-listado {
-  font-size: 1.3em;
+.btn-left {
+  border-radius: 0 0 0 0.25rem;
+  padding: 0.7rem 0.75rem;
+  font-size: 1.2rem;
+  font-weight: bolder;
 }
 
-.icon-listado-blue {
+.btn-center {
+  border-radius: 0px;
+  padding: 0.7rem 0.75rem;
+  font-size: 1.2rem;
+  font-weight: bolder;
+}
+
+.btn-right {
+  border-radius: 0 0 0.25rem 0;
+  padding: 0.7rem 0.75rem;
+  font-size: 1.2rem;
+  font-weight: bolder;
+}
+
+.input-search {
+  border-radius: 0.25rem 0 0 0.25rem;
+}
+
+.btn-search {
+  border-radius: 0 0.25rem 0.25rem 0;
+}
+
+.td-options {
+  padding: 0 !important;
+}
+
+.btn-listado {
+  font-size: 1.5rem;
+}
+
+.btn-listado-edit {
   color: #3490dc;
 }
 
-.icon-listado-red {
+.btn-listado-delete {
   color: #e3342f;
 }
 

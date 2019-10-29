@@ -53,16 +53,27 @@
 						</div>
 					</div>
 				</div>
-				<div class="card-footer text-muted">
-					&nbsp;
-					<button class="btn btn-primary m-r-5">
-						<i class="icon-check"></i>
-						Guardar
-					</button>
-					<button class="btn btn-danger">
-						<i class="icon-cancel"></i>
-						Limpiar
-					</button>
+				<div class="card-footer p-0">
+					<div class="row m-0">
+						<div class="col-3 p-0">
+							<button class="btn btn-block btn-left btn-primary m-0">
+								<i class="icon-undo"></i>
+								Atras
+							</button>
+						</div>
+						<div class="col-3 p-0">
+							<button class="btn btn-block btn-center btn-danger m-0">
+								<i class="icon-refresh"></i>
+								Limpiar
+							</button>
+						</div>
+						<div class="col-6 p-0">
+							<button class="btn btn-block btn-right btn-success m-0">
+								<i class="icon-check"></i>
+								Guardar
+							</button>
+						</div>
+					</div>
 				</div>
 			</form>	
 		</div>

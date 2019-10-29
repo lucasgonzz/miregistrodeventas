@@ -25,12 +25,14 @@ Route::group(['middleware' => ['has.role:provider']], function () {
 	Route::get('/mayoristas/vender', 'MainController@provider_vender')->name('vender.provider');
 	Route::get('/mayoristas/ingresar', 'MainController@provider_ingresar')->name('ingresar.provider');
 	Route::get('/mayoristas/listado', 'MainController@provider_listado')->name('listado.provider');
+	Route::get('/mayoristas/ventas', 'MainController@provider_ventas')->name('ventas.provider');
 });
 
 Route::group(['middleware' => ['has.role:commerce']], function () {
 	Route::get('/comercio/vender', 'MainController@commerce_vender')->name('vender.commerce');
 	Route::get('/comercio/ingresar', 'MainController@commerce_ingresar')->name('ingresar.commerce');
 	Route::get('/comercio/listado', 'MainController@commerce_listado')->name('listado.commerce');
+	Route::get('/comercio/ventas', 'MainController@commerce_ventas')->name('ventas.commerce');
 });
 
 // Route::get('/ingresar', 'MainController@ingresar')->name('ingresar');
