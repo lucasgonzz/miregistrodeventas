@@ -19,7 +19,7 @@ class CreateArticlesTable extends Migration
             $table->string('name', 128);
             $table->decimal('cost', 7, 2);
             $table->decimal('price', 7, 2);
-            $table->decimal('last_price', 7, 2);
+            $table->decimal('previus_price', 7, 2);
             $table->integer('stock');
             $table->integer('user_id')->unsigned();
             $table->integer('sub_user_id')->nullable()->unsigned();

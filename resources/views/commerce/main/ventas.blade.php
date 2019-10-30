@@ -6,32 +6,36 @@
 	@include('commerce.modals.ventas-desde-una-fecha')
 	@include('commerce.modals.ventas-detalles-de-venta')
 	<div class="row justify-content-center">
-		<div class="col-lg-7">	
+		<div class="col-lg-9">	
 			<div class="card">
 				<div class="card-header">
 					<div class="row justify-content-between align-items-center">
-						<div class="col-4">
+						<div class="col-3">
 							<strong v-show="!desdeUnaFecha">Ventas de hoy</strong>
 							<strong v-show="desdeUnaFecha">
 								Ventas desde @{{ desde }} hasta @{{ hasta }}
 							</strong>
 						</div>
-						<div class="col-8">
-							<button class="btn btn-success" @click="showResumen">
-								<i class="icon-file"></i>
-								Resumen
-							</button>
-							<button v-show="!desdeUnaFecha" class="btn btn-primary" @click="today">
-								<i class="icon-undo"></i>
-								Las de ayer
-							</button>
-							<button v-show="!desdeUnaFecha" class="btn btn-primary" @click="showFromDate">
+						<div class="col-9">
+							<button v-show="!desdeUnaFecha" class="btn m-l-5 float-right btn-primary" @click="showFromDate">
 								<i class="icon-calendar"></i>
 								Desde una fecha
 							</button>
-							<button v-show="desdeUnaFecha" class="btn btn-primary" @click="today">
+							<button v-show="desdeUnaFecha" class="btn m-l-5 float-right btn-primary" @click="today">
 								<i class="icon-calendar"></i>
 								Solo las de hoy
+							</button>
+							<button v-show="previus_day!=1" class="btn m-l-5 float-right btn-primary" @click="diaSiguiente">
+								<i class="icon-redo"></i>
+								Dia siguiente
+							</button>
+							<button v-show="!desdeUnaFecha" class="btn m-l-5 float-right btn-primary" @click="diaAnterior">
+								<i class="icon-undo"></i>
+								Dia anterior
+							</button>
+							<button class="btn float-right btn-success" @click="showResumen">
+								<i class="icon-file"></i>
+								Resumen
 							</button>
 						</div>
 					</div>
@@ -72,7 +76,7 @@
 											</div>
 										</th>
 										<th scope="col">Ver</th>
-										<th v-show="desdeUnaFecha" scope="col">Fecha</th>
+										<th v-show="desdeUnaFecha || previus_day!=1" scope="col">Fecha</th>
 										<th scope="col">Hora</th>
 										<th v-show="mostrarCostos" scope="col">Costo</th>
 										<th scope="col">Total</th>
@@ -91,7 +95,7 @@
 												<i class="icon-eye-1"></i>
 											</button>
 										</td>
-										<td v-show="desdeUnaFecha">
+										<td v-show="desdeUnaFecha || previus_day!=1">
 											<i class="icon-calendar"></i>
 											12/02/2019
 										</td>
@@ -136,8 +140,25 @@ new Vue({
 			{'id': 6, 'hora': '12:50', 'costo': 500, 'total': 700, 'cant_articulos': 6},
 		],
 		selectAllProperty: false,
+		previus_day: 1
 	},
 	methods: {
+
+		// Metodos del header
+		diaAnterior() {
+			this.previus_day++
+			// axios.get(`sales/previus-day/${this.previus_day}`)
+			// .then( res => {
+			// 	this.sales = res.data
+			// 	this.previus_day++
+			// })
+			// .catch( err => {
+			// 	console.log(err)
+			// })
+		},
+		diaSiguiente() {
+			this.previus_day--
+		},
 
 		// Resumen de ventas
 		showResumen: () => {

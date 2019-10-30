@@ -140,3 +140,6 @@
 .icon-barcode:before {
   content: "\48";
 }
+.icon-redo:before {
+  content: "\49";
+}
