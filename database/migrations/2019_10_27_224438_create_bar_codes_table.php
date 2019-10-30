@@ -17,6 +17,7 @@ class CreateBarCodesTable extends Migration
             $table->bigIncrements('id');
 
             $table->string('name');
+            $table->integer('amount');
             $table->integer('user_id')->unsigned();
 
             $table->foreign('user_id')

@@ -21,6 +21,8 @@ Route::post('user/password', 'UserController@update_password')->name('password')
 
 // Auth::routes();
 
+
+// Mayoristas
 Route::group(['middleware' => ['has.role:provider']], function () {
 	Route::get('/mayoristas/vender', 'MainController@provider_vender')->name('vender.provider');
 	Route::get('/mayoristas/ingresar', 'MainController@provider_ingresar')->name('ingresar.provider');
@@ -28,12 +30,14 @@ Route::group(['middleware' => ['has.role:provider']], function () {
 	Route::get('/mayoristas/ventas', 'MainController@provider_ventas')->name('ventas.provider');
 });
 
+// Comercios
 Route::group(['middleware' => ['has.role:commerce']], function () {
-	Route::get('/comercio/vender', 'MainController@commerce_vender')->name('vender.commerce');
-	Route::get('/comercio/ingresar', 'MainController@commerce_ingresar')->name('ingresar.commerce');
-	Route::get('/comercio/listado', 'MainController@commerce_listado')->name('listado.commerce');
-	Route::get('/comercio/ventas', 'MainController@commerce_ventas')->name('ventas.commerce');
+	Route::get('/comercios/vender', 'MainController@commerce_vender')->name('vender.commerce');
+	Route::get('/comercios/ingresar', 'MainController@commerce_ingresar')->name('ingresar.commerce');
+	Route::get('/comercios/listado', 'MainController@commerce_listado')->name('listado.commerce');
+	Route::get('/comercios/ventas', 'MainController@commerce_ventas')->name('ventas.commerce');
 });
 
-// Route::get('/ingresar', 'MainController@ingresar')->name('ingresar');
-// Route::get('/listado', 'MainController@listado')->name('listado');
+// Comunes
+
+Route::get('codigos-de-barra', 'MainController@codigos_de_barra')->name('bar-codes');

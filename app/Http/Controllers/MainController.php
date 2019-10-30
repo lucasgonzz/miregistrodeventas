@@ -51,4 +51,9 @@ class MainController extends Controller
     function commerce_ventas() {
         return view('commerce.main.ventas');
     }
+
+    // Comunes
+    function codigos_de_barra() {
+        return view('common.codigos-de-barra');
+    }
 }

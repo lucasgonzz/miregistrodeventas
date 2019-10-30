@@ -125,3 +125,18 @@
 .icon-clock-2:before {
   content: "\43";
 }
+.icon-print:before {
+  content: "\44";
+}
+.icon-file:before {
+  content: "\45";
+}
+.icon-level-down:before {
+  content: "\46";
+}
+.icon-minus:before {
+  content: "\47";
+}
+.icon-barcode:before {
+  content: "\48";
+}

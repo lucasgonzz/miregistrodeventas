@@ -5,11 +5,21 @@
 	<div class="col-lg-7">	
 		<div class="card">
 			<div class="card-header">
-				<strong>Ingresar un nuevo artículo</strong>
+				<div class="row align-items-center">
+					<div class="col">
+						<strong>Ingresar un nuevo artículo</strong>
+					</div>
+					<div class="col">
+						<button class="btn btn-primary float-right">
+							<i class="icon-undo"></i>
+							Ultimo Ingresado
+						</button>
+					</div>
+				</div>
 			</div>
 			<form>
 				<div class="card-body">
-					<h5 class="card-title">Complete con los datos del artículo que quiera ingresar</h5>
+					<h6 class="card-title">Complete con los datos del artículo que quiera ingresar</h6>
 					{{ csrf_field() }}
 					<div class="form-group">
 						<label for="barCode">Codigo de Barras</label>

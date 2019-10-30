@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+<nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm p-b-0 p-t-5">
     <div class="container">
         <a class="navbar-brand" href="">
             <!-- {{ config('app.name', '') }} -->
@@ -13,68 +13,74 @@
             <ul class="navbar-nav mr-auto">
                 @if (Auth()->user()->hasRole('provider'))
                 <li class="nav-item">
-                    <a class="nav-link nav-link-active" href="{{ route('vender.provider') }}">
-                        <i class="icon-tag"></i>
+                    <a class="nav-link {{ active('mayoristas/vender') }}" href="{{ route('vender.provider') }}">
+                        <!-- <i class="icon-tag"></i> -->
                         Vender
                     </a>
                 </li>
                 @endif
                 @if (Auth()->user()->hasRole('commerce'))
                 <li class="nav-item">
-                    <a class="nav-link nav-link-active" href="{{ route('vender.commerce') }}">
-                        <i class="icon-tag"></i>
+                    <a class="nav-link {{ active('comercios/vender') }}" href="{{ route('vender.commerce') }}">
+                        <!-- <i class="icon-tag"></i> -->
                         Vender
                     </a>
                 </li>
                 @endif
                 @if (Auth()->user()->hasRole('provider'))
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('ingresar.provider') }}">
-                        <i class="icon-plus"></i>
+                    <a class="nav-link {{ active('mayoristas/ingresar') }}" href="{{ route('ingresar.provider') }}">
+                        <!-- <i class="icon-plus"></i> -->
                         Ingresar
                     </a>
                 </li>
                 @endif
                 @if (Auth()->user()->hasRole('commerce'))
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('ingresar.commerce') }}">
-                        <i class="icon-plus"></i>
+                    <a class="nav-link {{ active('comercios/ingresar') }}" href="{{ route('ingresar.commerce') }}">
+                        <!-- <i class="icon-plus"></i> -->
                         Ingresar
                     </a>
                 </li>
                 @endif
                 @if (Auth()->user()->hasRole('provider'))
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('listado.provider') }}">
-                        <i class="icon-list-ol"></i>
+                    <a class="nav-link {{ active('mayoristas/listado') }}" href="{{ route('listado.provider') }}">
+                        <!-- <i class="icon-list-ol"></i> -->
                         Listado
                     </a>
                 </li>
                 @endif
                 @if (Auth()->user()->hasRole('commerce'))
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('listado.commerce') }}">
-                        <i class="icon-list-ol"></i>
+                    <a class="nav-link {{ active('comercios/listado') }}" href="{{ route('listado.commerce') }}">
+                        <!-- <i class="icon-list-ol"></i> -->
                         Listado
                     </a>
                 </li>
                 @endif
                 @if (Auth()->user()->hasRole('provider'))
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('ventas.provider') }}">
-                        <i class="icon-list-ol"></i>
+                    <a class="nav-link {{ active('mayoristas/ventas') }}" href="{{ route('ventas.provider') }}">
+                        <!-- <i class="icon-list-ol"></i> -->
                         Ventas
                     </a>
                 </li>
                 @endif
                 @if (Auth()->user()->hasRole('commerce'))
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('ventas.commerce') }}">
-                        <i class="icon-list-ol"></i>
+                    <a class="nav-link {{ active('comercios/ventas') }}" href="{{ route('ventas.commerce') }}">
+                        <!-- <i class="icon-list-ol"></i> -->
                         Ventas
                     </a>
                 </li>
                 @endif
+                <li class="nav-item">
+                    <a class="nav-link {{ active('codigos-de-barra') }}" href="{{ route('bar-codes') }}">
+                        <!-- <i class="icon-list-ol"></i> -->
+                        Codigos de barra
+                    </a>
+                </li>
             </ul>
 
             <!-- Right Side Of Navbar -->

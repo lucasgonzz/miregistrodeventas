@@ -19,7 +19,7 @@
     <!-- sad -->
 </head>
 <body>
-    <div id="app">
+    <!-- <div id="app"> -->
         @include('layouts.navbar')
 
         <main class="py-4">
@@ -27,8 +27,8 @@
                 @yield('content')
             </div>
         </main>
-    </div>
-<script src="{{ asset('js/app.js') }}" defer></script>
+    <!-- </div> -->
+<script src="{{ asset('js/app.js') }}"></script>
 @yield('scripts')
 </body>
 </html>

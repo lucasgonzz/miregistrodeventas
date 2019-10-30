@@ -15871,9 +15871,8 @@ a.text-dark:focus {
 }
 
 .navbar .nav-link {
-  font-size: 1rem;
+  font-size: 1.2rem;
   color: rgba(52, 144, 220, 0.7) !important;
-  font-weight: bold;
 }
 
 .navbar .nav-link:hover {
@@ -15881,27 +15880,30 @@ a.text-dark:focus {
 }
 
 .navbar .nav-link-active {
+  font-weight: bold;
   color: #3490dc !important;
+  border-radius: 0px 0px 3px 3px;
+  border-bottom: 4px solid #3490dc;
 }
 
 .btn-left {
   border-radius: 0 0 0 0.25rem;
   padding: 0.7rem 0.75rem;
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: bolder;
 }
 
 .btn-center {
   border-radius: 0px;
   padding: 0.7rem 0.75rem;
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: bolder;
 }
 
 .btn-right {
   border-radius: 0 0 0.25rem 0;
   padding: 0.7rem 0.75rem;
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: bolder;
 }
 
@@ -15927,5 +15929,35 @@ a.text-dark:focus {
 
 .btn-listado-delete {
   color: #e3342f;
+}
+
+.input-precio-min-max {
+  width: 45% !important;
+}
+
+.img-arrow {
+  -webkit-transform: scaleY(-1);
+          transform: scaleY(-1);
+}
+
+.venta-ok-container {
+  width: 50%;
+  margin: auto;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+          flex-direction: column;
+  -webkit-box-align: center;
+          align-items: center;
+}
+
+.icon-venta-realizada {
+  font-size: 5rem;
+}
+
+.list-bar-codes {
+  max-height: 300px;
+  overflow-y: scroll;
 }
 
