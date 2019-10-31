@@ -81,6 +81,12 @@
                         Codigos de barra
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ active('empleados') }}" href="{{ route('empleados') }}">
+                        <!-- <i class="icon-list-ol"></i> -->
+                        Empleados
+                    </a>
+                </li>
             </ul>
 
             <!-- Right Side Of Navbar -->

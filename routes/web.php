@@ -28,6 +28,7 @@ Route::group(['middleware' => ['has.role:provider']], function () {
 	Route::get('/mayoristas/ingresar', 'MainController@provider_ingresar')->name('ingresar.provider');
 	Route::get('/mayoristas/listado', 'MainController@provider_listado')->name('listado.provider');
 	Route::get('/mayoristas/ventas', 'MainController@provider_ventas')->name('ventas.provider');
+	Route::get('/mayoristas/articles', 'ArticleController@index');
 });
 
 // Comercios
@@ -36,8 +37,11 @@ Route::group(['middleware' => ['has.role:commerce']], function () {
 	Route::get('/comercios/ingresar', 'MainController@commerce_ingresar')->name('ingresar.commerce');
 	Route::get('/comercios/listado', 'MainController@commerce_listado')->name('listado.commerce');
 	Route::get('/comercios/ventas', 'MainController@commerce_ventas')->name('ventas.commerce');
+	Route::get('/comercios/articles', 'ArticleController@index');
 });
 
 // Comunes
 
 Route::get('codigos-de-barra', 'MainController@codigos_de_barra')->name('bar-codes');
+Route::get('empleados', 'MainController@empleados')->name('empleados');
+Route::get('permissions', 'PermissionController@index');

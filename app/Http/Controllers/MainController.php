@@ -54,6 +54,9 @@ class MainController extends Controller
 
     // Comunes
     function codigos_de_barra() {
-        return view('common.codigos-de-barra');
+        return view('common.main.codigos-de-barra');
+    }
+    function empleados() {
+        return view('common.main.empleados');
     }
 }

@@ -30,9 +30,9 @@
 					</div>
 				</div>
 				<div class="card-body">
-					<h5 class="card-title">
+					<!-- <h5 class="card-title">
 						57 artículos registrados
-					</h5>
+					</h5> -->
 					<table class="table">
 						<thead class="thead-dark">
 							<tr>
@@ -46,93 +46,13 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td>123123</td>
-								<td>Camion</td>
-								<td>$500</td>
-								<th scope="row">$700</th>
-								<td>17/11/2019</td>
-								<td>17/11/2019</td>
-								<td class="td-options">
-									<button class="btn btn-listado btn-listado-edit">
-										<i class="icon-edit"></i>
-									</button>
-									<button class="btn btn-listado btn-listado-delete">
-										<i class="icon-trash-2"></i>
-									</button>
-								</td>
-							</tr>
-							<tr>
-								<td>123123</td>
-								<td>Camion</td>
-								<td>$500</td>
-								<th scope="row">$700</th>
-								<td>17/11/2019</td>
-								<td>17/11/2019</td>
-								<td class="td-options">
-									<button class="btn btn-listado btn-listado-edit">
-										<i class="icon-edit"></i>
-									</button>
-									<button class="btn btn-listado btn-listado-delete">
-										<i class="icon-trash-2"></i>
-									</button>
-								</td>
-							</tr>
-							<tr>
-								<td>123123</td>
-								<td>Camion</td>
-								<td>$500</td>
-								<th scope="row">$700</th>
-								<td>17/11/2019</td>
-								<td>17/11/2019</td>
-								<td class="td-options">
-									<button class="btn btn-listado btn-listado-edit">
-										<i class="icon-edit"></i>
-									</button>
-									<button class="btn btn-listado btn-listado-delete">
-										<i class="icon-trash-2"></i>
-									</button>
-								</td>
-							</tr>
-							<tr>
-								<td>123123</td>
-								<td>Camion</td>
-								<td>$500</td>
-								<th scope="row">$700</th>
-								<td>17/11/2019</td>
-								<td>17/11/2019</td>
-								<td class="td-options">
-									<button class="btn btn-listado btn-listado-edit">
-										<i class="icon-edit"></i>
-									</button>
-									<button class="btn btn-listado btn-listado-delete">
-										<i class="icon-trash-2"></i>
-									</button>
-								</td>
-							</tr>
-							<tr>
-								<td>123123</td>
-								<td>Camion</td>
-								<td>$500</td>
-								<th scope="row">$700</th>
-								<td>17/11/2019</td>
-								<td>17/11/2019</td>
-								<td class="td-options">
-									<button class="btn btn-listado btn-listado-edit">
-										<i class="icon-edit"></i>
-									</button>
-									<button class="btn btn-listado btn-listado-delete">
-										<i class="icon-trash-2"></i>
-									</button>
-								</td>
-							</tr>
-							<tr>
-								<td>123123</td>
-								<td>Camion</td>
-								<td>$500</td>
-								<th scope="row">$700</th>
-								<td>17/11/2019</td>
-								<td>17/11/2019</td>
+							<tr v-for="article in articles">
+								<td>@{{ article.bar_code }}</td>
+								<td>@{{ article.name }}</td>
+								<td>$@{{ price(article.cost) }}</td>
+								<th scope="row">$@{{ price(article.price) }}</th>
+								<td>@{{ date(article.created_at) }}</td>
+								<td>@{{ date(article.updated_at) }}</td>
 								<td class="td-options">
 									<button class="btn btn-listado btn-listado-edit">
 										<i class="icon-edit"></i>
@@ -146,23 +66,7 @@
 					</table>
 				</div>
 				<div class="card-footer p-0">
-					<ul class="pagination justify-content-center m-t-10 m-b-10">
-						<li class="page-item">
-							<a class="page-link" href="#" aria-label="Previous">
-								<span aria-hidden="true">&laquo;</span>
-							</a>
-						</li>
-						<li class="page-item"><a class="page-link" href="#">1</a></li>
-						<li class="page-item"><a class="page-link" href="#">2</a></li>
-						<li class="page-item"><a class="page-link" href="#">3</a></li>
-						<li class="page-item"><a class="page-link" href="#">3</a></li>
-						<li class="page-item"><a class="page-link" href="#">3</a></li>
-						<li class="page-item">
-							<a class="page-link" href="#" aria-label="Next">
-								<span aria-hidden="true">&raquo;</span>
-							</a>
-						</li>
-					</ul>
+					@include('common.includes.pagination')
 				</div>
 			</div>
 		</div>
@@ -184,8 +88,81 @@ new Vue({
 			{'id': 6, 'name': 'San Juan'},
 		],
 		columnas_para_imprimir: ['bar_code', 'name', 'cost', 'price', 'created_at', 'updated_at'],
+
+		articles: [],
+
+		// Pagination
+		current_page: 0,
+		pagination: {
+            'total' : 0,
+            'current_page' : 0,
+            'per_page' : 0,
+            'last_page' : 0,
+            'from' : 0,
+            'to' : 0,
+		},
+		offset: 2,
+	},
+	computed: {
+		isActived: function(){
+			return this.pagination.current_page;
+		},
+		pagesNumber: function(){
+
+			if(!this.pagination.to){
+				return [];
+			}
+
+			var from = this.pagination.current_page - this.offset;
+			
+			if(from < 1){
+				from = 1;
+			}
+
+			var to = from + (2 * this.offset);
+			if(to >= this.pagination.last_page){
+				to = this.pagination.last_page;
+			}
+
+			var pagesArray = [];
+			while(from <= to){
+				pagesArray.push(from);
+				from++;
+			}
+			return pagesArray;
+		}
+	},
+	created() {
+		this.getArticles(1)
 	},
 	methods: {
+		date(date) {
+			return moment(date).format('DD/MM/YY')
+		},
+		price(p) {
+			var centavos = p.split('.')[1]
+			var price = p.split('.')[0]
+			let formated_price = numeral(price).format('0,0').split(',').join('.')
+			if (centavos != '00') {
+				formated_price = formated_price + ',' + centavos
+			}
+			return formated_price
+		},
+
+		getArticles(page) {
+			axios.get('articles?page=' + page)
+			.then( res => {
+				this.articles = res.data.articles.data;
+				this.pagination = res.data.pagination;
+			})
+			.catch( err => {
+				console.log(err)
+			})
+		},
+		changePage: function(page){
+			this.pagination.current_page = page;
+			this.getArticles(page);
+		},
 		showDescargarPdf() {
 			$('#listado-descargar-pdf').modal('show')
 		},
