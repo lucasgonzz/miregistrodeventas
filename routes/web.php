@@ -29,6 +29,14 @@ Route::group(['middleware' => ['has.role:provider']], function () {
 	Route::get('/mayoristas/listado', 'MainController@provider_listado')->name('listado.provider');
 	Route::get('/mayoristas/ventas', 'MainController@provider_ventas')->name('ventas.provider');
 	Route::get('/mayoristas/articles', 'ArticleController@index');
+
+	// Listado
+	Route::post('/mayoristas/articles/filter', 'ArticleController@filter');
+	Route::get('/mayoristas/articles/search/{query}', 'ArticleController@search');
+	Route::get('/mayoristas/articles/pre-search/{query}', 'ArticleController@pre_search');
+	Route::put('/mayoristas/articles/{id}', 'ArticleController@update');
+	Route::delete('/mayoristas/articles/{id}', 'ArticleController@destroy');
+
 });
 
 // Comercios
@@ -38,6 +46,9 @@ Route::group(['middleware' => ['has.role:commerce']], function () {
 	Route::get('/comercios/listado', 'MainController@commerce_listado')->name('listado.commerce');
 	Route::get('/comercios/ventas', 'MainController@commerce_ventas')->name('ventas.commerce');
 	Route::get('/comercios/articles', 'ArticleController@index');
+
+	Route::post('/comercios/articles/filter', 'ArticleController@filter');
+	Route::get('/comercios/configuracion', 'MainController@commerce_config')->name('commerce.config');
 });
 
 // Comunes

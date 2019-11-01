@@ -79,14 +79,24 @@
 new Vue({
 	el: '#listado',
 	data: {
-		providers: [
-			{'id': 1, 'name': 'Victoria'},
-			{'id': 2, 'name': 'Rosario'},
-			{'id': 3, 'name': 'Buenos Aires'},
-			{'id': 4, 'name': 'Mendoza'},
-			{'id': 5, 'name': 'San Luiz'},
-			{'id': 6, 'name': 'San Juan'},
-		],
+		filtro: {
+			'mostrar': '',
+			'ordenar': '',
+			'pertenezcan_a_mayoristas': [],
+			'precio_entre': {
+				'min': '',
+				'max': ''
+			}
+		},
+		// providers: [
+		// 	{'id': 1, 'name': 'Victoria'},
+		// 	{'id': 2, 'name': 'Rosario'},
+		// 	{'id': 3, 'name': 'Buenos Aires'},
+		// 	{'id': 4, 'name': 'Mendoza'},
+		// 	{'id': 5, 'name': 'San Luiz'},
+		// 	{'id': 6, 'name': 'San Juan'},
+		// ],
+		providers: [],
 		columnas_para_imprimir: ['bar_code', 'name', 'cost', 'price', 'created_at', 'updated_at'],
 
 		articles: [],
@@ -102,6 +112,57 @@ new Vue({
             'to' : 0,
 		},
 		offset: 2,
+	},
+	created() {
+		this.getArticles(1)
+	},
+	methods: {
+		date(date) {
+			return moment(date).format('DD/MM/YY')
+		},
+		price(p) {
+			var centavos = p.split('.')[1]
+			var price = p.split('.')[0]
+			let formated_price = numeral(price).format('0,0').split(',').join('.')
+			if (centavos != '00') {
+				formated_price = formated_price + ',' + centavos
+			}
+			return formated_price
+		},
+
+		getArticles(page) {
+			axios.get('articles?page=' + page)
+			.then( res => {
+				this.articles = res.data.articles.data;
+				this.pagination = res.data.pagination;
+			})
+			.catch( err => {
+				console.log(err)
+				location.reload()
+			})
+		},
+		filter() {
+			axios.post('articles/filter', {
+				filtros: this.filtros
+			})
+			.then( res => {
+				console.log(res)
+				this.articles = res.data
+			})
+			.catch( err => {
+				console.log(err)
+			})
+		},
+		changePage: function(page){
+			this.pagination.current_page = page;
+			this.getArticles(page);
+		},
+		showDescargarPdf() {
+			$('#listado-descargar-pdf').modal('show')
+		},
+		showFiltrar() {
+			$('#listado-filtrar').modal('show')
+		}
 	},
 	computed: {
 		isActived: function(){
@@ -130,44 +191,6 @@ new Vue({
 				from++;
 			}
 			return pagesArray;
-		}
-	},
-	created() {
-		this.getArticles(1)
-	},
-	methods: {
-		date(date) {
-			return moment(date).format('DD/MM/YY')
-		},
-		price(p) {
-			var centavos = p.split('.')[1]
-			var price = p.split('.')[0]
-			let formated_price = numeral(price).format('0,0').split(',').join('.')
-			if (centavos != '00') {
-				formated_price = formated_price + ',' + centavos
-			}
-			return formated_price
-		},
-
-		getArticles(page) {
-			axios.get('articles?page=' + page)
-			.then( res => {
-				this.articles = res.data.articles.data;
-				this.pagination = res.data.pagination;
-			})
-			.catch( err => {
-				console.log(err)
-			})
-		},
-		changePage: function(page){
-			this.pagination.current_page = page;
-			this.getArticles(page);
-		},
-		showDescargarPdf() {
-			$('#listado-descargar-pdf').modal('show')
-		},
-		showFiltrar() {
-			$('#listado-filtrar').modal('show')
 		}
 	},
 })

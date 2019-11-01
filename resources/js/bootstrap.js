@@ -28,6 +28,8 @@ window.numeral = require('numeral')
 window.moment = require('moment')
 moment.locale('es')
 
+window.toastr = require('toastr')
+
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
