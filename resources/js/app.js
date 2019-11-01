@@ -20,9 +20,11 @@ window.Vue = require('vue');
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 import navComponent from './components/NavComponent.vue'
 import ventas from './components/Ventas.vue'
+import Listado from './components/listado/Listado.vue'
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('nav-component', navComponent);
 Vue.component('ventas', ventas);
+Vue.component('listado', Listado);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
