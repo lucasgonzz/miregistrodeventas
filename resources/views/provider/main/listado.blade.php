@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<listado></listado>
+<!-- {{ Auth()->user()->hasRole('commerce') }} -->
+<listado rol="provider"></listado>
 @endsection
 

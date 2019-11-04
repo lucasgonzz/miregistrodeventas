@@ -47,7 +47,10 @@ Route::group(['middleware' => ['has.role:commerce']], function () {
 	Route::get('/comercios/ventas', 'MainController@commerce_ventas')->name('ventas.commerce');
 	Route::get('/comercios/articles', 'ArticleController@index');
 
+	// Listado
 	Route::post('/comercios/articles/filter', 'ArticleController@filter');
+	Route::get('/comercios/providers', 'ProviderController@index');
+
 	Route::get('/comercios/configuracion', 'MainController@commerce_config')->name('commerce.config');
 });
 

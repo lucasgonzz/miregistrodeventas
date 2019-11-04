@@ -8,7 +8,9 @@ use App\Article;
 class ArticleController extends Controller
 {
     function index() {
-    	$articles = Article::where('user_id', Auth()->user()->id)->paginate(10);
+    	$articles = Article::where('user_id', Auth()->user()->id)
+                            ->with('providers')
+                            ->paginate(10);
     	return [
                 'pagination' => [
                     'total' => $articles->total(),

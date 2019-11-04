@@ -17,11 +17,11 @@ class CreateArticleProviderTable extends Migration
             $table->bigIncrements('id');
 
             $table->integer('article_id')->unsigned();
-            $table->integer('user_id')->unsigned();
+            $table->integer('provider_id')->unsigned();
 
             $table->foreign('article_id')
                     ->references('id')->on('articles');
-            $table->foreign('user_id')
+            $table->foreign('provider_id')
                     ->references('id')->on('users');
 
             $table->timestamps();

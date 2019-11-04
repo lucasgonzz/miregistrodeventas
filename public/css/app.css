@@ -11112,6 +11112,10 @@ a.text-dark:focus {
   cursor: pointer;
 }
 
+.c-n {
+  cursor: normal;
+}
+
 .c-b {
   color: #3490dc !important;
 }

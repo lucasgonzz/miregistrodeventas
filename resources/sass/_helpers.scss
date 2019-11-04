@@ -15,6 +15,10 @@ $sides: (top, bottom, left, right); // Leave this variable alone
 .c-p{
 	cursor: pointer;
 }
+.c-n {
+	cursor: normal;
+}
+
 
 .c-b{
 	color: $blue !important;
