@@ -63,5 +63,6 @@ Route::group(['middleware' => ['has.role:commerce']], function () {
 Route::get('codigos-de-barra', 'MainController@codigos_de_barra')->name('bar-codes');
 Route::get('empleados', 'MainController@empleados')->name('empleados');
 Route::get('permissions', 'PermissionController@index');
+Route::get('pdf/{columns}/{start_id}/{end_id}', 'PdfController@articles')
 
 Route::get('pdf', 'PdfController@index');

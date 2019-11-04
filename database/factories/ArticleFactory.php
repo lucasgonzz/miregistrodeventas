@@ -5,8 +5,15 @@
 use App\Article;
 use Faker\Generator as Faker;
 
-$factory->define(Article::class, function (Faker $faker) {
-    $bar_code = 0;
+// $bar_codes = [];
+// $bar_code = 1;
+// for ($i=0; $i < 60 ; $i++) { 
+//     $bar_codes[] = $bar_code;
+//     $bar_code++;
+// }
+
+$bar_code = 0;
+$factory->define(Article::class, function (Faker $faker) use ($bar_code) {
 	$cost = rand(50, 3000);
     $bar_code++;
     return [

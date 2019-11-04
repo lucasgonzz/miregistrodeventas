@@ -2085,7 +2085,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _provider_DescargarPdf_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./provider/DescargarPdf.vue */ "./resources/js/components/listado/provider/DescargarPdf.vue");
+/* harmony import */ var _common_DescargarPdf_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./common/DescargarPdf.vue */ "./resources/js/components/listado/common/DescargarPdf.vue");
 /* harmony import */ var _common_Filtrar_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./common/Filtrar.vue */ "./resources/js/components/listado/common/Filtrar.vue");
 /* harmony import */ var _common_EditarArticulo_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./common/EditarArticulo.vue */ "./resources/js/components/listado/common/EditarArticulo.vue");
 /* harmony import */ var _common_ConfirmarEliminacion_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./common/ConfirmarEliminacion.vue */ "./resources/js/components/listado/common/ConfirmarEliminacion.vue");
@@ -2262,7 +2262,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    DescargarPdf: _provider_DescargarPdf_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+    DescargarPdf: _common_DescargarPdf_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
     Filtrar: _common_Filtrar_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
     EditarArticulo: _common_EditarArticulo_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
     InfoFiltrados: _common_InfoFiltrados_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
@@ -2629,6 +2629,130 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/listado/common/DescargarPdf.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/listado/common/DescargarPdf.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['rol'],
+  data: function data() {
+    return {
+      articulosADescargar: 'esta-pagina',
+      columnasParaImprimir: ['name', 'cost', 'price', 'created_at']
+    };
+  },
+  methods: {
+    pdf: function pdf() {
+      this.$emit('generatePdf', this.columnasParaImprimir);
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/listado/common/EditarArticulo.vue?vue&type=script&lang=js&":
 /*!****************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/listado/common/EditarArticulo.vue?vue&type=script&lang=js& ***!
@@ -2912,105 +3036,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['filtro', 'filtrado', 'providers', 'articlesLength']
-});
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/listado/provider/DescargarPdf.vue?vue&type=script&lang=js&":
-/*!****************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/listado/provider/DescargarPdf.vue?vue&type=script&lang=js& ***!
-  \****************************************************************************************************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-/* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['columnasParaImprimir']
 });
 
 /***/ }),
@@ -57852,9 +57877,7 @@ var render = function() {
         on: { destroyArticle: _vm.destroyArticle }
       }),
       _vm._v(" "),
-      _c("descargar-pdf", {
-        attrs: { "columnas-para-imprimir": _vm.columnas_para_imprimir }
-      }),
+      _c("descargar-pdf", { attrs: { rol: _vm.rol } }),
       _vm._v(" "),
       _c("filtrar", {
         attrs: { filtro: _vm.filtro, rol: _vm.rol, providers: _vm.providers },
@@ -58542,6 +58565,757 @@ var staticRenderFns = [
       },
       [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
     )
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/listado/common/DescargarPdf.vue?vue&type=template&id=3687a304&":
+/*!******************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/listado/common/DescargarPdf.vue?vue&type=template&id=3687a304& ***!
+  \******************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "modal fade",
+      attrs: {
+        id: "listado-descargar-pdf",
+        tabindex: "-1",
+        role: "dialog",
+        "aria-labelledby": "ventas-resumens",
+        "aria-hidden": "true"
+      }
+    },
+    [
+      _c("div", { staticClass: "modal-dialog", attrs: { role: "document" } }, [
+        _c("div", { staticClass: "modal-content" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("div", { staticClass: "modal-body" }, [
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col" }, [
+                _c("h5", [_vm._v("¿Que artículos quiere descargar?")]),
+                _vm._v(" "),
+                _c("div", { staticClass: "custom-control custom-radio" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.articulosADescargar,
+                        expression: "articulosADescargar"
+                      }
+                    ],
+                    staticClass: "custom-control-input",
+                    attrs: {
+                      type: "radio",
+                      value: "todos",
+                      id: "todos",
+                      name: "customRadio"
+                    },
+                    domProps: {
+                      checked: _vm._q(_vm.articulosADescargar, "todos")
+                    },
+                    on: {
+                      change: function($event) {
+                        _vm.articulosADescargar = "todos"
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "label",
+                    {
+                      staticClass: "custom-control-label",
+                      attrs: { for: "todos" }
+                    },
+                    [_vm._v("Todos")]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "custom-control custom-radio" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.articulosADescargar,
+                        expression: "articulosADescargar"
+                      }
+                    ],
+                    staticClass: "custom-control-input",
+                    attrs: {
+                      type: "radio",
+                      value: "esta-pagina",
+                      id: "esta-pagina",
+                      name: "customRadio"
+                    },
+                    domProps: {
+                      checked: _vm._q(_vm.articulosADescargar, "esta-pagina")
+                    },
+                    on: {
+                      change: function($event) {
+                        _vm.articulosADescargar = "esta-pagina"
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "label",
+                    {
+                      staticClass: "custom-control-label",
+                      attrs: { for: "esta-pagina" }
+                    },
+                    [_vm._v("Solo los de esta página")]
+                  )
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "row m-t-10" }, [
+              _c("div", { staticClass: "col" }, [
+                _c("h5", [_vm._v("¿Que columnas quiere que se muestren?")]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "custom-control custom-checkbox my-1 mr-sm-2"
+                  },
+                  [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.columnasParaImprimir,
+                          expression: "columnasParaImprimir"
+                        }
+                      ],
+                      staticClass: "custom-control-input",
+                      attrs: {
+                        type: "checkbox",
+                        value: "bar_code",
+                        id: "bar_code"
+                      },
+                      domProps: {
+                        checked: Array.isArray(_vm.columnasParaImprimir)
+                          ? _vm._i(_vm.columnasParaImprimir, "bar_code") > -1
+                          : _vm.columnasParaImprimir
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$a = _vm.columnasParaImprimir,
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = "bar_code",
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 &&
+                                (_vm.columnasParaImprimir = $$a.concat([$$v]))
+                            } else {
+                              $$i > -1 &&
+                                (_vm.columnasParaImprimir = $$a
+                                  .slice(0, $$i)
+                                  .concat($$a.slice($$i + 1)))
+                            }
+                          } else {
+                            _vm.columnasParaImprimir = $$c
+                          }
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "label",
+                      {
+                        staticClass: "custom-control-label",
+                        attrs: { for: "bar_code" }
+                      },
+                      [_vm._v("Codigo de barras")]
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "custom-control custom-checkbox my-1 mr-sm-2"
+                  },
+                  [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.columnasParaImprimir,
+                          expression: "columnasParaImprimir"
+                        }
+                      ],
+                      staticClass: "custom-control-input",
+                      attrs: { type: "checkbox", value: "name", id: "nombre" },
+                      domProps: {
+                        checked: Array.isArray(_vm.columnasParaImprimir)
+                          ? _vm._i(_vm.columnasParaImprimir, "name") > -1
+                          : _vm.columnasParaImprimir
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$a = _vm.columnasParaImprimir,
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = "name",
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 &&
+                                (_vm.columnasParaImprimir = $$a.concat([$$v]))
+                            } else {
+                              $$i > -1 &&
+                                (_vm.columnasParaImprimir = $$a
+                                  .slice(0, $$i)
+                                  .concat($$a.slice($$i + 1)))
+                            }
+                          } else {
+                            _vm.columnasParaImprimir = $$c
+                          }
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "label",
+                      {
+                        staticClass: "custom-control-label",
+                        attrs: { for: "nombre" }
+                      },
+                      [_vm._v("\r\n                Nombre\r\n              ")]
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "custom-control custom-checkbox my-1 mr-sm-2"
+                  },
+                  [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.columnasParaImprimir,
+                          expression: "columnasParaImprimir"
+                        }
+                      ],
+                      staticClass: "custom-control-input",
+                      attrs: { type: "checkbox", value: "cost", id: "costo" },
+                      domProps: {
+                        checked: Array.isArray(_vm.columnasParaImprimir)
+                          ? _vm._i(_vm.columnasParaImprimir, "cost") > -1
+                          : _vm.columnasParaImprimir
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$a = _vm.columnasParaImprimir,
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = "cost",
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 &&
+                                (_vm.columnasParaImprimir = $$a.concat([$$v]))
+                            } else {
+                              $$i > -1 &&
+                                (_vm.columnasParaImprimir = $$a
+                                  .slice(0, $$i)
+                                  .concat($$a.slice($$i + 1)))
+                            }
+                          } else {
+                            _vm.columnasParaImprimir = $$c
+                          }
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "label",
+                      {
+                        staticClass: "custom-control-label",
+                        attrs: { for: "costo" }
+                      },
+                      [_vm._v("\r\n                Costo\r\n              ")]
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "custom-control custom-checkbox my-1 mr-sm-2"
+                  },
+                  [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.columnasParaImprimir,
+                          expression: "columnasParaImprimir"
+                        }
+                      ],
+                      staticClass: "custom-control-input",
+                      attrs: { type: "checkbox", value: "price", id: "precio" },
+                      domProps: {
+                        checked: Array.isArray(_vm.columnasParaImprimir)
+                          ? _vm._i(_vm.columnasParaImprimir, "price") > -1
+                          : _vm.columnasParaImprimir
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$a = _vm.columnasParaImprimir,
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = "price",
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 &&
+                                (_vm.columnasParaImprimir = $$a.concat([$$v]))
+                            } else {
+                              $$i > -1 &&
+                                (_vm.columnasParaImprimir = $$a
+                                  .slice(0, $$i)
+                                  .concat($$a.slice($$i + 1)))
+                            }
+                          } else {
+                            _vm.columnasParaImprimir = $$c
+                          }
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "label",
+                      {
+                        staticClass: "custom-control-label",
+                        attrs: { for: "precio" }
+                      },
+                      [_vm._v("\r\n                Precio\r\n              ")]
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "custom-control custom-checkbox my-1 mr-sm-2"
+                  },
+                  [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.columnasParaImprimir,
+                          expression: "columnasParaImprimir"
+                        }
+                      ],
+                      staticClass: "custom-control-input",
+                      attrs: {
+                        type: "checkbox",
+                        value: "previus_price",
+                        id: "precio"
+                      },
+                      domProps: {
+                        checked: Array.isArray(_vm.columnasParaImprimir)
+                          ? _vm._i(_vm.columnasParaImprimir, "previus_price") >
+                            -1
+                          : _vm.columnasParaImprimir
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$a = _vm.columnasParaImprimir,
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = "previus_price",
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 &&
+                                (_vm.columnasParaImprimir = $$a.concat([$$v]))
+                            } else {
+                              $$i > -1 &&
+                                (_vm.columnasParaImprimir = $$a
+                                  .slice(0, $$i)
+                                  .concat($$a.slice($$i + 1)))
+                            }
+                          } else {
+                            _vm.columnasParaImprimir = $$c
+                          }
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "label",
+                      {
+                        staticClass: "custom-control-label",
+                        attrs: { for: "precio" }
+                      },
+                      [
+                        _vm._v(
+                          "\r\n                Precio anterior\r\n              "
+                        )
+                      ]
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "custom-control custom-checkbox my-1 mr-sm-2"
+                  },
+                  [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.columnasParaImprimir,
+                          expression: "columnasParaImprimir"
+                        }
+                      ],
+                      staticClass: "custom-control-input",
+                      attrs: { type: "checkbox", value: "stock", id: "precio" },
+                      domProps: {
+                        checked: Array.isArray(_vm.columnasParaImprimir)
+                          ? _vm._i(_vm.columnasParaImprimir, "stock") > -1
+                          : _vm.columnasParaImprimir
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$a = _vm.columnasParaImprimir,
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = "stock",
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 &&
+                                (_vm.columnasParaImprimir = $$a.concat([$$v]))
+                            } else {
+                              $$i > -1 &&
+                                (_vm.columnasParaImprimir = $$a
+                                  .slice(0, $$i)
+                                  .concat($$a.slice($$i + 1)))
+                            }
+                          } else {
+                            _vm.columnasParaImprimir = $$c
+                          }
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "label",
+                      {
+                        staticClass: "custom-control-label",
+                        attrs: { for: "precio" }
+                      },
+                      [_vm._v("\r\n                Stock\r\n              ")]
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: _vm.rol == "commerce",
+                        expression: "rol == 'commerce'"
+                      }
+                    ],
+                    staticClass: "custom-control custom-checkbox my-1 mr-sm-2"
+                  },
+                  [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.columnasParaImprimir,
+                          expression: "columnasParaImprimir"
+                        }
+                      ],
+                      staticClass: "custom-control-input",
+                      attrs: {
+                        type: "checkbox",
+                        value: "providers",
+                        id: "precio"
+                      },
+                      domProps: {
+                        checked: Array.isArray(_vm.columnasParaImprimir)
+                          ? _vm._i(_vm.columnasParaImprimir, "providers") > -1
+                          : _vm.columnasParaImprimir
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$a = _vm.columnasParaImprimir,
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = "providers",
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 &&
+                                (_vm.columnasParaImprimir = $$a.concat([$$v]))
+                            } else {
+                              $$i > -1 &&
+                                (_vm.columnasParaImprimir = $$a
+                                  .slice(0, $$i)
+                                  .concat($$a.slice($$i + 1)))
+                            }
+                          } else {
+                            _vm.columnasParaImprimir = $$c
+                          }
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "label",
+                      {
+                        staticClass: "custom-control-label",
+                        attrs: { for: "precio" }
+                      },
+                      [
+                        _vm._v(
+                          "\r\n                Proveedores\r\n              "
+                        )
+                      ]
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "custom-control custom-checkbox my-1 mr-sm-2"
+                  },
+                  [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.columnasParaImprimir,
+                          expression: "columnasParaImprimir"
+                        }
+                      ],
+                      staticClass: "custom-control-input",
+                      attrs: {
+                        type: "checkbox",
+                        value: "created_at",
+                        id: "created_at"
+                      },
+                      domProps: {
+                        checked: Array.isArray(_vm.columnasParaImprimir)
+                          ? _vm._i(_vm.columnasParaImprimir, "created_at") > -1
+                          : _vm.columnasParaImprimir
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$a = _vm.columnasParaImprimir,
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = "created_at",
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 &&
+                                (_vm.columnasParaImprimir = $$a.concat([$$v]))
+                            } else {
+                              $$i > -1 &&
+                                (_vm.columnasParaImprimir = $$a
+                                  .slice(0, $$i)
+                                  .concat($$a.slice($$i + 1)))
+                            }
+                          } else {
+                            _vm.columnasParaImprimir = $$c
+                          }
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "label",
+                      {
+                        staticClass: "custom-control-label",
+                        attrs: { for: "created_at" }
+                      },
+                      [
+                        _vm._v(
+                          "\r\n                Fecha en que se agrego\r\n              "
+                        )
+                      ]
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "custom-control custom-checkbox my-1 mr-sm-2"
+                  },
+                  [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.columnasParaImprimir,
+                          expression: "columnasParaImprimir"
+                        }
+                      ],
+                      staticClass: "custom-control-input",
+                      attrs: {
+                        type: "checkbox",
+                        value: "updated_at",
+                        id: "updated_at"
+                      },
+                      domProps: {
+                        checked: Array.isArray(_vm.columnasParaImprimir)
+                          ? _vm._i(_vm.columnasParaImprimir, "updated_at") > -1
+                          : _vm.columnasParaImprimir
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$a = _vm.columnasParaImprimir,
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = "updated_at",
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 &&
+                                (_vm.columnasParaImprimir = $$a.concat([$$v]))
+                            } else {
+                              $$i > -1 &&
+                                (_vm.columnasParaImprimir = $$a
+                                  .slice(0, $$i)
+                                  .concat($$a.slice($$i + 1)))
+                            }
+                          } else {
+                            _vm.columnasParaImprimir = $$c
+                          }
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "label",
+                      {
+                        staticClass: "custom-control-label",
+                        attrs: { for: "updated_at" }
+                      },
+                      [
+                        _vm._v(
+                          "\r\n                Ultima fecha en que se actualizo\r\n              "
+                        )
+                      ]
+                    )
+                  ]
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _vm._m(1),
+            _vm._v(
+              "\r\n        " + _vm._s(_vm.columnasParaImprimir) + "\r\n      "
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "modal-footer" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-secondary",
+                attrs: { type: "button", "data-dismiss": "modal" }
+              },
+              [_vm._v("Cerrar")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary",
+                attrs: { type: "button" },
+                on: { click: function($event) {} }
+              },
+              [_vm._v("Generar Pdf")]
+            )
+          ])
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c("h5", { staticClass: "modal-title" }, [
+        _vm._v("Descargar mis artículos")
+      ]),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col" }, [
+      _c("small", { staticClass: "form-text text-muted" }, [
+        _vm._v(
+          "\r\n            Puede imprimir un maximo de 7 columnas  \r\n          "
+        )
+      ])
+    ])
   }
 ]
 render._withStripped = true
@@ -59697,521 +60471,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "card-header" }, [
       _c("h4", { staticClass: "h4 m-b-0" }, [_vm._v("Filtros")])
-    ])
-  }
-]
-render._withStripped = true
-
-
-
-/***/ }),
-
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/listado/provider/DescargarPdf.vue?vue&type=template&id=79d8ce84&":
-/*!********************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/listado/provider/DescargarPdf.vue?vue&type=template&id=79d8ce84& ***!
-  \********************************************************************************************************************************************************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "modal fade",
-      attrs: {
-        id: "listado-descargar-pdf",
-        tabindex: "-1",
-        role: "dialog",
-        "aria-labelledby": "ventas-resumens",
-        "aria-hidden": "true"
-      }
-    },
-    [
-      _c("div", { staticClass: "modal-dialog", attrs: { role: "document" } }, [
-        _c("div", { staticClass: "modal-content" }, [
-          _vm._m(0),
-          _vm._v(" "),
-          _c("div", { staticClass: "modal-body" }, [
-            _vm._m(1),
-            _vm._v(" "),
-            _c("div", { staticClass: "row m-t-10" }, [
-              _c("div", { staticClass: "col" }, [
-                _c("h5", [_vm._v("¿Que columnas quiere que se muestren?")]),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "custom-control custom-checkbox my-1 mr-sm-2"
-                  },
-                  [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.columnasParaImprimir,
-                          expression: "columnasParaImprimir"
-                        }
-                      ],
-                      staticClass: "custom-control-input",
-                      attrs: {
-                        type: "checkbox",
-                        value: "bar_code",
-                        id: "bar_code"
-                      },
-                      domProps: {
-                        checked: Array.isArray(_vm.columnasParaImprimir)
-                          ? _vm._i(_vm.columnasParaImprimir, "bar_code") > -1
-                          : _vm.columnasParaImprimir
-                      },
-                      on: {
-                        change: function($event) {
-                          var $$a = _vm.columnasParaImprimir,
-                            $$el = $event.target,
-                            $$c = $$el.checked ? true : false
-                          if (Array.isArray($$a)) {
-                            var $$v = "bar_code",
-                              $$i = _vm._i($$a, $$v)
-                            if ($$el.checked) {
-                              $$i < 0 &&
-                                (_vm.columnasParaImprimir = $$a.concat([$$v]))
-                            } else {
-                              $$i > -1 &&
-                                (_vm.columnasParaImprimir = $$a
-                                  .slice(0, $$i)
-                                  .concat($$a.slice($$i + 1)))
-                            }
-                          } else {
-                            _vm.columnasParaImprimir = $$c
-                          }
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "label",
-                      {
-                        staticClass: "custom-control-label",
-                        attrs: { for: "bar_code" }
-                      },
-                      [_vm._v("Codigo de barras")]
-                    )
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "custom-control custom-checkbox my-1 mr-sm-2"
-                  },
-                  [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.columnasParaImprimir,
-                          expression: "columnasParaImprimir"
-                        }
-                      ],
-                      staticClass: "custom-control-input",
-                      attrs: { type: "checkbox", value: "name", id: "nombre" },
-                      domProps: {
-                        checked: Array.isArray(_vm.columnasParaImprimir)
-                          ? _vm._i(_vm.columnasParaImprimir, "name") > -1
-                          : _vm.columnasParaImprimir
-                      },
-                      on: {
-                        change: function($event) {
-                          var $$a = _vm.columnasParaImprimir,
-                            $$el = $event.target,
-                            $$c = $$el.checked ? true : false
-                          if (Array.isArray($$a)) {
-                            var $$v = "name",
-                              $$i = _vm._i($$a, $$v)
-                            if ($$el.checked) {
-                              $$i < 0 &&
-                                (_vm.columnasParaImprimir = $$a.concat([$$v]))
-                            } else {
-                              $$i > -1 &&
-                                (_vm.columnasParaImprimir = $$a
-                                  .slice(0, $$i)
-                                  .concat($$a.slice($$i + 1)))
-                            }
-                          } else {
-                            _vm.columnasParaImprimir = $$c
-                          }
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "label",
-                      {
-                        staticClass: "custom-control-label",
-                        attrs: { for: "nombre" }
-                      },
-                      [_vm._v("\r\n                Nombre\r\n              ")]
-                    )
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "custom-control custom-checkbox my-1 mr-sm-2"
-                  },
-                  [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.columnasParaImprimir,
-                          expression: "columnasParaImprimir"
-                        }
-                      ],
-                      staticClass: "custom-control-input",
-                      attrs: { type: "checkbox", value: "cost", id: "costo" },
-                      domProps: {
-                        checked: Array.isArray(_vm.columnasParaImprimir)
-                          ? _vm._i(_vm.columnasParaImprimir, "cost") > -1
-                          : _vm.columnasParaImprimir
-                      },
-                      on: {
-                        change: function($event) {
-                          var $$a = _vm.columnasParaImprimir,
-                            $$el = $event.target,
-                            $$c = $$el.checked ? true : false
-                          if (Array.isArray($$a)) {
-                            var $$v = "cost",
-                              $$i = _vm._i($$a, $$v)
-                            if ($$el.checked) {
-                              $$i < 0 &&
-                                (_vm.columnasParaImprimir = $$a.concat([$$v]))
-                            } else {
-                              $$i > -1 &&
-                                (_vm.columnasParaImprimir = $$a
-                                  .slice(0, $$i)
-                                  .concat($$a.slice($$i + 1)))
-                            }
-                          } else {
-                            _vm.columnasParaImprimir = $$c
-                          }
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "label",
-                      {
-                        staticClass: "custom-control-label",
-                        attrs: { for: "costo" }
-                      },
-                      [_vm._v("\r\n                Costo\r\n              ")]
-                    )
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "custom-control custom-checkbox my-1 mr-sm-2"
-                  },
-                  [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.columnasParaImprimir,
-                          expression: "columnasParaImprimir"
-                        }
-                      ],
-                      staticClass: "custom-control-input",
-                      attrs: { type: "checkbox", value: "price", id: "precio" },
-                      domProps: {
-                        checked: Array.isArray(_vm.columnasParaImprimir)
-                          ? _vm._i(_vm.columnasParaImprimir, "price") > -1
-                          : _vm.columnasParaImprimir
-                      },
-                      on: {
-                        change: function($event) {
-                          var $$a = _vm.columnasParaImprimir,
-                            $$el = $event.target,
-                            $$c = $$el.checked ? true : false
-                          if (Array.isArray($$a)) {
-                            var $$v = "price",
-                              $$i = _vm._i($$a, $$v)
-                            if ($$el.checked) {
-                              $$i < 0 &&
-                                (_vm.columnasParaImprimir = $$a.concat([$$v]))
-                            } else {
-                              $$i > -1 &&
-                                (_vm.columnasParaImprimir = $$a
-                                  .slice(0, $$i)
-                                  .concat($$a.slice($$i + 1)))
-                            }
-                          } else {
-                            _vm.columnasParaImprimir = $$c
-                          }
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "label",
-                      {
-                        staticClass: "custom-control-label",
-                        attrs: { for: "precio" }
-                      },
-                      [_vm._v("\r\n                Precio\r\n              ")]
-                    )
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "custom-control custom-checkbox my-1 mr-sm-2"
-                  },
-                  [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.columnasParaImprimir,
-                          expression: "columnasParaImprimir"
-                        }
-                      ],
-                      staticClass: "custom-control-input",
-                      attrs: {
-                        type: "checkbox",
-                        value: "created_at",
-                        id: "created_at"
-                      },
-                      domProps: {
-                        checked: Array.isArray(_vm.columnasParaImprimir)
-                          ? _vm._i(_vm.columnasParaImprimir, "created_at") > -1
-                          : _vm.columnasParaImprimir
-                      },
-                      on: {
-                        change: function($event) {
-                          var $$a = _vm.columnasParaImprimir,
-                            $$el = $event.target,
-                            $$c = $$el.checked ? true : false
-                          if (Array.isArray($$a)) {
-                            var $$v = "created_at",
-                              $$i = _vm._i($$a, $$v)
-                            if ($$el.checked) {
-                              $$i < 0 &&
-                                (_vm.columnasParaImprimir = $$a.concat([$$v]))
-                            } else {
-                              $$i > -1 &&
-                                (_vm.columnasParaImprimir = $$a
-                                  .slice(0, $$i)
-                                  .concat($$a.slice($$i + 1)))
-                            }
-                          } else {
-                            _vm.columnasParaImprimir = $$c
-                          }
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "label",
-                      {
-                        staticClass: "custom-control-label",
-                        attrs: { for: "created_at" }
-                      },
-                      [
-                        _vm._v(
-                          "\r\n                Fecha en que se agrego\r\n              "
-                        )
-                      ]
-                    )
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "custom-control custom-checkbox my-1 mr-sm-2"
-                  },
-                  [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.columnasParaImprimir,
-                          expression: "columnasParaImprimir"
-                        }
-                      ],
-                      staticClass: "custom-control-input",
-                      attrs: {
-                        type: "checkbox",
-                        value: "updated_at",
-                        id: "updated_at"
-                      },
-                      domProps: {
-                        checked: Array.isArray(_vm.columnasParaImprimir)
-                          ? _vm._i(_vm.columnasParaImprimir, "updated_at") > -1
-                          : _vm.columnasParaImprimir
-                      },
-                      on: {
-                        change: function($event) {
-                          var $$a = _vm.columnasParaImprimir,
-                            $$el = $event.target,
-                            $$c = $$el.checked ? true : false
-                          if (Array.isArray($$a)) {
-                            var $$v = "updated_at",
-                              $$i = _vm._i($$a, $$v)
-                            if ($$el.checked) {
-                              $$i < 0 &&
-                                (_vm.columnasParaImprimir = $$a.concat([$$v]))
-                            } else {
-                              $$i > -1 &&
-                                (_vm.columnasParaImprimir = $$a
-                                  .slice(0, $$i)
-                                  .concat($$a.slice($$i + 1)))
-                            }
-                          } else {
-                            _vm.columnasParaImprimir = $$c
-                          }
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "label",
-                      {
-                        staticClass: "custom-control-label",
-                        attrs: { for: "updated_at" }
-                      },
-                      [
-                        _vm._v(
-                          "\r\n                Ultima fecha en que se actualizo\r\n              "
-                        )
-                      ]
-                    )
-                  ]
-                )
-              ])
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "modal-footer" }, [
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-secondary",
-                attrs: { type: "button", "data-dismiss": "modal" }
-              },
-              [_vm._v("Cerrar")]
-            ),
-            _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-primary",
-                attrs: { type: "button" },
-                on: { click: function($event) {} }
-              },
-              [_vm._v("Generar Pdf")]
-            )
-          ])
-        ])
-      ])
-    ]
-  )
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-header" }, [
-      _c("h5", { staticClass: "modal-title" }, [
-        _vm._v("Descargar mis artículos")
-      ]),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "close",
-          attrs: {
-            type: "button",
-            "data-dismiss": "modal",
-            "aria-label": "Close"
-          }
-        },
-        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col" }, [
-        _c("h5", [_vm._v("¿Que artículos quiere descargar?")]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form-check" }, [
-          _c("input", {
-            staticClass: "form-check-input",
-            attrs: {
-              type: "radio",
-              name: "exampleRadios",
-              id: "todos",
-              value: "option1",
-              checked: ""
-            }
-          }),
-          _vm._v(" "),
-          _c(
-            "label",
-            { staticClass: "form-check-label", attrs: { for: "todos" } },
-            [
-              _vm._v(
-                "\r\n                Todos mis artículos\r\n              "
-              )
-            ]
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form-check" }, [
-          _c("input", {
-            staticClass: "form-check-input",
-            attrs: {
-              type: "radio",
-              name: "exampleRadios",
-              id: "esta-pagina",
-              value: "option2"
-            }
-          }),
-          _vm._v(" "),
-          _c(
-            "label",
-            { staticClass: "form-check-label", attrs: { for: "esta-pagina" } },
-            [
-              _vm._v(
-                "\r\n                Solo los de esta página\r\n              "
-              )
-            ]
-          )
-        ])
-      ])
     ])
   }
 ]
@@ -72883,6 +73142,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/listado/common/DescargarPdf.vue":
+/*!*****************************************************************!*\
+  !*** ./resources/js/components/listado/common/DescargarPdf.vue ***!
+  \*****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _DescargarPdf_vue_vue_type_template_id_3687a304___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DescargarPdf.vue?vue&type=template&id=3687a304& */ "./resources/js/components/listado/common/DescargarPdf.vue?vue&type=template&id=3687a304&");
+/* harmony import */ var _DescargarPdf_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DescargarPdf.vue?vue&type=script&lang=js& */ "./resources/js/components/listado/common/DescargarPdf.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _DescargarPdf_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _DescargarPdf_vue_vue_type_template_id_3687a304___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _DescargarPdf_vue_vue_type_template_id_3687a304___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/listado/common/DescargarPdf.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/listado/common/DescargarPdf.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************!*\
+  !*** ./resources/js/components/listado/common/DescargarPdf.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DescargarPdf_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./DescargarPdf.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/listado/common/DescargarPdf.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DescargarPdf_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/listado/common/DescargarPdf.vue?vue&type=template&id=3687a304&":
+/*!************************************************************************************************!*\
+  !*** ./resources/js/components/listado/common/DescargarPdf.vue?vue&type=template&id=3687a304& ***!
+  \************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DescargarPdf_vue_vue_type_template_id_3687a304___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./DescargarPdf.vue?vue&type=template&id=3687a304& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/listado/common/DescargarPdf.vue?vue&type=template&id=3687a304&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DescargarPdf_vue_vue_type_template_id_3687a304___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DescargarPdf_vue_vue_type_template_id_3687a304___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/listado/common/EditarArticulo.vue":
 /*!*******************************************************************!*\
   !*** ./resources/js/components/listado/common/EditarArticulo.vue ***!
@@ -73085,75 +73413,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_InfoFiltrados_vue_vue_type_template_id_9014e9b0___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_InfoFiltrados_vue_vue_type_template_id_9014e9b0___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
-
-
-
-/***/ }),
-
-/***/ "./resources/js/components/listado/provider/DescargarPdf.vue":
-/*!*******************************************************************!*\
-  !*** ./resources/js/components/listado/provider/DescargarPdf.vue ***!
-  \*******************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _DescargarPdf_vue_vue_type_template_id_79d8ce84___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DescargarPdf.vue?vue&type=template&id=79d8ce84& */ "./resources/js/components/listado/provider/DescargarPdf.vue?vue&type=template&id=79d8ce84&");
-/* harmony import */ var _DescargarPdf_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DescargarPdf.vue?vue&type=script&lang=js& */ "./resources/js/components/listado/provider/DescargarPdf.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
-
-
-
-
-/* normalize component */
-
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _DescargarPdf_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _DescargarPdf_vue_vue_type_template_id_79d8ce84___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _DescargarPdf_vue_vue_type_template_id_79d8ce84___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
-  false,
-  null,
-  null,
-  null
-  
-)
-
-/* hot reload */
-if (false) { var api; }
-component.options.__file = "resources/js/components/listado/provider/DescargarPdf.vue"
-/* harmony default export */ __webpack_exports__["default"] = (component.exports);
-
-/***/ }),
-
-/***/ "./resources/js/components/listado/provider/DescargarPdf.vue?vue&type=script&lang=js&":
-/*!********************************************************************************************!*\
-  !*** ./resources/js/components/listado/provider/DescargarPdf.vue?vue&type=script&lang=js& ***!
-  \********************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DescargarPdf_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./DescargarPdf.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/listado/provider/DescargarPdf.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DescargarPdf_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
-
-/***/ }),
-
-/***/ "./resources/js/components/listado/provider/DescargarPdf.vue?vue&type=template&id=79d8ce84&":
-/*!**************************************************************************************************!*\
-  !*** ./resources/js/components/listado/provider/DescargarPdf.vue?vue&type=template&id=79d8ce84& ***!
-  \**************************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DescargarPdf_vue_vue_type_template_id_79d8ce84___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./DescargarPdf.vue?vue&type=template&id=79d8ce84& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/listado/provider/DescargarPdf.vue?vue&type=template&id=79d8ce84&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DescargarPdf_vue_vue_type_template_id_79d8ce84___WEBPACK_IMPORTED_MODULE_0__["render"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DescargarPdf_vue_vue_type_template_id_79d8ce84___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
