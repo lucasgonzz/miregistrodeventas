@@ -15923,6 +15923,10 @@ a.text-dark:focus {
   padding: 0 !important;
 }
 
+.td-price {
+  font-weight: bold;
+}
+
 .btn-listado {
   font-size: 1.5rem;
 }
@@ -15937,6 +15941,23 @@ a.text-dark:focus {
 
 .input-precio-min-max {
   width: 45% !important;
+}
+
+.cont-check-box {
+  display: -webkit-box;
+  display: flex;
+  flex-wrap: wrap;
+  -webkit-box-pack: justify;
+          justify-content: space-between;
+}
+
+.custom-control-inline {
+  width: 25%;
+  text-align: center;
+}
+
+.label-block {
+  display: block;
 }
 
 .buscador-sombreado {

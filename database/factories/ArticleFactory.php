@@ -14,6 +14,7 @@ $factory->define(Article::class, function (Faker $faker) {
         'name' => $faker->name,
         'cost' => $cost,
         'price' => rand($cost, $cost*2),
+        'previus_price' => 0,
         'stock' => rand(6, 25),
         'user_id' => rand(1, 2),
     ];

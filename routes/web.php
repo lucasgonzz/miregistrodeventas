@@ -49,7 +49,11 @@ Route::group(['middleware' => ['has.role:commerce']], function () {
 
 	// Listado
 	Route::post('/comercios/articles/filter', 'ArticleController@filter');
+	Route::get('/comercios/articles/search/{query}', 'ArticleController@search');
+	Route::get('/comercios/articles/pre-search/{query}', 'ArticleController@pre_search');
 	Route::get('/comercios/providers', 'ProviderController@index');
+	Route::put('/comercios/articles/{id}', 'ArticleController@update');
+	Route::delete('/comercios/articles/{id}', 'ArticleController@destroy');
 
 	Route::get('/comercios/configuracion', 'MainController@commerce_config')->name('commerce.config');
 });
