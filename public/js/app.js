@@ -2254,6 +2254,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 
@@ -2290,6 +2291,7 @@ __webpack_require__.r(__webpack_exports__);
       search_query: '',
       pre_search: [],
       providers: [],
+      idsArticles: [],
       // Filtros
       filtro: {
         'mostrar': 'todos',
@@ -2404,10 +2406,14 @@ __webpack_require__.r(__webpack_exports__);
       var _this4 = this;
 
       axios.get('articles?page=' + page).then(function (res) {
-        console.log('Articles: ');
         console.log(res.data);
         _this4.articles = res.data.articles.data;
         _this4.pagination = res.data.pagination;
+        var self = _this4;
+
+        _this4.articles.forEach(function (article) {
+          self.idsArticles.push(article.id);
+        });
       })["catch"](function (err) {
         console.log(err); // location.reload()
       });
@@ -2481,6 +2487,7 @@ __webpack_require__.r(__webpack_exports__);
     showDescargarPdf: function showDescargarPdf() {
       $('#listado-descargar-pdf').modal('show');
     },
+    generatePdf: function generatePdf() {},
     showFiltrar: function showFiltrar() {
       $('#listado-filtrar').modal('show');
     },
@@ -2737,7 +2744,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['rol'],
+  props: ['rol', 'idsArticles'],
   data: function data() {
     return {
       articulosADescargar: 'esta-pagina',
@@ -2747,6 +2754,23 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     pdf: function pdf() {
       this.$emit('generatePdf', this.columnasParaImprimir);
+    },
+    getColumns: function getColumns() {
+      return this.columnasParaImprimir.join('-');
+    },
+    getLink: function getLink() {
+      var link = 'pdf/' + this.columnasParaImprimir.join('-') + '/';
+
+      if (this.articulosADescargar == 'esta-pagina') {
+        this.idsArticles.forEach(function (id) {
+          link += id + '-';
+        });
+        link = link.substring(0, link.length - 1);
+      } else {
+        link += 'todos';
+      }
+
+      return link;
     }
   }
 });
@@ -57877,7 +57901,9 @@ var render = function() {
         on: { destroyArticle: _vm.destroyArticle }
       }),
       _vm._v(" "),
-      _c("descargar-pdf", { attrs: { rol: _vm.rol } }),
+      _c("descargar-pdf", {
+        attrs: { rol: _vm.rol, "ids-articles": _vm.idsArticles }
+      }),
       _vm._v(" "),
       _c("filtrar", {
         attrs: { filtro: _vm.filtro, rol: _vm.rol, providers: _vm.providers },
@@ -59267,11 +59293,10 @@ var render = function() {
             ),
             _vm._v(" "),
             _c(
-              "button",
+              "a",
               {
                 staticClass: "btn btn-primary",
-                attrs: { type: "button" },
-                on: { click: function($event) {} }
+                attrs: { href: _vm.getLink(), target: "_blank" }
               },
               [_vm._v("Generar Pdf")]
             )
@@ -73146,14 +73171,15 @@ __webpack_require__.r(__webpack_exports__);
 /*!*****************************************************************!*\
   !*** ./resources/js/components/listado/common/DescargarPdf.vue ***!
   \*****************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _DescargarPdf_vue_vue_type_template_id_3687a304___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DescargarPdf.vue?vue&type=template&id=3687a304& */ "./resources/js/components/listado/common/DescargarPdf.vue?vue&type=template&id=3687a304&");
 /* harmony import */ var _DescargarPdf_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DescargarPdf.vue?vue&type=script&lang=js& */ "./resources/js/components/listado/common/DescargarPdf.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _DescargarPdf_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _DescargarPdf_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -73183,7 +73209,7 @@ component.options.__file = "resources/js/components/listado/common/DescargarPdf.
 /*!******************************************************************************************!*\
   !*** ./resources/js/components/listado/common/DescargarPdf.vue?vue&type=script&lang=js& ***!
   \******************************************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
