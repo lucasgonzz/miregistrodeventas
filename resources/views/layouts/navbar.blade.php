@@ -81,6 +81,12 @@
                         Codigos de barra
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ active('empleados') }}" href="{{ route('empleados') }}">
+                        <!-- <i class="icon-list-ol"></i> -->
+                        Empleados
+                    </a>
+                </li>
             </ul>
 
             <!-- Right Side Of Navbar -->
@@ -91,6 +97,9 @@
                     </a>
 
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                        <a href="{{ route('commerce.config') }}" class="dropdown-item">                            
+                           Configuración
+                        </a>
                         <form action="{{ route('logout') }}" method="POST">
                             {{ csrf_field() }}
                             <button class="dropdown-item" type="submit">                            

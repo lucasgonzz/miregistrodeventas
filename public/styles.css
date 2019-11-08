@@ -140,3 +140,24 @@
 .icon-barcode:before {
   content: "\48";
 }
+.icon-redo:before {
+  content: "\49";
+}
+.icon-user-plus:before {
+  content: "\4a";
+}
+.icon-user:before {
+  content: "\4b";
+}
+.icon-user-delete:before {
+  content: "\4c";
+}
+.icon-users:before {
+  content: "\4d";
+}
+.icon-next:before {
+  content: "\4f";
+}
+.icon-back:before {
+  content: "\50";
+}

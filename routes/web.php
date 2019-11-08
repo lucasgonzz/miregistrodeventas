@@ -28,6 +28,15 @@ Route::group(['middleware' => ['has.role:provider']], function () {
 	Route::get('/mayoristas/ingresar', 'MainController@provider_ingresar')->name('ingresar.provider');
 	Route::get('/mayoristas/listado', 'MainController@provider_listado')->name('listado.provider');
 	Route::get('/mayoristas/ventas', 'MainController@provider_ventas')->name('ventas.provider');
+	Route::get('/mayoristas/articles', 'ArticleController@index');
+
+	// Listado
+	Route::post('/mayoristas/articles/filter', 'ArticleController@filter');
+	Route::get('/mayoristas/articles/search/{query}', 'ArticleController@search');
+	Route::get('/mayoristas/articles/pre-search/{query}', 'ArticleController@pre_search');
+	Route::put('/mayoristas/articles/{id}', 'ArticleController@update');
+	Route::delete('/mayoristas/articles/{id}', 'ArticleController@destroy');
+
 });
 
 // Comercios
@@ -36,8 +45,24 @@ Route::group(['middleware' => ['has.role:commerce']], function () {
 	Route::get('/comercios/ingresar', 'MainController@commerce_ingresar')->name('ingresar.commerce');
 	Route::get('/comercios/listado', 'MainController@commerce_listado')->name('listado.commerce');
 	Route::get('/comercios/ventas', 'MainController@commerce_ventas')->name('ventas.commerce');
+	Route::get('/comercios/articles', 'ArticleController@index');
+
+	// Listado
+	Route::post('/comercios/articles/filter', 'ArticleController@filter');
+	Route::get('/comercios/articles/search/{query}', 'ArticleController@search');
+	Route::get('/comercios/articles/pre-search/{query}', 'ArticleController@pre_search');
+	Route::get('/comercios/providers', 'ProviderController@index');
+	Route::put('/comercios/articles/{id}', 'ArticleController@update');
+	Route::delete('/comercios/articles/{id}', 'ArticleController@destroy');
+
+	Route::get('/comercios/configuracion', 'MainController@commerce_config')->name('commerce.config');
+	Route::get('comercios/pdf/{columns}/{idsArticles}', 'PdfController@articles');
 });
 
 // Comunes
 
 Route::get('codigos-de-barra', 'MainController@codigos_de_barra')->name('bar-codes');
+Route::get('empleados', 'MainController@empleados')->name('empleados');
+Route::get('permissions', 'PermissionController@index');
+
+Route::get('pdf', 'PdfController@index');
