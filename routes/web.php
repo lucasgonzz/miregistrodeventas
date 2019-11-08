@@ -37,6 +37,8 @@ Route::group(['middleware' => ['has.role:provider']], function () {
 	Route::put('/mayoristas/articles/{id}', 'ArticleController@update');
 	Route::delete('/mayoristas/articles/{id}', 'ArticleController@destroy');
 
+	Route::get('/mayoristas/pdf/{columns}/{articles_ids}/{orientation}/{header?}', 'PdfController@articles');
+
 });
 
 // Comercios
@@ -56,7 +58,7 @@ Route::group(['middleware' => ['has.role:commerce']], function () {
 	Route::delete('/comercios/articles/{id}', 'ArticleController@destroy');
 
 	Route::get('/comercios/configuracion', 'MainController@commerce_config')->name('commerce.config');
-	Route::get('comercios/pdf/{columns}/{idsArticles}', 'PdfController@articles');
+	Route::get('/comercios/pdf/{orientation}/{header}/{columns}/{articles_ids}', 'PdfController@articles');
 });
 
 // Comunes

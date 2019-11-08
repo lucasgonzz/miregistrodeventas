@@ -2255,6 +2255,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 
@@ -2346,8 +2347,16 @@ __webpack_require__.r(__webpack_exports__);
     since: function since(date) {
       return moment(date).fromNow();
     },
-    filter: function filter(filtro) {
+    setIdsArticles: function setIdsArticles() {
       var _this = this;
+
+      this.idsArticles = [];
+      this.articles.forEach(function (article) {
+        _this.idsArticles.push(article.id);
+      });
+    },
+    filter: function filter(filtro) {
+      var _this2 = this;
 
       axios.post('articles/filter', {
         mostrar: filtro.mostrar,
@@ -2355,20 +2364,22 @@ __webpack_require__.r(__webpack_exports__);
         precio_entre: filtro.precio_entre,
         providers: filtro.providers
       }).then(function (res) {
-        _this.filtrado = true;
-        _this.articles = res.data;
-        $('#listado-filtrar').modal('hide');
-        console.log(res.data);
+        _this2.filtrado = true;
+        _this2.articles = res.data;
+
+        _this2.setIdsArticles();
+
+        $('#listado-filtrar').modal('hide'); // console.log(res.data)
       })["catch"](function (err) {
         console.log(err);
       });
     },
     preSearch: function preSearch() {
-      var _this2 = this;
+      var _this3 = this;
 
       if (this.search_query.length > 2) {
         axios.get('articles/pre-search/' + this.search_query).then(function (res) {
-          _this2.pre_search = res.data;
+          _this3.pre_search = res.data;
           $('.resultados').show();
           $('.input-search').addClass('input-search-resultados');
         })["catch"](function (err) {
@@ -2386,14 +2397,14 @@ __webpack_require__.r(__webpack_exports__);
       $('.input-search').removeClass('input-search-resultados');
     },
     search: function search() {
-      var _this3 = this;
+      var _this4 = this;
 
       axios.get('articles/search/' + this.search_query).then(function (res) {
         console.log(res.data);
         var articles = res.data;
 
         if (articles.length > 0) {
-          _this3.articles = res.data;
+          _this4.articles = res.data;
         } else {
           toastr.error('No se encontraron artículos con ese criterio');
         }
@@ -2403,17 +2414,15 @@ __webpack_require__.r(__webpack_exports__);
     },
     // Articulos
     getArticles: function getArticles(page) {
-      var _this4 = this;
+      var _this5 = this;
 
       axios.get('articles?page=' + page).then(function (res) {
         console.log(res.data);
-        _this4.articles = res.data.articles.data;
-        _this4.pagination = res.data.pagination;
-        var self = _this4;
+        _this5.articles = res.data.articles.data;
+        _this5.pagination = res.data.pagination;
+        var self = _this5;
 
-        _this4.articles.forEach(function (article) {
-          self.idsArticles.push(article.id);
-        });
+        _this5.setIdsArticles();
       })["catch"](function (err) {
         console.log(err); // location.reload()
       });
@@ -2441,12 +2450,12 @@ __webpack_require__.r(__webpack_exports__);
       $('#listado-edit-article').modal('show');
     },
     updateArticle: function updateArticle(article) {
-      var _this5 = this;
+      var _this6 = this;
 
       axios.put('articles/' + this.article.id, {
         article: article
       }).then(function (res) {
-        _this5.getArticles(1);
+        _this6.getArticles(1);
 
         $('#listado-edit-article').modal('hide');
         console.log(res.data);
@@ -2462,12 +2471,12 @@ __webpack_require__.r(__webpack_exports__);
       $('#listado-delete-article').modal('show');
     },
     destroyArticle: function destroyArticle(article_id) {
-      var _this6 = this;
+      var _this7 = this;
 
       axios["delete"]('articles/' + article_id).then(function (res) {
         $('#listado-delete-article').modal('hide');
 
-        _this6.getArticles(1);
+        _this7.getArticles(1);
 
         toastr.success('Artículo eliminado con exito');
       })["catch"](function (err) {
@@ -2495,13 +2504,13 @@ __webpack_require__.r(__webpack_exports__);
       this.filtro.providers = [];
     },
     getProviders: function getProviders() {
-      var _this7 = this;
+      var _this8 = this;
 
       axios.get('providers').then(function (res) {
-        _this7.providers = res.data;
+        _this8.providers = res.data;
 
-        _this7.providers.forEach(function (p) {
-          _this7.filtro.providers.push(p.name);
+        _this8.providers.forEach(function (p) {
+          _this8.filtro.providers.push(p.name);
         });
       })["catch"](function (err) {
         console.log(err);
@@ -2743,23 +2752,73 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['rol', 'idsArticles'],
+  props: ['rol', 'idsArticles', 'filtro'],
   data: function data() {
     return {
       articulosADescargar: 'esta-pagina',
-      columnasParaImprimir: ['name', 'cost', 'price', 'created_at']
+      columnasParaImprimir: ['name', 'cost', 'price', 'created_at'],
+      orientation: 'normal',
+      // design: 'blanco-negro',
+      header: ['date', 'company_name']
     };
   },
   methods: {
-    pdf: function pdf() {
-      this.$emit('generatePdf', this.columnasParaImprimir);
-    },
-    getColumns: function getColumns() {
-      return this.columnasParaImprimir.join('-');
-    },
     getLink: function getLink() {
-      var link = 'pdf/' + this.columnasParaImprimir.join('-') + '/';
+      var link = 'pdf/' + this.getColumnasParaImpirimir().join('-') + '/';
 
       if (this.articulosADescargar == 'esta-pagina') {
         this.idsArticles.forEach(function (id) {
@@ -2770,7 +2829,50 @@ __webpack_require__.r(__webpack_exports__);
         link += 'todos';
       }
 
+      link += '/' + this.orientation + '/';
+
+      if (this.header.length) {
+        link += this.header.join('-');
+      }
+
       return link;
+    },
+    getColumnasParaImpirimir: function getColumnasParaImpirimir() {
+      var columns = [];
+
+      if (this.columnasParaImprimir.includes('bar_code')) {
+        columns.push('bar_code');
+      }
+
+      if (this.columnasParaImprimir.includes('name')) {
+        columns.push('name');
+      }
+
+      if (this.columnasParaImprimir.includes('cost')) {
+        columns.push('cost');
+      }
+
+      if (this.columnasParaImprimir.includes('price')) {
+        columns.push('price');
+      }
+
+      if (this.columnasParaImprimir.includes('previus_price')) {
+        columns.push('previus_price');
+      }
+
+      if (this.columnasParaImprimir.includes('stock')) {
+        columns.push('stock');
+      }
+
+      if (this.columnasParaImprimir.includes('created_at')) {
+        columns.push('created_at');
+      }
+
+      if (this.columnasParaImprimir.includes('updated_at')) {
+        columns.push('updated_at');
+      }
+
+      return columns;
     }
   }
 });
@@ -57902,7 +58004,11 @@ var render = function() {
       }),
       _vm._v(" "),
       _c("descargar-pdf", {
-        attrs: { rol: _vm.rol, "ids-articles": _vm.idsArticles }
+        attrs: {
+          rol: _vm.rol,
+          "ids-articles": _vm.idsArticles,
+          filtro: _vm.filtro
+        }
       }),
       _vm._v(" "),
       _c("filtrar", {
@@ -58634,652 +58740,870 @@ var render = function() {
           _c("div", { staticClass: "modal-body" }, [
             _c("div", { staticClass: "row" }, [
               _c("div", { staticClass: "col" }, [
-                _c("h5", [_vm._v("¿Que artículos quiere descargar?")]),
-                _vm._v(" "),
-                _c("div", { staticClass: "custom-control custom-radio" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.articulosADescargar,
-                        expression: "articulosADescargar"
-                      }
-                    ],
-                    staticClass: "custom-control-input",
-                    attrs: {
-                      type: "radio",
-                      value: "todos",
-                      id: "todos",
-                      name: "customRadio"
-                    },
-                    domProps: {
-                      checked: _vm._q(_vm.articulosADescargar, "todos")
-                    },
-                    on: {
-                      change: function($event) {
-                        _vm.articulosADescargar = "todos"
-                      }
-                    }
-                  }),
+                _c("div", { staticClass: "card" }, [
+                  _vm._m(1),
                   _vm._v(" "),
-                  _c(
-                    "label",
-                    {
-                      staticClass: "custom-control-label",
-                      attrs: { for: "todos" }
-                    },
-                    [_vm._v("Todos")]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "custom-control custom-radio" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.articulosADescargar,
-                        expression: "articulosADescargar"
-                      }
-                    ],
-                    staticClass: "custom-control-input",
-                    attrs: {
-                      type: "radio",
-                      value: "esta-pagina",
-                      id: "esta-pagina",
-                      name: "customRadio"
-                    },
-                    domProps: {
-                      checked: _vm._q(_vm.articulosADescargar, "esta-pagina")
-                    },
-                    on: {
-                      change: function($event) {
-                        _vm.articulosADescargar = "esta-pagina"
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "label",
-                    {
-                      staticClass: "custom-control-label",
-                      attrs: { for: "esta-pagina" }
-                    },
-                    [_vm._v("Solo los de esta página")]
-                  )
+                  _c("div", { staticClass: "card-body" }, [
+                    _c("div", { staticClass: "custom-control custom-radio" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.articulosADescargar,
+                            expression: "articulosADescargar"
+                          }
+                        ],
+                        staticClass: "custom-control-input",
+                        attrs: {
+                          type: "radio",
+                          value: "todos",
+                          id: "todos",
+                          name: "customRadio"
+                        },
+                        domProps: {
+                          checked: _vm._q(_vm.articulosADescargar, "todos")
+                        },
+                        on: {
+                          change: function($event) {
+                            _vm.articulosADescargar = "todos"
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "label",
+                        {
+                          staticClass: "custom-control-label",
+                          attrs: { for: "todos" }
+                        },
+                        [_vm._v("Todos")]
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "custom-control custom-radio" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.articulosADescargar,
+                            expression: "articulosADescargar"
+                          }
+                        ],
+                        staticClass: "custom-control-input",
+                        attrs: {
+                          type: "radio",
+                          value: "esta-pagina",
+                          id: "esta-pagina",
+                          name: "customRadio"
+                        },
+                        domProps: {
+                          checked: _vm._q(
+                            _vm.articulosADescargar,
+                            "esta-pagina"
+                          )
+                        },
+                        on: {
+                          change: function($event) {
+                            _vm.articulosADescargar = "esta-pagina"
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "label",
+                        {
+                          staticClass: "custom-control-label",
+                          attrs: { for: "esta-pagina" }
+                        },
+                        [_vm._v("Solo los de esta página")]
+                      )
+                    ])
+                  ])
                 ])
               ])
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "row m-t-10" }, [
               _c("div", { staticClass: "col" }, [
-                _c("h5", [_vm._v("¿Que columnas quiere que se muestren?")]),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "custom-control custom-checkbox my-1 mr-sm-2"
-                  },
-                  [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.columnasParaImprimir,
-                          expression: "columnasParaImprimir"
-                        }
-                      ],
-                      staticClass: "custom-control-input",
-                      attrs: {
-                        type: "checkbox",
-                        value: "bar_code",
-                        id: "bar_code"
-                      },
-                      domProps: {
-                        checked: Array.isArray(_vm.columnasParaImprimir)
-                          ? _vm._i(_vm.columnasParaImprimir, "bar_code") > -1
-                          : _vm.columnasParaImprimir
-                      },
-                      on: {
-                        change: function($event) {
-                          var $$a = _vm.columnasParaImprimir,
-                            $$el = $event.target,
-                            $$c = $$el.checked ? true : false
-                          if (Array.isArray($$a)) {
-                            var $$v = "bar_code",
-                              $$i = _vm._i($$a, $$v)
-                            if ($$el.checked) {
-                              $$i < 0 &&
-                                (_vm.columnasParaImprimir = $$a.concat([$$v]))
-                            } else {
-                              $$i > -1 &&
-                                (_vm.columnasParaImprimir = $$a
-                                  .slice(0, $$i)
-                                  .concat($$a.slice($$i + 1)))
-                            }
-                          } else {
-                            _vm.columnasParaImprimir = $$c
-                          }
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
+                _c("div", { staticClass: "card" }, [
+                  _vm._m(2),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "card-body" }, [
                     _c(
-                      "label",
+                      "div",
                       {
-                        staticClass: "custom-control-label",
-                        attrs: { for: "bar_code" }
-                      },
-                      [_vm._v("Codigo de barras")]
-                    )
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "custom-control custom-checkbox my-1 mr-sm-2"
-                  },
-                  [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.columnasParaImprimir,
-                          expression: "columnasParaImprimir"
-                        }
-                      ],
-                      staticClass: "custom-control-input",
-                      attrs: { type: "checkbox", value: "name", id: "nombre" },
-                      domProps: {
-                        checked: Array.isArray(_vm.columnasParaImprimir)
-                          ? _vm._i(_vm.columnasParaImprimir, "name") > -1
-                          : _vm.columnasParaImprimir
-                      },
-                      on: {
-                        change: function($event) {
-                          var $$a = _vm.columnasParaImprimir,
-                            $$el = $event.target,
-                            $$c = $$el.checked ? true : false
-                          if (Array.isArray($$a)) {
-                            var $$v = "name",
-                              $$i = _vm._i($$a, $$v)
-                            if ($$el.checked) {
-                              $$i < 0 &&
-                                (_vm.columnasParaImprimir = $$a.concat([$$v]))
-                            } else {
-                              $$i > -1 &&
-                                (_vm.columnasParaImprimir = $$a
-                                  .slice(0, $$i)
-                                  .concat($$a.slice($$i + 1)))
-                            }
-                          } else {
-                            _vm.columnasParaImprimir = $$c
-                          }
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "label",
-                      {
-                        staticClass: "custom-control-label",
-                        attrs: { for: "nombre" }
-                      },
-                      [_vm._v("\r\n                Nombre\r\n              ")]
-                    )
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "custom-control custom-checkbox my-1 mr-sm-2"
-                  },
-                  [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.columnasParaImprimir,
-                          expression: "columnasParaImprimir"
-                        }
-                      ],
-                      staticClass: "custom-control-input",
-                      attrs: { type: "checkbox", value: "cost", id: "costo" },
-                      domProps: {
-                        checked: Array.isArray(_vm.columnasParaImprimir)
-                          ? _vm._i(_vm.columnasParaImprimir, "cost") > -1
-                          : _vm.columnasParaImprimir
-                      },
-                      on: {
-                        change: function($event) {
-                          var $$a = _vm.columnasParaImprimir,
-                            $$el = $event.target,
-                            $$c = $$el.checked ? true : false
-                          if (Array.isArray($$a)) {
-                            var $$v = "cost",
-                              $$i = _vm._i($$a, $$v)
-                            if ($$el.checked) {
-                              $$i < 0 &&
-                                (_vm.columnasParaImprimir = $$a.concat([$$v]))
-                            } else {
-                              $$i > -1 &&
-                                (_vm.columnasParaImprimir = $$a
-                                  .slice(0, $$i)
-                                  .concat($$a.slice($$i + 1)))
-                            }
-                          } else {
-                            _vm.columnasParaImprimir = $$c
-                          }
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "label",
-                      {
-                        staticClass: "custom-control-label",
-                        attrs: { for: "costo" }
-                      },
-                      [_vm._v("\r\n                Costo\r\n              ")]
-                    )
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "custom-control custom-checkbox my-1 mr-sm-2"
-                  },
-                  [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.columnasParaImprimir,
-                          expression: "columnasParaImprimir"
-                        }
-                      ],
-                      staticClass: "custom-control-input",
-                      attrs: { type: "checkbox", value: "price", id: "precio" },
-                      domProps: {
-                        checked: Array.isArray(_vm.columnasParaImprimir)
-                          ? _vm._i(_vm.columnasParaImprimir, "price") > -1
-                          : _vm.columnasParaImprimir
-                      },
-                      on: {
-                        change: function($event) {
-                          var $$a = _vm.columnasParaImprimir,
-                            $$el = $event.target,
-                            $$c = $$el.checked ? true : false
-                          if (Array.isArray($$a)) {
-                            var $$v = "price",
-                              $$i = _vm._i($$a, $$v)
-                            if ($$el.checked) {
-                              $$i < 0 &&
-                                (_vm.columnasParaImprimir = $$a.concat([$$v]))
-                            } else {
-                              $$i > -1 &&
-                                (_vm.columnasParaImprimir = $$a
-                                  .slice(0, $$i)
-                                  .concat($$a.slice($$i + 1)))
-                            }
-                          } else {
-                            _vm.columnasParaImprimir = $$c
-                          }
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "label",
-                      {
-                        staticClass: "custom-control-label",
-                        attrs: { for: "precio" }
-                      },
-                      [_vm._v("\r\n                Precio\r\n              ")]
-                    )
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "custom-control custom-checkbox my-1 mr-sm-2"
-                  },
-                  [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.columnasParaImprimir,
-                          expression: "columnasParaImprimir"
-                        }
-                      ],
-                      staticClass: "custom-control-input",
-                      attrs: {
-                        type: "checkbox",
-                        value: "previus_price",
-                        id: "precio"
-                      },
-                      domProps: {
-                        checked: Array.isArray(_vm.columnasParaImprimir)
-                          ? _vm._i(_vm.columnasParaImprimir, "previus_price") >
-                            -1
-                          : _vm.columnasParaImprimir
-                      },
-                      on: {
-                        change: function($event) {
-                          var $$a = _vm.columnasParaImprimir,
-                            $$el = $event.target,
-                            $$c = $$el.checked ? true : false
-                          if (Array.isArray($$a)) {
-                            var $$v = "previus_price",
-                              $$i = _vm._i($$a, $$v)
-                            if ($$el.checked) {
-                              $$i < 0 &&
-                                (_vm.columnasParaImprimir = $$a.concat([$$v]))
-                            } else {
-                              $$i > -1 &&
-                                (_vm.columnasParaImprimir = $$a
-                                  .slice(0, $$i)
-                                  .concat($$a.slice($$i + 1)))
-                            }
-                          } else {
-                            _vm.columnasParaImprimir = $$c
-                          }
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "label",
-                      {
-                        staticClass: "custom-control-label",
-                        attrs: { for: "precio" }
+                        staticClass:
+                          "custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2"
                       },
                       [
-                        _vm._v(
-                          "\r\n                Precio anterior\r\n              "
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.columnasParaImprimir,
+                              expression: "columnasParaImprimir"
+                            }
+                          ],
+                          staticClass: "custom-control-input",
+                          attrs: {
+                            type: "checkbox",
+                            value: "bar_code",
+                            id: "bar_code"
+                          },
+                          domProps: {
+                            checked: Array.isArray(_vm.columnasParaImprimir)
+                              ? _vm._i(_vm.columnasParaImprimir, "bar_code") >
+                                -1
+                              : _vm.columnasParaImprimir
+                          },
+                          on: {
+                            change: function($event) {
+                              var $$a = _vm.columnasParaImprimir,
+                                $$el = $event.target,
+                                $$c = $$el.checked ? true : false
+                              if (Array.isArray($$a)) {
+                                var $$v = "bar_code",
+                                  $$i = _vm._i($$a, $$v)
+                                if ($$el.checked) {
+                                  $$i < 0 &&
+                                    (_vm.columnasParaImprimir = $$a.concat([
+                                      $$v
+                                    ]))
+                                } else {
+                                  $$i > -1 &&
+                                    (_vm.columnasParaImprimir = $$a
+                                      .slice(0, $$i)
+                                      .concat($$a.slice($$i + 1)))
+                                }
+                              } else {
+                                _vm.columnasParaImprimir = $$c
+                              }
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "label",
+                          {
+                            staticClass: "custom-control-label",
+                            attrs: { for: "bar_code" }
+                          },
+                          [_vm._v("Codigo de barras")]
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2"
+                      },
+                      [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.columnasParaImprimir,
+                              expression: "columnasParaImprimir"
+                            }
+                          ],
+                          staticClass: "custom-control-input",
+                          attrs: {
+                            type: "checkbox",
+                            value: "name",
+                            id: "name"
+                          },
+                          domProps: {
+                            checked: Array.isArray(_vm.columnasParaImprimir)
+                              ? _vm._i(_vm.columnasParaImprimir, "name") > -1
+                              : _vm.columnasParaImprimir
+                          },
+                          on: {
+                            change: function($event) {
+                              var $$a = _vm.columnasParaImprimir,
+                                $$el = $event.target,
+                                $$c = $$el.checked ? true : false
+                              if (Array.isArray($$a)) {
+                                var $$v = "name",
+                                  $$i = _vm._i($$a, $$v)
+                                if ($$el.checked) {
+                                  $$i < 0 &&
+                                    (_vm.columnasParaImprimir = $$a.concat([
+                                      $$v
+                                    ]))
+                                } else {
+                                  $$i > -1 &&
+                                    (_vm.columnasParaImprimir = $$a
+                                      .slice(0, $$i)
+                                      .concat($$a.slice($$i + 1)))
+                                }
+                              } else {
+                                _vm.columnasParaImprimir = $$c
+                              }
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "label",
+                          {
+                            staticClass: "custom-control-label",
+                            attrs: { for: "name" }
+                          },
+                          [
+                            _vm._v(
+                              "\r\n                    Nombre\r\n                  "
+                            )
+                          ]
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2"
+                      },
+                      [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.columnasParaImprimir,
+                              expression: "columnasParaImprimir"
+                            }
+                          ],
+                          staticClass: "custom-control-input",
+                          attrs: {
+                            type: "checkbox",
+                            value: "cost",
+                            id: "cost"
+                          },
+                          domProps: {
+                            checked: Array.isArray(_vm.columnasParaImprimir)
+                              ? _vm._i(_vm.columnasParaImprimir, "cost") > -1
+                              : _vm.columnasParaImprimir
+                          },
+                          on: {
+                            change: function($event) {
+                              var $$a = _vm.columnasParaImprimir,
+                                $$el = $event.target,
+                                $$c = $$el.checked ? true : false
+                              if (Array.isArray($$a)) {
+                                var $$v = "cost",
+                                  $$i = _vm._i($$a, $$v)
+                                if ($$el.checked) {
+                                  $$i < 0 &&
+                                    (_vm.columnasParaImprimir = $$a.concat([
+                                      $$v
+                                    ]))
+                                } else {
+                                  $$i > -1 &&
+                                    (_vm.columnasParaImprimir = $$a
+                                      .slice(0, $$i)
+                                      .concat($$a.slice($$i + 1)))
+                                }
+                              } else {
+                                _vm.columnasParaImprimir = $$c
+                              }
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "label",
+                          {
+                            staticClass: "custom-control-label",
+                            attrs: { for: "cost" }
+                          },
+                          [
+                            _vm._v(
+                              "\r\n                    Costo\r\n                  "
+                            )
+                          ]
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2"
+                      },
+                      [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.columnasParaImprimir,
+                              expression: "columnasParaImprimir"
+                            }
+                          ],
+                          staticClass: "custom-control-input",
+                          attrs: {
+                            type: "checkbox",
+                            value: "price",
+                            id: "price"
+                          },
+                          domProps: {
+                            checked: Array.isArray(_vm.columnasParaImprimir)
+                              ? _vm._i(_vm.columnasParaImprimir, "price") > -1
+                              : _vm.columnasParaImprimir
+                          },
+                          on: {
+                            change: function($event) {
+                              var $$a = _vm.columnasParaImprimir,
+                                $$el = $event.target,
+                                $$c = $$el.checked ? true : false
+                              if (Array.isArray($$a)) {
+                                var $$v = "price",
+                                  $$i = _vm._i($$a, $$v)
+                                if ($$el.checked) {
+                                  $$i < 0 &&
+                                    (_vm.columnasParaImprimir = $$a.concat([
+                                      $$v
+                                    ]))
+                                } else {
+                                  $$i > -1 &&
+                                    (_vm.columnasParaImprimir = $$a
+                                      .slice(0, $$i)
+                                      .concat($$a.slice($$i + 1)))
+                                }
+                              } else {
+                                _vm.columnasParaImprimir = $$c
+                              }
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "label",
+                          {
+                            staticClass: "custom-control-label",
+                            attrs: { for: "price" }
+                          },
+                          [
+                            _vm._v(
+                              "\r\n                    Precio\r\n                  "
+                            )
+                          ]
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2"
+                      },
+                      [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.columnasParaImprimir,
+                              expression: "columnasParaImprimir"
+                            }
+                          ],
+                          staticClass: "custom-control-input",
+                          attrs: {
+                            type: "checkbox",
+                            value: "previus_price",
+                            id: "previus_price"
+                          },
+                          domProps: {
+                            checked: Array.isArray(_vm.columnasParaImprimir)
+                              ? _vm._i(
+                                  _vm.columnasParaImprimir,
+                                  "previus_price"
+                                ) > -1
+                              : _vm.columnasParaImprimir
+                          },
+                          on: {
+                            change: function($event) {
+                              var $$a = _vm.columnasParaImprimir,
+                                $$el = $event.target,
+                                $$c = $$el.checked ? true : false
+                              if (Array.isArray($$a)) {
+                                var $$v = "previus_price",
+                                  $$i = _vm._i($$a, $$v)
+                                if ($$el.checked) {
+                                  $$i < 0 &&
+                                    (_vm.columnasParaImprimir = $$a.concat([
+                                      $$v
+                                    ]))
+                                } else {
+                                  $$i > -1 &&
+                                    (_vm.columnasParaImprimir = $$a
+                                      .slice(0, $$i)
+                                      .concat($$a.slice($$i + 1)))
+                                }
+                              } else {
+                                _vm.columnasParaImprimir = $$c
+                              }
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "label",
+                          {
+                            staticClass: "custom-control-label",
+                            attrs: { for: "previus_price" }
+                          },
+                          [
+                            _vm._v(
+                              "\r\n                    Precio anterior\r\n                  "
+                            )
+                          ]
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2"
+                      },
+                      [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.columnasParaImprimir,
+                              expression: "columnasParaImprimir"
+                            }
+                          ],
+                          staticClass: "custom-control-input",
+                          attrs: {
+                            type: "checkbox",
+                            value: "stock",
+                            id: "stock"
+                          },
+                          domProps: {
+                            checked: Array.isArray(_vm.columnasParaImprimir)
+                              ? _vm._i(_vm.columnasParaImprimir, "stock") > -1
+                              : _vm.columnasParaImprimir
+                          },
+                          on: {
+                            change: function($event) {
+                              var $$a = _vm.columnasParaImprimir,
+                                $$el = $event.target,
+                                $$c = $$el.checked ? true : false
+                              if (Array.isArray($$a)) {
+                                var $$v = "stock",
+                                  $$i = _vm._i($$a, $$v)
+                                if ($$el.checked) {
+                                  $$i < 0 &&
+                                    (_vm.columnasParaImprimir = $$a.concat([
+                                      $$v
+                                    ]))
+                                } else {
+                                  $$i > -1 &&
+                                    (_vm.columnasParaImprimir = $$a
+                                      .slice(0, $$i)
+                                      .concat($$a.slice($$i + 1)))
+                                }
+                              } else {
+                                _vm.columnasParaImprimir = $$c
+                              }
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "label",
+                          {
+                            staticClass: "custom-control-label",
+                            attrs: { for: "stock" }
+                          },
+                          [
+                            _vm._v(
+                              "\r\n                    Stock\r\n                  "
+                            )
+                          ]
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2"
+                      },
+                      [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.columnasParaImprimir,
+                              expression: "columnasParaImprimir"
+                            }
+                          ],
+                          staticClass: "custom-control-input",
+                          attrs: {
+                            type: "checkbox",
+                            value: "created_at",
+                            id: "created_at"
+                          },
+                          domProps: {
+                            checked: Array.isArray(_vm.columnasParaImprimir)
+                              ? _vm._i(_vm.columnasParaImprimir, "created_at") >
+                                -1
+                              : _vm.columnasParaImprimir
+                          },
+                          on: {
+                            change: function($event) {
+                              var $$a = _vm.columnasParaImprimir,
+                                $$el = $event.target,
+                                $$c = $$el.checked ? true : false
+                              if (Array.isArray($$a)) {
+                                var $$v = "created_at",
+                                  $$i = _vm._i($$a, $$v)
+                                if ($$el.checked) {
+                                  $$i < 0 &&
+                                    (_vm.columnasParaImprimir = $$a.concat([
+                                      $$v
+                                    ]))
+                                } else {
+                                  $$i > -1 &&
+                                    (_vm.columnasParaImprimir = $$a
+                                      .slice(0, $$i)
+                                      .concat($$a.slice($$i + 1)))
+                                }
+                              } else {
+                                _vm.columnasParaImprimir = $$c
+                              }
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "label",
+                          {
+                            staticClass: "custom-control-label",
+                            attrs: { for: "created_at" }
+                          },
+                          [
+                            _vm._v(
+                              "\r\n                    Fecha en que se agrego\r\n                  "
+                            )
+                          ]
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2"
+                      },
+                      [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.columnasParaImprimir,
+                              expression: "columnasParaImprimir"
+                            }
+                          ],
+                          staticClass: "custom-control-input",
+                          attrs: {
+                            type: "checkbox",
+                            value: "updated_at",
+                            id: "updated_at"
+                          },
+                          domProps: {
+                            checked: Array.isArray(_vm.columnasParaImprimir)
+                              ? _vm._i(_vm.columnasParaImprimir, "updated_at") >
+                                -1
+                              : _vm.columnasParaImprimir
+                          },
+                          on: {
+                            change: function($event) {
+                              var $$a = _vm.columnasParaImprimir,
+                                $$el = $event.target,
+                                $$c = $$el.checked ? true : false
+                              if (Array.isArray($$a)) {
+                                var $$v = "updated_at",
+                                  $$i = _vm._i($$a, $$v)
+                                if ($$el.checked) {
+                                  $$i < 0 &&
+                                    (_vm.columnasParaImprimir = $$a.concat([
+                                      $$v
+                                    ]))
+                                } else {
+                                  $$i > -1 &&
+                                    (_vm.columnasParaImprimir = $$a
+                                      .slice(0, $$i)
+                                      .concat($$a.slice($$i + 1)))
+                                }
+                              } else {
+                                _vm.columnasParaImprimir = $$c
+                              }
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "label",
+                          {
+                            staticClass: "custom-control-label",
+                            attrs: { for: "updated_at" }
+                          },
+                          [
+                            _vm._v(
+                              "\r\n                    Ultima fecha en que se actualizo\r\n                  "
+                            )
+                          ]
                         )
                       ]
                     )
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "custom-control custom-checkbox my-1 mr-sm-2"
-                  },
-                  [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.columnasParaImprimir,
-                          expression: "columnasParaImprimir"
-                        }
-                      ],
-                      staticClass: "custom-control-input",
-                      attrs: { type: "checkbox", value: "stock", id: "precio" },
-                      domProps: {
-                        checked: Array.isArray(_vm.columnasParaImprimir)
-                          ? _vm._i(_vm.columnasParaImprimir, "stock") > -1
-                          : _vm.columnasParaImprimir
-                      },
-                      on: {
-                        change: function($event) {
-                          var $$a = _vm.columnasParaImprimir,
-                            $$el = $event.target,
-                            $$c = $$el.checked ? true : false
-                          if (Array.isArray($$a)) {
-                            var $$v = "stock",
-                              $$i = _vm._i($$a, $$v)
-                            if ($$el.checked) {
-                              $$i < 0 &&
-                                (_vm.columnasParaImprimir = $$a.concat([$$v]))
-                            } else {
-                              $$i > -1 &&
-                                (_vm.columnasParaImprimir = $$a
-                                  .slice(0, $$i)
-                                  .concat($$a.slice($$i + 1)))
-                            }
-                          } else {
-                            _vm.columnasParaImprimir = $$c
-                          }
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "label",
-                      {
-                        staticClass: "custom-control-label",
-                        attrs: { for: "precio" }
-                      },
-                      [_vm._v("\r\n                Stock\r\n              ")]
-                    )
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    directives: [
-                      {
-                        name: "show",
-                        rawName: "v-show",
-                        value: _vm.rol == "commerce",
-                        expression: "rol == 'commerce'"
-                      }
-                    ],
-                    staticClass: "custom-control custom-checkbox my-1 mr-sm-2"
-                  },
-                  [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.columnasParaImprimir,
-                          expression: "columnasParaImprimir"
-                        }
-                      ],
-                      staticClass: "custom-control-input",
-                      attrs: {
-                        type: "checkbox",
-                        value: "providers",
-                        id: "precio"
-                      },
-                      domProps: {
-                        checked: Array.isArray(_vm.columnasParaImprimir)
-                          ? _vm._i(_vm.columnasParaImprimir, "providers") > -1
-                          : _vm.columnasParaImprimir
-                      },
-                      on: {
-                        change: function($event) {
-                          var $$a = _vm.columnasParaImprimir,
-                            $$el = $event.target,
-                            $$c = $$el.checked ? true : false
-                          if (Array.isArray($$a)) {
-                            var $$v = "providers",
-                              $$i = _vm._i($$a, $$v)
-                            if ($$el.checked) {
-                              $$i < 0 &&
-                                (_vm.columnasParaImprimir = $$a.concat([$$v]))
-                            } else {
-                              $$i > -1 &&
-                                (_vm.columnasParaImprimir = $$a
-                                  .slice(0, $$i)
-                                  .concat($$a.slice($$i + 1)))
-                            }
-                          } else {
-                            _vm.columnasParaImprimir = $$c
-                          }
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "label",
-                      {
-                        staticClass: "custom-control-label",
-                        attrs: { for: "precio" }
-                      },
-                      [
-                        _vm._v(
-                          "\r\n                Proveedores\r\n              "
-                        )
-                      ]
-                    )
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "custom-control custom-checkbox my-1 mr-sm-2"
-                  },
-                  [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.columnasParaImprimir,
-                          expression: "columnasParaImprimir"
-                        }
-                      ],
-                      staticClass: "custom-control-input",
-                      attrs: {
-                        type: "checkbox",
-                        value: "created_at",
-                        id: "created_at"
-                      },
-                      domProps: {
-                        checked: Array.isArray(_vm.columnasParaImprimir)
-                          ? _vm._i(_vm.columnasParaImprimir, "created_at") > -1
-                          : _vm.columnasParaImprimir
-                      },
-                      on: {
-                        change: function($event) {
-                          var $$a = _vm.columnasParaImprimir,
-                            $$el = $event.target,
-                            $$c = $$el.checked ? true : false
-                          if (Array.isArray($$a)) {
-                            var $$v = "created_at",
-                              $$i = _vm._i($$a, $$v)
-                            if ($$el.checked) {
-                              $$i < 0 &&
-                                (_vm.columnasParaImprimir = $$a.concat([$$v]))
-                            } else {
-                              $$i > -1 &&
-                                (_vm.columnasParaImprimir = $$a
-                                  .slice(0, $$i)
-                                  .concat($$a.slice($$i + 1)))
-                            }
-                          } else {
-                            _vm.columnasParaImprimir = $$c
-                          }
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "label",
-                      {
-                        staticClass: "custom-control-label",
-                        attrs: { for: "created_at" }
-                      },
-                      [
-                        _vm._v(
-                          "\r\n                Fecha en que se agrego\r\n              "
-                        )
-                      ]
-                    )
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "custom-control custom-checkbox my-1 mr-sm-2"
-                  },
-                  [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.columnasParaImprimir,
-                          expression: "columnasParaImprimir"
-                        }
-                      ],
-                      staticClass: "custom-control-input",
-                      attrs: {
-                        type: "checkbox",
-                        value: "updated_at",
-                        id: "updated_at"
-                      },
-                      domProps: {
-                        checked: Array.isArray(_vm.columnasParaImprimir)
-                          ? _vm._i(_vm.columnasParaImprimir, "updated_at") > -1
-                          : _vm.columnasParaImprimir
-                      },
-                      on: {
-                        change: function($event) {
-                          var $$a = _vm.columnasParaImprimir,
-                            $$el = $event.target,
-                            $$c = $$el.checked ? true : false
-                          if (Array.isArray($$a)) {
-                            var $$v = "updated_at",
-                              $$i = _vm._i($$a, $$v)
-                            if ($$el.checked) {
-                              $$i < 0 &&
-                                (_vm.columnasParaImprimir = $$a.concat([$$v]))
-                            } else {
-                              $$i > -1 &&
-                                (_vm.columnasParaImprimir = $$a
-                                  .slice(0, $$i)
-                                  .concat($$a.slice($$i + 1)))
-                            }
-                          } else {
-                            _vm.columnasParaImprimir = $$c
-                          }
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "label",
-                      {
-                        staticClass: "custom-control-label",
-                        attrs: { for: "updated_at" }
-                      },
-                      [
-                        _vm._v(
-                          "\r\n                Ultima fecha en que se actualizo\r\n              "
-                        )
-                      ]
-                    )
-                  ]
-                )
+                  ])
+                ])
               ])
             ]),
             _vm._v(" "),
-            _vm._m(1),
-            _vm._v(
-              "\r\n        " + _vm._s(_vm.columnasParaImprimir) + "\r\n      "
-            )
+            _c("div", { staticClass: "row m-t-10" }, [
+              _c("div", { staticClass: "col" }, [
+                _c("div", { staticClass: "card" }, [
+                  _vm._m(3),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "card-body" }, [
+                    _c("div", { staticClass: "custom-control custom-radio" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.orientation,
+                            expression: "orientation"
+                          }
+                        ],
+                        staticClass: "custom-control-input",
+                        attrs: {
+                          type: "radio",
+                          value: "normal",
+                          id: "normal",
+                          name: "normal"
+                        },
+                        domProps: {
+                          checked: _vm._q(_vm.orientation, "normal")
+                        },
+                        on: {
+                          change: function($event) {
+                            _vm.orientation = "normal"
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "label",
+                        {
+                          staticClass: "custom-control-label",
+                          attrs: { for: "normal" }
+                        },
+                        [_vm._v("Normal")]
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "custom-control custom-radio" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.orientation,
+                            expression: "orientation"
+                          }
+                        ],
+                        staticClass: "custom-control-input",
+                        attrs: {
+                          type: "radio",
+                          value: "apaisado",
+                          id: "apaisado",
+                          name: "apaisado"
+                        },
+                        domProps: {
+                          checked: _vm._q(_vm.orientation, "apaisado")
+                        },
+                        on: {
+                          change: function($event) {
+                            _vm.orientation = "apaisado"
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "label",
+                        {
+                          staticClass: "custom-control-label",
+                          attrs: { for: "apaisado" }
+                        },
+                        [_vm._v("Apaisado")]
+                      )
+                    ])
+                  ])
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "row m-t-10" }, [
+              _c("div", { staticClass: "col" }, [
+                _c("div", { staticClass: "card" }, [
+                  _vm._m(4),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "card-body" }, [
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "custom-control custom-checkbox my-1 mr-sm-2"
+                      },
+                      [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.header,
+                              expression: "header"
+                            }
+                          ],
+                          staticClass: "custom-control-input",
+                          attrs: {
+                            type: "checkbox",
+                            value: "date",
+                            id: "date"
+                          },
+                          domProps: {
+                            checked: Array.isArray(_vm.header)
+                              ? _vm._i(_vm.header, "date") > -1
+                              : _vm.header
+                          },
+                          on: {
+                            change: function($event) {
+                              var $$a = _vm.header,
+                                $$el = $event.target,
+                                $$c = $$el.checked ? true : false
+                              if (Array.isArray($$a)) {
+                                var $$v = "date",
+                                  $$i = _vm._i($$a, $$v)
+                                if ($$el.checked) {
+                                  $$i < 0 && (_vm.header = $$a.concat([$$v]))
+                                } else {
+                                  $$i > -1 &&
+                                    (_vm.header = $$a
+                                      .slice(0, $$i)
+                                      .concat($$a.slice($$i + 1)))
+                                }
+                              } else {
+                                _vm.header = $$c
+                              }
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "label",
+                          {
+                            staticClass: "custom-control-label",
+                            attrs: { for: "date" }
+                          },
+                          [
+                            _vm._v(
+                              "\r\n                    Fecha\r\n                  "
+                            )
+                          ]
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "custom-control custom-checkbox my-1 mr-sm-2"
+                      },
+                      [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.header,
+                              expression: "header"
+                            }
+                          ],
+                          staticClass: "custom-control-input",
+                          attrs: {
+                            type: "checkbox",
+                            value: "company_name",
+                            id: "company_name"
+                          },
+                          domProps: {
+                            checked: Array.isArray(_vm.header)
+                              ? _vm._i(_vm.header, "company_name") > -1
+                              : _vm.header
+                          },
+                          on: {
+                            change: function($event) {
+                              var $$a = _vm.header,
+                                $$el = $event.target,
+                                $$c = $$el.checked ? true : false
+                              if (Array.isArray($$a)) {
+                                var $$v = "company_name",
+                                  $$i = _vm._i($$a, $$v)
+                                if ($$el.checked) {
+                                  $$i < 0 && (_vm.header = $$a.concat([$$v]))
+                                } else {
+                                  $$i > -1 &&
+                                    (_vm.header = $$a
+                                      .slice(0, $$i)
+                                      .concat($$a.slice($$i + 1)))
+                                }
+                              } else {
+                                _vm.header = $$c
+                              }
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "label",
+                          {
+                            staticClass: "custom-control-label",
+                            attrs: { for: "company_name" }
+                          },
+                          [
+                            _vm._v(
+                              "\r\n                    Nombre del negocio\r\n                  "
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  ])
+                ])
+              ])
+            ])
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "modal-footer" }, [
@@ -59312,7 +59636,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "modal-header" }, [
-      _c("h5", { staticClass: "modal-title" }, [
+      _c("h6", { staticClass: "modal-title" }, [
         _vm._v("Descargar mis artículos")
       ]),
       _vm._v(" "),
@@ -59334,12 +59658,36 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col" }, [
-      _c("small", { staticClass: "form-text text-muted" }, [
-        _vm._v(
-          "\r\n            Puede imprimir un maximo de 7 columnas  \r\n          "
-        )
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h6", { staticClass: "m-0" }, [
+        _vm._v("¿Que artículos quiere descargar?")
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h6", { staticClass: "m-0" }, [
+        _vm._v("¿Que columnas quiere que se muestren?")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h6", { staticClass: "m-0" }, [_vm._v("Horientación")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h6", { staticClass: "m-0" }, [_vm._v("Encabezado")])
     ])
   }
 ]
@@ -73171,15 +73519,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!*****************************************************************!*\
   !*** ./resources/js/components/listado/common/DescargarPdf.vue ***!
   \*****************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _DescargarPdf_vue_vue_type_template_id_3687a304___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DescargarPdf.vue?vue&type=template&id=3687a304& */ "./resources/js/components/listado/common/DescargarPdf.vue?vue&type=template&id=3687a304&");
 /* harmony import */ var _DescargarPdf_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DescargarPdf.vue?vue&type=script&lang=js& */ "./resources/js/components/listado/common/DescargarPdf.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _DescargarPdf_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _DescargarPdf_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -73209,7 +73556,7 @@ component.options.__file = "resources/js/components/listado/common/DescargarPdf.
 /*!******************************************************************************************!*\
   !*** ./resources/js/components/listado/common/DescargarPdf.vue?vue&type=script&lang=js& ***!
   \******************************************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

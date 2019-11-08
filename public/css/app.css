@@ -15929,6 +15929,7 @@ a.text-dark:focus {
 
 .btn-listado {
   font-size: 1.5rem;
+  padding: 0;
 }
 
 .btn-listado-edit {
@@ -15954,6 +15955,11 @@ a.text-dark:focus {
 .custom-control-inline {
   width: 25%;
   text-align: center;
+}
+
+.custom-control-inline-50 {
+  display: inline-block;
+  width: 40%;
 }
 
 .label-block {

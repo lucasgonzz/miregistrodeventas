@@ -7,7 +7,8 @@
 	<confirmar-eliminacion :article="article" 
 							@destroyArticle="destroyArticle"></confirmar-eliminacion>
 	<descargar-pdf :rol="rol" 
-					:ids-articles="idsArticles"></descargar-pdf>
+					:ids-articles="idsArticles"
+					:filtro="filtro"></descargar-pdf>
 	<filtrar :filtro="filtro" 
 				:rol="rol" 
 				:providers="providers"
@@ -240,7 +241,12 @@ export default {
 		since(date) {
 			return moment(date).fromNow()
 		},
-
+		setIdsArticles() {
+			this.idsArticles = []
+			this.articles.forEach( article => {
+				this.idsArticles.push(article.id)
+			})
+		},
 		filter(filtro) {
 			axios.post('articles/filter', {
 				mostrar: filtro.mostrar,
@@ -251,8 +257,9 @@ export default {
 			.then( res => {
 				this.filtrado = true
 				this.articles = res.data
+				this.setIdsArticles()
 				$('#listado-filtrar').modal('hide')
-				console.log(res.data)
+				// console.log(res.data)
 			})
 			.catch( err => {
 				console.log(err)
@@ -305,9 +312,7 @@ export default {
 				this.articles = res.data.articles.data;
 				this.pagination = res.data.pagination;
 				const self = this
-				this.articles.forEach( article => {
-					self.idsArticles.push(article.id)
-				})
+				this.setIdsArticles()
 			})
 			.catch( err => {
 				console.log(err)

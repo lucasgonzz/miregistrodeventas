@@ -9,131 +9,186 @@ use App\Article;
 
 class PdfController extends Controller
 {
-    function articles($columns_string, $idsArticles) {
+    function articles($columns_string, $articles_ids_string, $orientation, $header = null) {
 
-    	$articles = [];
-    	$ids_articles = explode('-', $idsArticles);
-    	$columns = explode('-', $columns_string);
+    	$articles;
+    	if ($articles_ids_string == 'todos') {
+    		$articles = Article::all();
+    	} else {
+    		$articles_ids = explode('-', $articles_ids_string);
+	    	foreach ($articles_ids as $id_article) {
+	    		$articles[] = Article::find($id_article);
+	    	}
+    	}
+    	$columns_ = explode('-', $columns_string);
+    	$columns = [];
 
-    	// dd($columns);
-
-    	foreach ($ids_articles as $id_article) {
-    		$articles[] = Article::find($id_article);
+    	foreach ($columns_ as $column) {
+    		switch ($column) {
+    			case 'bar_code':
+    				$columns['bar_code'] = 35;
+    				break;
+    			case 'name':
+    				$columns['name'] = 50;
+    				break;
+    			case 'cost':
+    				$columns['cost'] = 20;
+    				break;
+    			case 'price':
+    				$columns['price'] = 20;
+    				break;
+    			case 'previus_price':
+    				$columns['previus_price'] = 20;
+    				break;
+    			case 'stock':
+    				$columns['stock'] = 15;
+    				break;
+    			case 'created_at':
+    				$columns['created_at'] = 25;
+    				break;
+    			case 'updated_at':
+    				$columns['updated_at'] = 25;
+    				break;
+    		}
     	}
 
-		$pdf = new Pdf($columns);
+    	if (!is_null($header)) {
+    		$header = explode('-', $header);
+    	}
+		$pdf = new Pdf($orientation, $columns, $header);
 		$pdf->AliasNbPages();
 		$pdf->addPage();
 		$pdf->setFont('Times', '', 14);
-		$pdf->setMargins(10, 0);
 		foreach ($articles as $article) {
-			if (in_array('bar_code', $columns)) {
-				$pdf->Cell(35,10, $article->bar_code, 1);
-			}
-			if (in_array('name', $columns)) {
-				$name = $article->name;
-				if (strlen($name) > 19) {
-					$name = substr($name, 0, 19) . '..';
-					$pdf->Cell(50,10,$name, 1);
+			foreach ($columns as $column => $w) {
+				if ($column=='created_at' || $column=='updated_at') {
+					$pdf->Cell($w,7,date_format($article->{$column}, 'd/m/y'),'B',0,'C');
 				} else {
-					$pdf->Cell(50,10,$name, 1);
+					$align = 'L';
+					if ($column=='name') {
+						if (strlen($article->{$column}) > 19) {
+							$article->{$column} = substr($article->{$column}, 0, 19) . '..';
+						}
+					}
+					if ($column=='price' || $column=='cost' || $column=='previus_price') {
+						$align = 'R';
+						$article->{$column} = $this->price($article->{$column});
+					}
+					if ($column=='stock') {
+						$align = 'R';
+					}
+					$pdf->Cell($w,7,$article->{$column},'B',0,$align);
 				}
 			}
-			if (in_array('cost', $columns)) {
-				$cost = $article->cost;
-				$centavos = explode('.', $cost)[1];
-				if ($centavos == '00') {
-					$cost = explode('.', $cost)[0];
-					$cost = number_format((int)$cost, 0, '', '.');
-				} else {
-					$cost = number_format((int)$cost, 2, ',', '.');
-				}
-				$pdf->Cell(20,10, $cost, 1);
-			}
-			if (in_array('price', $columns)) {
-				$pdf->Cell(20,10, $article->price, 1);
-			}
-			if (in_array('last_price', $columns)) {
-				$pdf->Cell(20,10, $article->last_price, 1);
-			}
-			if (in_array('stock', $columns)) {
-				$pdf->Cell(15,10, $article->stock, 1);
-			}
-			if (in_array('created_at', $columns)) {
-				$pdf->Cell(25,10,date_format($article->created_at, 'd/m/y'),1);
-			}
-			if (in_array('updated_at', $columns)) {
-				$pdf->Cell(25,10,date_format($article->updated_at, 'd/m/y'),1);
-			}
-
-			// $pdf->SetY(10);
-			// $pdf->Cell(20,10,$article->cost,1);
-			// $pdf->Cell(20,10,$article->price,1);
-			// $pdf->Cell(15,10,$article->stock,1);
 			$pdf->Ln();
 		}
 
 		$pdf->Output();
 		exit;
     }
+
+	function price($price) {
+		$centavos = explode('.', $price)[1];
+		$new_price = explode('.', $price)[0];
+		if ($centavos != '00') {
+			$new_price += ".$centavos";
+			return number_format($new_price, 2, ',', '.');
+		} else {
+			return number_format($new_price, 0, '', '.');			
+		}
+	}
 }
 
 
 class Pdf extends fpdf {
 
-	function __construct($columns) {
-		parent::__construct();
+	function __construct($orientation, $columns, $header) {
+		if ($orientation == 'normal') {
+			parent::__construct('P','mm','A4');
+		} else {
+			parent::__construct('L','mm','A4');
+		}
+		$this->orientation = $orientation;
 		$this->columns = $columns;
+		$this->header = $header;
 	}
 
 	function Header() {
+
+		// Margenes
+		$width = 0;
+		foreach ($this->columns as $column => $w) {
+			$width += $w;
+		}
+		if ($this->orientation == 'normal') {
+			$margins = (210 - $width) / 2;
+		} else {
+			$margins = (297 - $width) / 2;
+		}
+		$this->SetMargins($margins, 10, $margins);
+
+		$this->SetFont('Arial','',11);
+		// Marca de la empresa
+		$this->SetX(10);
+		$this->Write(5,'Miregistrodeventas.com');
+
+		$this->SetY(15);
+		$this->SetX(10);
+
+		if (!is_null($this->header)) {
+			// Fecha
+			if (in_array('date', $this->header)) {
+				$this->Write(5,date('d/m/y'));
+			}
+
+			// Nombre del negocio del usuario
+			if (in_array('company_name', $this->header)) {
+				$this->SetY(20);
+				$this->SetFont('Arial','B',16);
+				$this->Cell(0,5,Auth()->user()->company_name,0,0,'C');
+			}
+		}
+		$this->SetY(30);
 		$this->setFont('Arial', 'B', 12);
-		$this->setY(10);
-		// $this->setLineWidth(1);
-		// $this->SetFillColor(200,220,255);
-		// $this->Cell(80);
-		// dd($this->columns);
-		if (in_array('bar_code', $this->columns)) {
-			$this->Cell(35, 10, 'Codigo',1,0,'C');
+
+		foreach ($this->columns as $column => $w) {
+			switch ($column) {
+				case 'bar_code':
+					$column_es = 'Código';
+					break;
+				case 'name':
+					$column_es = 'Nombre';
+					break;
+				case 'cost':
+					$column_es = 'Costo';
+					break;
+				case 'price':
+					$column_es = 'Precio';
+					break;
+				case 'stock':
+					$column_es = 'Stock';
+					break;
+				case 'previus_price':
+					$column_es = 'P. Anterior';
+					break;
+				case 'created_at':
+					$column_es = 'Ingresado';
+					break;
+				case 'updated_at':
+					$column_es = 'Actualizado';
+					break;
+			}
+			$this->Cell($w,5,$column_es,0,0,'C');
+			$this->Line($margins, 37, $margins+$width, 37);
 		}
-		if (in_array('name', $this->columns)) {
-			$this->Cell(50, 10, 'Nombre',1,0,'C');
-		}
-		if (in_array('cost', $this->columns)) {
-			$this->Cell(20, 10, 'Costo',1,0,'C');
-		}
-		if (in_array('price', $this->columns)) {
-			$this->Cell(20, 10, 'Precio',1,0,'C');
-		}
-		if (in_array('last_price', $this->columns)) {
-		}
-		if (in_array('stock', $this->columns)) {
-			$this->Cell(15, 10, 'Stock',1,0,'C');
-		}
-		if (in_array('created_at', $this->columns)) {
-			$this->Cell(25, 10, 'Ingesado',1,0,'C');
-		}
-		if (in_array('updated_at', $this->columns)) {
-				$this->Cell(25, 10, 'Actualizado',1,0,'C');
-		}
-		// foreach ($this->columns as $column) {
-		// 	switch ($column) {
-		// 		case 'bar_code':
-		// case 'name':
-		// case 'cost':
-		// case 'price':
-		// case 'stock':
-		// case 'created_at':
-		// case 'updated_at':
-		// 	}
-		// }
-		$this->Ln();
+		$this->Ln(10);
 	}
 
 	function Footer() {
-		$this->setMargins(10, 0);
+		$this->AliasNbPages();
 		$this->SetY(-15);
-		$this->setFont('Arial', 'I', 11);
-		$this->Cell(40, 10, 'Pie de pagina, num: '.$this->PageNo().' de {nb}');
+		$this->SetX(10);
+		$this->setFont('Arial', '', 11);
+		$this->Write(5,$this->PageNo().'/{nb}');
 	}
 }
