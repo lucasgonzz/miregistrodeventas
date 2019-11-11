@@ -65,6 +65,7 @@ Route::group(['middleware' => ['has.role:commerce']], function () {
 	Route::delete('/comercios/providers/{id}', 'ProviderController@delete');
 	Route::get('/comercios/articles/get-by-bar-code/{id}', 'ArticleController@getByBarCode');
 	Route::get('/comercios/articles/bar-codes', 'ArticleController@BarCodes');
+	Route::get('/comercios/articles/previus-next/{index}', 'ArticleController@previusNext');
 
 	// Listado
 	Route::post('/comercios/articles/filter', 'ArticleController@filter');

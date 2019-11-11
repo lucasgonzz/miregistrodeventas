@@ -7,6 +7,9 @@
 					:providers="providers"
 					:rol="rol"
 					:article="article"
+					:previusNext="previus_next"
+					@previus="previus"
+					@next="next"
 					@clearArticle="clearArticle"
 					@updateArticle="updateArticle"></edit-article>
 		<div class="row justify-content-center">
@@ -14,15 +17,28 @@
 				<div class="card">
 					<div class="card-header">
 						<div class="row align-items-center">
-							<div class="col">
+							<div class="col col-lg-5">
 								<h5 class="m-b-0">
 									<strong>Ingresar un nuevo artículo</strong>
 								</h5>
 							</div>
 							<div class="col">
-								<button class="btn btn-primary float-right">
+								<button @click="next" 
+										v-show="previus_next > 1" 
+										class="btn btn-primary m-l-5 float-right">
+									<i class="icon-redo"></i>
+									Siguiente
+								</button>
+								<button @click="previus" 
+										class="btn btn-primary m-l-5 float-right">
 									<i class="icon-undo"></i>
-									Ultimo Ingresado
+									Anterior
+								</button>
+								<button @click="clearArticle" 
+										v-show="previus_next != 0"
+										class="btn btn-warning float-right">
+									<i class="icon-refresh"></i>
+									Limpiar
 								</button>
 							</div>
 						</div>
@@ -93,7 +109,7 @@
 							</div>
 							<div class="row m-b-15" v-if="rol == 'commerce'">
 								<div class="col">
-									<div class="form-group" v-show="rol == 'commerce'">
+									<div class="form-group">
 										<label class="label-block" for="providers">Proveedor</label>
 										<select v-model="article.provider" 
 												name="providers" id="providers" 
@@ -152,11 +168,18 @@
 										Limpiar
 									</button>
 								</div>
-								<div class="col-6 p-0">
+								<div v-if="previus_next == 0" class="col-6 p-0">
 									<button @click.prevent="saveArticle"
 											class="btn btn-block btn-right btn-success m-0">
 										<i class="icon-check"></i>
 										Guardar
+									</button>
+								</div>
+								<div v-else class="col-6 p-0">
+									<button @click.prevent="saveArticle"
+											class="btn btn-block btn-right btn-success m-0">
+										<i class="icon-check"></i>
+										Actualizar
 									</button>
 								</div>
 							</div>
@@ -193,6 +216,7 @@ export default {
 			remember_provider: true,
 			remember_date: false,
 			bar_codes: [],
+			previus_next: 0,
 		}
 	},
 	created() {
@@ -225,20 +249,7 @@ export default {
 			if (this.bar_codes.includes(this.article.bar_code)) {
 				axios.get('articles/get-by-bar-code/'+this.article.bar_code)
 				.then( res => {
-					console.log(res.data)
-					var article = res.data
-					this.article.creado = this.date(article.created_at) + ' ' 
-											+ this.since(article.created_at)
-					this.article.actualizado = this.date(article.updated_at) + ' ' 
-												+ this.since(article.updated_at)
-					this.article.id = article.id
-					this.article.bar_code = article.bar_code
-					this.article.name = article.name
-					this.article.cost = article.cost
-					this.article.price = article.price
-					this.article.providers = article.providers
-					this.article.stock = article.stock
-					console.log(article.providers)
+					this.setArticle(res.data)
 					$('#edit-article').modal('show')
 				})
 				.catch( err => {
@@ -259,20 +270,12 @@ export default {
 					article: this.article
 				})
 				.then( res => {
-					this.article.bar_code = ''
-					this.article.name = ''
-					this.article.cost = ''
-					this.article.price = ''
-					this.article.stock = ''
-					if (!this.remember_provider) {
-						this.article.provider = []
-					}
-					if (!this.remember_date) {
-						this.article.created_at = new Date().toISOString().slice(0,10)
-					}
+					// console.log(res.data)
+					this.clearArticle()
 					toastr.success('Artículo guardado correctamente')
 				})
 				.catch( err => {
+					console.log('mal')
 					console.log(err)
 				})
 			// }
@@ -282,35 +285,64 @@ export default {
 				article: this.article
 			})
 			.then( res => {
-				this.article.bar_code = ''
-				this.article.name = ''
-				this.article.cost = ''
-				this.article.price = ''
-				this.article.stock = ''
-				this.article.new_stock = 0
-				this.article.provider = this.providers[0].id
-				this.article.providers = []
-				this.article.created_at = new Date().toISOString().slice(0,10)
-				toastr.success('Artículo guardado correctamente')
+				this.clearArticle()
+				toastr.success('Artículo actualizado correctamente')
 				$('#edit-article').modal('hide')
-				console.log(res.data)
+			})
+			.catch( err => {
+				console.log(err)
+			})
+		},
+		setArticle(article) {
+			this.article.creado = this.date(article.created_at) + ' ' 
+									+ this.since(article.created_at)
+			this.article.actualizado = this.date(article.updated_at) + ' ' 
+										+ this.since(article.updated_at)
+			this.article.id = article.id
+			this.article.bar_code = article.bar_code
+			this.article.name = article.name
+			this.article.cost = article.cost
+			this.article.price = article.price
+			this.article.provider = article.providers[0].id
+			this.article.providers = article.providers
+			this.article.stock = article.stock
+		},
+		previus() {
+			this.previus_next++
+			axios.get('articles/previus-next/'+this.previus_next)
+			.then( res => {
+				this.setArticle(res.data)
+				$('#edit-article').modal('show')
+			})
+			.catch( err => {
+				console.log(err)
+			})
+		},
+		next() {
+			this.previus_next--
+			axios.get('articles/previus-next/'+this.previus_next)
+			.then( res => {
+				this.setArticle(res.data)
+				$('#edit-article').modal('show')
 			})
 			.catch( err => {
 				console.log(err)
 			})
 		},
 		clearArticle() {
-			this.article = {
-								bar_code: '',
-								name: '',
-								cost: '',
-								price: '',
-								new_stock: 0,
-								stock: '',
-								provider: 0,
-								act_fecha: true,
-								created_at: new Date().toISOString().slice(0,10),
-							}
+			this.article.bar_code = ''
+			this.article.name = ''
+			this.article.cost = ''
+			this.article.price = ''
+			this.article.stock = ''
+			this.article.new_stock = ''
+			if (!this.remember_provider) {
+				this.article.provider = this.providers[0].id
+			}
+			if (!this.remember_date) {
+				this.article.created_at = new Date().toISOString().slice(0,10)
+			}
+			this.previus_next = 0
 		},
 
 		// Providers

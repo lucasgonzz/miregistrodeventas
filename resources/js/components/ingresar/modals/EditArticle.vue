@@ -4,7 +4,12 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title">
-					Ya hay un <strong>{{ article.name }}</strong> ingresado
+					<span v-show="previusNext == 0">
+						Ya hay un <strong>{{ article.name }}</strong> ingresado
+					</span>
+					<span v-show="previusNext != 0">
+						<strong>{{ article.name }}</strong>
+					</span>
 				</h5>
 				<button @click="clearArticle" type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
@@ -34,8 +39,20 @@
 						Para agregar decimales (centavos) coloque un punto para separar las unidades	
 					</small>
 				</div>
-				<div class="form-group" v-show="rol == 'commerce'">
-					<label class="label-block" for="provider">Proveedores</label>
+				<div class="form-group">
+					<label for="stock">Cantidad para agregar</label>
+					<input type="number" 
+							min="0"
+							v-model="article.new_stock" 
+							class="form-control focus-red">
+					<small>
+						Actualmente hay {{ article.stock }}
+					</small>
+				</div>
+				<div class="form-group" v-show="rol == 'commerce' && article.new_stock > 0">
+					<label class="label-block" for="provider">
+						De que proveedor son estas {{ article.new_stock }} unidades
+					</label>
 					<select v-model="article.provider"
 							id="provider" 
 							class="form-control">
@@ -69,15 +86,6 @@
 					<input type="text" name="name" v-model="article.name" class="form-control focus-red">
 				</div>
 				<div class="form-group">
-					<label for="stock">Cantidad para agregar</label>
-					<input type="number" 
-							v-model="article.new_stock" 
-							class="form-control focus-red">
-					<small>
-						Actualmente hay {{ article.stock }}
-					</small>
-				</div>
-				<div class="form-group">
 					<div class="custom-control custom-checkbox my-1 mr-sm-2 m-b-10">
 						<input v-model="article.act_fecha" 
 								type="checkbox" 
@@ -93,11 +101,27 @@
 						</small>
 					</div>
 				</div>
-				<!-- {{article}} -->
+				{{previusNext}}
 			</div>
 			<div class="modal-footer">
 				<button @click="clearArticle" type="button" class="btn btn-secondary focus-red" data-dismiss="modal">Cancelar</button>
-				<button type="button" class="btn btn-primary focus-red" v-on:click="updateArticle">Actualizar</button>
+				<button v-show="previusNext > 0"
+						@click="previus"
+						class="btn btn-primary">
+					<i class="icon-undo"></i>
+					Anterior
+				</button>
+				<button v-show="previusNext > 1"
+						@click="next"
+						class="btn btn-primary">
+					<i class="icon-redo"></i>
+					Siguiente
+				</button>
+				<button type="button" 
+						class="btn btn-primary focus-red" 
+						@click="updateArticle">
+					Actualizar
+				</button>
 			</div>
 		</div>
 	</div>
@@ -106,7 +130,7 @@
 </template>
 <script>
 export default {
-	props: ['article', 'rol', 'providers'],	
+	props: ['article', 'rol', 'providers', 'previusNext'],	
 	methods: {
 		date(date) {
 			return moment(date).format('DD/MM/YY')
@@ -116,6 +140,12 @@ export default {
 		},
 		clearArticle() {
 			this.$emit('clearArticle')
+		},
+		previus() {
+			this.$emit('previus')
+		},
+		next() {
+			this.$emit('next')
 		},
 		updateArticle() {
 			this.$emit('updateArticle')

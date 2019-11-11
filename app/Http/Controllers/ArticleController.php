@@ -124,10 +124,26 @@ class ArticleController extends Controller
                             ->where('name', 'LIKE', "%$query%")->get();
     }
 
+    function previusNext($index) {
+        $user = Auth()->user();
+        if ($user->hasRole('commerce')) {
+            $articles = Article::where('user_id', Auth()->user()->id)
+                                ->orderBy('id', 'DESC')
+                                ->with('providers')
+                                ->take($index)
+                                ->get();
+        } else {
+            $articles = Article::where('user_id', Auth()->user()->id)
+                                ->orderBy('id', 'DESC')
+                                ->take($index)
+                                ->get();
+        }
+        return $articles[$index-1];
+    }
+
     function update(Request $request, $id) {
         $article = Article::find($id);
         $updated_article = $request->article;
-        // return $updated_article;
 
         if ($article->price != $updated_article['price']) {
             $article->previus_price = $article->price;
@@ -154,6 +170,7 @@ class ArticleController extends Controller
     }
 
     function store(Request $request) {
+        // return $request->article;
         $user = Auth()->user();
         $article = new Article();
         $article->bar_code = $request->article['bar_code'];
@@ -167,11 +184,16 @@ class ArticleController extends Controller
         $date = date('Y-m-d');
         if ($request->article['created_at'] != $date) {
             $article->created_at = $request->article['created_at'];
+            $article->updated_at = $request->article['created_at'];
         }
 
         $article->save();
         if ($user->hasRole('commerce')) {
-            $article->providers()->sync($request->article['providers']);
+            $article->providers()->attach($request->article['provider'], [
+                                            'amount' => $request->article['stock'],
+                                            'cost' => $request->article['cost'],
+                                            'price' => $request->article['price']
+                                        ]);
         }
     }
 

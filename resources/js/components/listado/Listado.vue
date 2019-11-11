@@ -1,9 +1,10 @@
 <template>
 <div id="listado">	
 	<editar-articulo :rol="rol" 
-						:article="article" 
-						:providers="providers" 
-						@updateArticle="updateArticle"></editar-articulo>
+					:article="article" 
+					:providers="providers" 
+					@updateArticle="updateArticle"
+					@clearArticle="clearArticle"></editar-articulo>
 	<confirmar-eliminacion :article="article" 
 							@destroyArticle="destroyArticle"></confirmar-eliminacion>
 	<descargar-pdf :rol="rol" 
@@ -60,94 +61,113 @@
 					</div>
 				</div>
 				<div class="card-body">
-					<info-filtrados :filtro="filtro" :filtrado="filtrado" 
-									:providers="providers"
-									:articles-length="articles.length"></info-filtrados>
-					<div class="table-responsive">						
-						<table class="table">
-							<thead class="thead-dark">
-								<tr v-if="rol == 'commerce'">
-									<th scope="col">Codigo</th>
-									<th scope="col">Nombre</th>
-									<th scope="col">Costo</th>
-									<th scope="col">Precio</th>
-									<th scope="col">Pre anterior</th>
-									<th scope="col">Stock</th>
-									<th scope="col">Proveedor/es</th>
-									<th scope="col">Agregado</th>
-									<th scope="col">Actualizado</th>
-									<th scope="col">Opciones</th>
-								</tr>
-								<tr v-else>
-									<th scope="col">Codigo</th>
-									<th scope="col">Nombre</th>
-									<th scope="col">Costo</th>
-									<th scope="col">Precio</th>
-									<th scope="col">Pre anterior</th>
-									<th scope="col">Stock</th>
-									<th scope="col">Agregado</th>
-									<th scope="col">Actualizado</th>
-									<th scope="col">Opciones</th>
-								</tr>
-							</thead>
-							<tbody>
-								<template v-if="rol == 'commerce'">
-									<tr v-for="article in articles">
-										<td>{{ article.bar_code }}</td>
-										<td>{{ article.name }}</td>
-										<td>${{ price(article.cost) }}</td>
-										<td class="td-price">${{ price(article.price) }}</td>
-										<td v-if="article.previus_price != '0.00'">${{ price(article.previus_price) }}</td>
-										<td v-else>Sin datos</td>
-										<td>{{ article.stock }}</td>
-										<td>
-											<div class="dropdown">
-												<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-													Proveedores
-												</button>
-												<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-													<span v-for="provider in article.providers"
-														class="dropdown-item c-n">
-														{{ provider.name }}						
-													</span>
-												</div>
-											</div>
-										</td>
-										<td>{{ date(article.created_at) }}</td>
-										<td>{{ date(article.updated_at) }}</td>
-										<td class="td-options">
-											<button @click="editArticle(article)" class="btn btn-listado btn-listado-edit">
-												<i class="icon-edit"></i>
-											</button>
-											<button @click="deleteArticle(article)" class="btn btn-listado btn-listado-delete">
-												<i class="icon-trash-2"></i>
-											</button>
-										</td>
+					<div v-show="isLoading" class="m-b-10">
+						<div class="spinner">
+							<div class="spinner-border text-primary" role="status">
+								<span class="sr-only">Loading...</span>
+							</div>
+						</div>
+					</div>
+					<div v-show="!isLoading">
+						<info-filtrados :filtro="filtro" :filtrado="filtrado" 
+										:providers="providers"
+										:articles-length="articles.length"></info-filtrados>
+						<div class="table-responsive">						
+							<table class="table">
+								<thead class="thead-dark">
+									<tr v-if="rol == 'commerce'">
+										<th scope="col">Codigo</th>
+										<th scope="col">Nombre</th>
+										<th scope="col">Costo</th>
+										<th scope="col">Precio</th>
+										<th scope="col">Pre anterior</th>
+										<th scope="col">Stock</th>
+										<th scope="col">Proveedor/es</th>
+										<th scope="col">Agregado</th>
+										<th scope="col">Actualizado</th>
+										<th scope="col">Opciones</th>
 									</tr>
-								</template>
-								<template v-else>								
-									<tr v-for="article in articles">
-										<td>{{ article.bar_code }}</td>
-										<td>{{ article.name }}</td>
-										<td>${{ price(article.cost) }}</td>
-										<td class="td-price">${{ price(article.price) }}</td>
-										<td v-if="article.previus_price != '0.00'">${{ price(article.previus_price) }}</td>
-										<td v-else>Sin datos</td>
-										<td>{{ article.stock }}</td>
-										<td>{{ date(article.created_at) }}</td>
-										<td>{{ date(article.updated_at) }}</td>
-										<td class="td-options">
-											<button @click="editArticle(article)" class="btn btn-listado btn-listado-edit">
-												<i class="icon-edit"></i>
-											</button>
-											<button @click="deleteArticle(article)" class="btn btn-listado btn-listado-delete">
-												<i class="icon-trash-2"></i>
-											</button>
-										</td>
-									</tr>								
-								</template>
-							</tbody>
-						</table>
+									<tr v-else>
+										<th scope="col">Codigo</th>
+										<th scope="col">Nombre</th>
+										<th scope="col">Costo</th>
+										<th scope="col">Precio</th>
+										<th scope="col">Pre anterior</th>
+										<th scope="col">Stock</th>
+										<th scope="col">Agregado</th>
+										<th scope="col">Actualizado</th>
+										<th scope="col">Opciones</th>
+									</tr>
+								</thead>
+								<tbody>
+									<template v-if="rol == 'commerce'">
+										<tr v-for="article in articles">
+											<td>{{ article.bar_code }}</td>
+											<td>{{ article.name }}</td>
+											<td>${{ price(article.cost) }}</td>
+											<td class="td-price">${{ price(article.price) }}</td>
+											<td v-if="article.previus_price != '0.00'">${{ price(article.previus_price) }}</td>
+											<td v-else>Sin datos</td>
+											<td>{{ article.stock }}</td>
+											<td>
+												<div class="dropdown">
+													<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+														Proveedores
+													</button>
+													<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+														<span v-for="provider in article.providers_not_repeated"
+															class="dropdown-item c-n">
+															{{ provider.name }}						
+														</span>
+													</div>
+												</div>
+											</td>
+											<td>{{ date(article.created_at) }}</td>
+											<td v-if="article.created_at != article.updated_at">
+												{{ date(article.updated_at) }}
+											</td>
+											<td v-else>
+												Sin datos
+											</td>
+											<td class="td-options">
+												<button @click="editArticle(article)" class="btn btn-listado btn-listado-edit">
+													<i class="icon-edit"></i>
+												</button>
+												<button @click="deleteArticle(article)" class="btn btn-listado btn-listado-delete">
+													<i class="icon-trash-2"></i>
+												</button>
+											</td>
+										</tr>
+									</template>
+									<template v-else>								
+										<tr v-for="article in articles">
+											<td>{{ article.bar_code }}</td>
+											<td>{{ article.name }}</td>
+											<td>${{ price(article.cost) }}</td>
+											<td class="td-price">${{ price(article.price) }}</td>
+											<td v-if="article.previus_price != '0.00'">${{ price(article.previus_price) }}</td>
+											<td v-else>Sin datos</td>
+											<td>{{ article.stock }}</td>
+											<td>{{ date(article.created_at) }}</td>
+											<td v-if="article.created_at != article.updated_at">
+												{{ date(article.updated_at) }}
+											</td>
+											<td v-else>
+												Sin datos
+											</td>
+											<td class="td-options">
+												<button @click="editArticle(article)" class="btn btn-listado btn-listado-edit">
+													<i class="icon-edit"></i>
+												</button>
+												<button @click="deleteArticle(article)" class="btn btn-listado btn-listado-delete">
+													<i class="icon-trash-2"></i>
+												</button>
+											</td>
+										</tr>								
+									</template>
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
 				<div class="card-footer p-0">
@@ -157,7 +177,7 @@
 								:pages-number="pagesNumber"></pagination>
 					<div class="row p-10">
 						<div class="col">
-							<button v-show="filtrado" 
+							<button v-show="filtrado || searching" 
 									class="btn btn-primary float-right"
 									@click="volverAListar">
 								<i class="icon-undo"></i>
@@ -198,6 +218,8 @@ export default {
 			article: {'id': 0, 'bar_code': '','name': '', 'cost': 0, 'price': 0, 'stock': 0, 'providers': [], 'created_at': '', 'updated_at': '', 'creado': '', 'actualizado': '', 'act_fecha': true},
 			search_query: '',
 			pre_search: [],
+			searching: false,
+			isLoading: false,
 			providers: [],
 			idsArticles: [],
 
@@ -259,6 +281,7 @@ export default {
 			})
 		},
 		filter(filtro) {
+			this.isLoading = true
 			axios.post('articles/filter', {
 				mostrar: filtro.mostrar,
 				ordenar: filtro.ordenar,
@@ -266,6 +289,7 @@ export default {
 				providers: filtro.providers
 			})
 			.then( res => {
+				this.isLoading = false
 				this.filtrado = true
 				this.articles = res.data
 				this.setIdsArticles()
@@ -299,12 +323,15 @@ export default {
 			$('.input-search').removeClass('input-search-resultados')
 		},
 		search() {
+			this.searching = true
+			this.isLoading = true
 			axios.get('articles/search/'+this.search_query)
 			.then( res => {
-				console.log(res.data)
+				this.isLoading = false
 				var articles = res.data
 				if (articles.length > 0) {
 					this.articles = res.data
+					this.filterProviders()
 				} else {
 					toastr.error('No se encontraron artículos con ese criterio')
 				}
@@ -317,17 +344,20 @@ export default {
 
 		// Articulos
 		getArticles(page) {
+			this.isLoading = true
 			axios.get('articles?page=' + page)
 			.then( res => {
+				this.isLoading = false
 				console.log(res.data)
 				this.articles = res.data.articles.data;
 				this.pagination = res.data.pagination;
 				const self = this
 				this.setIdsArticles()
+
+				this.filterProviders()
 			})
 			.catch( err => {
 				console.log(err)
-				// location.reload()
 			})
 		},
 		editArticle(article) {
@@ -338,16 +368,15 @@ export default {
 			this.article.price = this.price(article.price, false)
 			this.article.stock = article.stock
 			if (this.rol == 'commerce') {
-				this.article.providers = []
-				const self = this
-				article.providers.forEach( p => {
-					self.article.providers.push(p.id)
-				})
+				// console.log(this.providers[0])
+				this.article.provider = article.providers[0].id
+				this.article.providers = article.providers
 			}
 			this.article.created_at = article.created_at
 			this.article.updated_at = article.updated_at
 			this.article.creado = this.date(article.created_at)+' '+this.since(article.created_at)
 			this.article.actualizado = this.date(article.updated_at)+' '+this.since(article.updated_at)
+			// console.log(this.article)
 			$('#listado-edit-article').modal('show')
 		},
 		updateArticle(article) {
@@ -356,8 +385,8 @@ export default {
 			})
 			.then( res => {
 				this.getArticles(1)
+				this.clearArticle()
 				$('#listado-edit-article').modal('hide')
-				console.log(res.data)
 				toastr.success(`${article.name} se actualizo con exito`)
 			})
 			.catch( err => {
@@ -376,16 +405,29 @@ export default {
 			.then( res => {
 				$('#listado-delete-article').modal('hide')
 				this.getArticles(1)
-				toastr.success('Artículo eliminado con exito')
+				toastr.success('Artículo eliminado correctamente')
 			})
 			.catch( err => {
 				console.log(err)
 			})
 		},
+		clearArticle() {
+			this.article.bar_code = ''
+			this.article.name = ''
+			this.article.cost = ''
+			this.article.price = ''
+			this.article.stock = 0
+			this.article.new_stock = 0
+			this.article.provider = this.providers[0].id
+			this.article.created_at = ''
+			this.previus_next = 0
+			console.log(this.article)
+		},
 
 
 		volverAListar() {
 			this.filtrado = false
+			this.searching = false
 			this.getArticles(1)
 		},
 
@@ -419,7 +461,22 @@ export default {
 			.catch( err => {
 				console.log(err)
 			})
-		}
+		},
+		filterProviders() {
+			// Se crea una propiedad en los articulos donde estan solo 
+			// los proveedores que no se repiten
+			this.articles.forEach( article => {
+				var providers_ids = []
+				var providers = []
+				article.providers.forEach( provider => {
+					if (!providers_ids.includes(provider.id)) {
+						providers_ids.push(provider.id)
+						providers.push(provider)
+					}
+				})
+				article.providers_not_repeated = providers
+			})
+		},
 	},
 	created() {
 		this.getArticles(1)

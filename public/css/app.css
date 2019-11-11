@@ -15944,6 +15944,13 @@ a.text-dark:focus {
   width: 45% !important;
 }
 
+.spinner {
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-pack: center;
+          justify-content: center;
+}
+
 .btn-importar {
   font-size: 1.5rem;
 }
@@ -15968,6 +15975,11 @@ a.text-dark:focus {
 
 .label-block {
   display: block;
+}
+
+.list-listado {
+  max-height: 150px;
+  overflow-y: scroll;
 }
 
 .buscador-sombreado {

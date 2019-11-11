@@ -38,6 +38,6 @@ class Article extends Model
         return $this->belongsToMany('App\Provider')
                                                     ->withPivot('amount', 'cost', 'price')
                                                     ->withTimestamps()
-                                                    ->orderBy('created_at', 'DESC');
+                                                    ->orderBy('id', 'DESC');
     }
 }

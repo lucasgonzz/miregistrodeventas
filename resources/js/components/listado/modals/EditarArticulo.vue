@@ -4,7 +4,9 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title">Editar <strong>{{ article.name }}</strong> | <i class="icon-barcode"></i> {{ article.bar_code }}</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<button @click="clearArticle"
+						type="button" 
+						class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
@@ -33,23 +35,54 @@
 						Para agregar decimales (centavos) coloque un punto para separar las unidades	
 					</small>
 				</div>
-				<div class="form-group" v-show="rol == 'commerce'">
-					<label class="label-block">Proveedores</label>
-					<div v-for="provider in providers" 
-							class="custom-control custom-checkbox custom-control-inline">
-						<input v-model="article.providers" type="checkbox" class="custom-control-input" :id="provider.id" :value="provider.id">
-						<label class="custom-control-label" :for="provider.id">
+				<div class="form-group">
+					<label for="stock">Cantidad para agregar</label>
+					<input type="number" 
+							min="0"
+							v-model="article.new_stock" 
+							class="form-control focus-red">
+					<small>
+						Actualmente hay {{ article.stock }}
+					</small>
+				</div>
+				<div class="form-group" v-show="rol == 'commerce' && article.new_stock > 0">
+					<label class="label-block" for="provider">
+						De que proveedor son estas {{ article.new_stock }} unidades
+					</label>
+
+					<select v-model="article.provider"
+							id="provider" 
+							class="form-control">
+						<option v-for="provider in providers" :value="provider.id">
 							{{ provider.name }}
-						</label>
-					</div>
+						</option>
+					</select>
+					<ul class="list-group m-t-5">
+						<li class="list-group-item active p-t-5 p-b-5">Otros provedores</li>
+						<div class="list-listado">
+							<li v-for="provider in article.providers"
+								class="list-group-item p-t-5 p-b-5">
+								<p class="m-t-0 m-b-0">
+									<strong>
+										{{ provider.name }}
+									</strong> se le compraron {{ provider.pivot.amount }}
+									<span class="float-right">
+										costo: ${{ provider.pivot.cost }}
+									</span>
+								</p>
+								<p class="m-t-0 m-b-0">
+									 el {{ date(provider.pivot.created_at) }} hace {{ since(provider.pivot.created_at) }}
+									<span class="float-right">
+									 	precio: ${{ provider.pivot.price }}
+									</span>
+								</p>
+							</li>
+						</div>
+					</ul>
 				</div>
 				<div class="form-group">
 					<label for="name">Nombre</label>
 					<input type="text" name="name" v-model="article.name" class="form-control focus-red">
-				</div>
-				<div class="form-group">
-					<label for="stock">Cantidad</label>
-					<input type="number" v-model="article.stock" name="stock" class="form-control focus-red">
 				</div>
 				<div class="form-group">
 					<div class="custom-control custom-checkbox my-1 mr-sm-2 m-b-10">
@@ -67,10 +100,14 @@
 						</small>
 					</div>
 				</div>
-				<!-- {{article}} -->
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary focus-red" data-dismiss="modal">Cancelar</button>
+				<button @click="clearArticle"
+						type="button" 
+						class="btn btn-secondary focus-red" 
+						data-dismiss="modal">
+					Cancelar
+				</button>
 				<button type="button" class="btn btn-primary focus-red" v-on:click="updateArticle">Actualizar</button>
 			</div>
 		</div>
@@ -82,19 +119,17 @@
 export default {
 	props: ['article', 'rol', 'providers'],	
 	methods: {
+		date(date) {
+			return moment(date).format('DD/MM/YY')
+		},
+		since(date) {
+			return moment(date).fromNow()
+		},
 		updateArticle() {
 			this.$emit('updateArticle', this.article)
 		},
-		isChecked(provider_id) {
-			this.article.providers.forEach( p => {
-				if (provider_id == p.id) {
-					console.log(`${p.name} si`)
-					return true
-				} else {
-					console.log('no')
-					return false
-				}
-			})
+		clearArticle() {
+			this.$emit('clearArticle')
 		}
 	}
 }
