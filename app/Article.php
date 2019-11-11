@@ -37,6 +37,7 @@ class Article extends Model
     public function providers(){
         return $this->belongsToMany('App\Provider')
                                                     ->withPivot('amount', 'cost', 'price')
-                                                    ->withTimestamps();
+                                                    ->withTimestamps()
+                                                    ->orderBy('created_at', 'DESC');
     }
 }

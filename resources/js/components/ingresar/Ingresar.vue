@@ -7,6 +7,7 @@
 					:providers="providers"
 					:rol="rol"
 					:article="article"
+					@clearArticle="clearArticle"
 					@updateArticle="updateArticle"></edit-article>
 		<div class="row justify-content-center">
 			<div class="col-lg-7">	
@@ -145,7 +146,8 @@
 									</button>
 								</div>
 								<div class="col-3 p-0">
-									<button class="btn btn-block btn-center btn-danger m-0">
+									<button @click="clearArticle" 
+											class="btn btn-block btn-center btn-danger m-0">
 										<i class="icon-refresh"></i>
 										Limpiar
 									</button>
@@ -296,6 +298,19 @@ export default {
 			.catch( err => {
 				console.log(err)
 			})
+		},
+		clearArticle() {
+			this.article = {
+								bar_code: '',
+								name: '',
+								cost: '',
+								price: '',
+								new_stock: 0,
+								stock: '',
+								provider: 0,
+								act_fecha: true,
+								created_at: new Date().toISOString().slice(0,10),
+							}
 		},
 
 		// Providers

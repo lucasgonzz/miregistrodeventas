@@ -12,9 +12,9 @@ use Faker\Generator as Faker;
 //     $bar_code++;
 // }
 
-$bar_code = 1234567891000;
-$factory->define(Article::class, function (Faker $faker) use ($bar_code) {
+$factory->define(Article::class, function (Faker $faker) {
 	$cost = rand(50, 3000);
+    $bar_code = rand(1, 100000);
     return [
     	'bar_code' => $bar_code,
         'name' => $faker->name,

@@ -6,7 +6,7 @@
 				<h5 class="modal-title">
 					Ya hay un <strong>{{ article.name }}</strong> ingresado
 				</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<button @click="clearArticle" type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
@@ -69,7 +69,7 @@
 					<input type="text" name="name" v-model="article.name" class="form-control focus-red">
 				</div>
 				<div class="form-group">
-					<label for="stock">Cantidad</label>
+					<label for="stock">Cantidad para agregar</label>
 					<input type="number" 
 							v-model="article.new_stock" 
 							class="form-control focus-red">
@@ -96,7 +96,7 @@
 				<!-- {{article}} -->
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary focus-red" data-dismiss="modal">Cancelar</button>
+				<button @click="clearArticle" type="button" class="btn btn-secondary focus-red" data-dismiss="modal">Cancelar</button>
 				<button type="button" class="btn btn-primary focus-red" v-on:click="updateArticle">Actualizar</button>
 			</div>
 		</div>
@@ -113,6 +113,9 @@ export default {
 		},
 		since(date) {
 			return moment(date).fromNow()
+		},
+		clearArticle() {
+			this.$emit('clearArticle')
 		},
 		updateArticle() {
 			this.$emit('updateArticle')

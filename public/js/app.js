@@ -2254,6 +2254,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2380,6 +2382,19 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (err) {
         console.log(err);
       });
+    },
+    clearArticle: function clearArticle() {
+      this.article = {
+        bar_code: '',
+        name: '',
+        cost: '',
+        price: '',
+        new_stock: 0,
+        stock: '',
+        provider: 0,
+        act_fecha: true,
+        created_at: new Date().toISOString().slice(0, 10)
+      };
     },
     // Providers
     getProviders: function getProviders() {
@@ -2549,6 +2564,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     since: function since(date) {
       return moment(date).fromNow();
+    },
+    clearArticle: function clearArticle() {
+      this.$emit('clearArticle');
     },
     updateArticle: function updateArticle() {
       this.$emit('updateArticle');
@@ -58729,7 +58747,7 @@ var render = function() {
       _vm._v(" "),
       _c("edit-article", {
         attrs: { providers: _vm.providers, rol: _vm.rol, article: _vm.article },
-        on: { updateArticle: _vm.updateArticle }
+        on: { clearArticle: _vm.clearArticle, updateArticle: _vm.updateArticle }
       }),
       _vm._v(" "),
       _c("div", { staticClass: "row justify-content-center" }, [
@@ -59214,7 +59232,19 @@ var render = function() {
               _c("div", { staticClass: "row m-0" }, [
                 _vm._m(2),
                 _vm._v(" "),
-                _vm._m(3),
+                _c("div", { staticClass: "col-3 p-0" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-block btn-center btn-danger m-0",
+                      on: { click: _vm.clearArticle }
+                    },
+                    [
+                      _c("i", { staticClass: "icon-refresh" }),
+                      _vm._v("\n\t\t\t\t\t\t\t\t\tLimpiar\n\t\t\t\t\t\t\t\t")
+                    ]
+                  )
+                ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "col-6 p-0" }, [
                   _c(
@@ -59285,17 +59315,6 @@ var staticRenderFns = [
         _vm._v("\n\t\t\t\t\t\t\t\t\tAtras\n\t\t\t\t\t\t\t\t")
       ])
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-3 p-0" }, [
-      _c("button", { staticClass: "btn btn-block btn-center btn-danger m-0" }, [
-        _c("i", { staticClass: "icon-refresh" }),
-        _vm._v("\n\t\t\t\t\t\t\t\t\tLimpiar\n\t\t\t\t\t\t\t\t")
-      ])
-    ])
   }
 ]
 render._withStripped = true
@@ -59341,7 +59360,19 @@ var render = function() {
               _vm._v(" ingresado\r\n\t\t\t\t")
             ]),
             _vm._v(" "),
-            _vm._m(0)
+            _c(
+              "button",
+              {
+                staticClass: "close",
+                attrs: {
+                  type: "button",
+                  "data-dismiss": "modal",
+                  "aria-label": "Close"
+                },
+                on: { click: _vm.clearArticle }
+              },
+              [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+            )
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "modal-body" }, [
@@ -59615,7 +59646,9 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "form-group" }, [
-              _c("label", { attrs: { for: "stock" } }, [_vm._v("Cantidad")]),
+              _c("label", { attrs: { for: "stock" } }, [
+                _vm._v("Cantidad para agregar")
+              ]),
               _vm._v(" "),
               _c("input", {
                 directives: [
@@ -59737,7 +59770,8 @@ var render = function() {
               "button",
               {
                 staticClass: "btn btn-secondary focus-red",
-                attrs: { type: "button", "data-dismiss": "modal" }
+                attrs: { type: "button", "data-dismiss": "modal" },
+                on: { click: _vm.clearArticle }
               },
               [_vm._v("Cancelar")]
             ),
@@ -59757,25 +59791,7 @@ var render = function() {
     ]
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      {
-        staticClass: "close",
-        attrs: {
-          type: "button",
-          "data-dismiss": "modal",
-          "aria-label": "Close"
-        }
-      },
-      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
-    )
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

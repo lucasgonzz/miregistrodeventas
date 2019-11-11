@@ -14,8 +14,8 @@ class ArticleController extends Controller
 {
     function index() {
     	$articles = Article::where('user_id', Auth()->user()->id)
-                            // ->orderBy('id', 'DESC')
-                            // ->with('providers')
+                            ->orderBy('id', 'DESC')
+                            ->with('providers')
                             ->paginate(10);
     	return [
                 'pagination' => [
@@ -127,7 +127,7 @@ class ArticleController extends Controller
     function update(Request $request, $id) {
         $article = Article::find($id);
         $updated_article = $request->article;
-        return $updated_article;
+        // return $updated_article;
 
         if ($article->price != $updated_article['price']) {
             $article->previus_price = $article->price;
@@ -141,7 +141,14 @@ class ArticleController extends Controller
         $article->stock += $updated_article['new_stock'];
         $article->save();
         if (Auth()->user()->hasRole('commerce')) {
-            $article->providers()->attach($updated_article['provider']);
+            $article->providers()
+                                ->attach(
+                                    $updated_article['provider'], 
+                                    [
+                                        'amount' => $updated_article['new_stock'],
+                                        'cost' => $updated_article['cost'],
+                                        'price' => $updated_article['price'],
+                                    ]);
         }
         return 'bien';
     }
