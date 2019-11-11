@@ -18,6 +18,9 @@ class CreateArticleProviderTable extends Migration
 
             $table->integer('article_id')->unsigned();
             $table->integer('provider_id')->unsigned();
+            $table->integer('amount')->nullable();
+            $table->integer('cost')->nullable();
+            $table->integer('price')->nullable();
 
             $table->foreign('article_id')
                     ->references('id')->on('articles');

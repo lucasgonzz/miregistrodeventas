@@ -21,7 +21,7 @@ $factory->define(Article::class, function (Faker $faker) use ($bar_code) {
         'cost' => $cost,
         'price' => rand($cost, $cost*2),
         'previus_price' => 0,
-        'stock' => rand(6, 25),
+        'stock' => rand(10, 25),
         'user_id' => rand(1, 2),
     ];
 });

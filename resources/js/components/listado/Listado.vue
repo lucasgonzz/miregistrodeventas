@@ -9,6 +9,7 @@
 	<descargar-pdf :rol="rol" 
 					:ids-articles="idsArticles"
 					:filtro="filtro"></descargar-pdf>
+	<importar></importar>
 	<filtrar :filtro="filtro" 
 				:rol="rol" 
 				:providers="providers"
@@ -43,9 +44,17 @@
 								<i class="icon-filter"></i>
 								Filtrar
 							</button>
-							<button class="btn btn-danger m-l- float-right" @click="showDescargarPdf">
-								<i class="icon-file"></i>
-								Descargar Pdf
+							<button class="btn btn-danger m-l-5 float-right" @click="showDescargarPdf">
+								<i class="icon-download"></i>
+								Pdf
+							</button>
+							<a href="articles/exel" class="btn btn-success m-l-5 float-right">
+								<i class="icon-download"></i>
+								Exel
+							</a>
+							<button class="btn btn-warning m-l-5 float-right" @click="showImportar">
+								<i class="icon-upload"></i>
+								Importar Exel
 							</button>
 						</div>
 					</div>
@@ -164,15 +173,17 @@
 </template>
 
 <script>
-import DescargarPdf from './common/DescargarPdf.vue'
-import Filtrar from './common/Filtrar.vue'
-import EditarArticulo from './common/EditarArticulo.vue'
-import ConfirmarEliminacion from './common/ConfirmarEliminacion.vue'
-import InfoFiltrados from './common/InfoFiltrados.vue'
+import DescargarPdf from './modals/DescargarPdf.vue'
+import Importar from './modals/Importar.vue'
+import Filtrar from './modals/Filtrar.vue'
+import EditarArticulo from './modals/EditarArticulo.vue'
+import ConfirmarEliminacion from './modals/ConfirmarEliminacion.vue'
+import InfoFiltrados from './modals/InfoFiltrados.vue'
 import Pagination from './Pagination.vue'
 export default {
 	components: {
 		DescargarPdf,
+		Importar,
 		Filtrar,
 		EditarArticulo,
 		InfoFiltrados,
@@ -388,8 +399,8 @@ export default {
 		showDescargarPdf() {
 			$('#listado-descargar-pdf').modal('show')
 		},
-		generatePdf() {
-
+		showImportar() {
+			$('#listado-importar').modal('show')
 		},
 		showFiltrar() {
 			$('#listado-filtrar').modal('show')

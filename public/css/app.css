@@ -15944,6 +15944,10 @@ a.text-dark:focus {
   width: 45% !important;
 }
 
+.btn-importar {
+  font-size: 1.5rem;
+}
+
 .cont-check-box {
   display: -webkit-box;
   display: flex;

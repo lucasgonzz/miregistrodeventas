@@ -161,3 +161,12 @@
 .icon-back:before {
   content: "\50";
 }
+.icon-upload:before {
+  content: "\4e";
+}
+.icon-up:before {
+  content: "\51";
+}
+.icon-down:before {
+  content: "\52";
+}
