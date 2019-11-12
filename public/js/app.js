@@ -2076,6 +2076,182 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/codigos-de-barra/CodigosDeBarra.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/codigos-de-barra/CodigosDeBarra.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      bar_codes: [],
+      bar_code: {
+        name: '',
+        amount: 0,
+        size: 'md',
+        text: true
+      },
+      hola: ''
+    };
+  },
+  methods: {
+    date: function date(_date) {
+      return moment(_date).format('DD/MM/YY');
+    },
+    since: function since(date) {
+      return moment(date).fromNow();
+    },
+    saveBarCode: function saveBarCode() {
+      var _this = this;
+
+      axios.post('bar-codes', {
+        barCode: this.bar_code
+      }).then(function (res) {
+        // console.log(res.data)
+        _this.getBarCodes();
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    },
+    getBarCodes: function getBarCodes() {
+      var _this2 = this;
+
+      axios.get('bar-codes').then(function (res) {
+        _this2.bar_codes = res.data;
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    },
+    getLink: function getLink() {
+      return 'bar-codes/' + this.bar_code.name + '/' + this.bar_code.amount + '/' + this.bar_code.size + '/' + this.bar_code.text;
+    }
+  },
+  created: function created() {
+    this.getBarCodes();
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ingresar/Ingresar.vue?vue&type=script&lang=js&":
 /*!****************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ingresar/Ingresar.vue?vue&type=script&lang=js& ***!
@@ -58880,6 +59056,403 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/codigos-de-barra/CodigosDeBarra.vue?vue&type=template&id=62053172&":
+/*!**********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/codigos-de-barra/CodigosDeBarra.vue?vue&type=template&id=62053172& ***!
+  \**********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { attrs: { id: "codigos-de-barra" } }, [
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c("div", { staticClass: "col-lg-8" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _vm._v("\r\n\t\t\t\t\tCodigos de barra\r\n\t\t\t\t")
+          ]),
+          _vm._v(" "),
+          _c("form", [
+            _c("div", { staticClass: "card-body" }, [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-12 col-lg-6" }, [
+                  _c("div", { staticClass: "card" }, [
+                    _c("div", { staticClass: "card-header" }, [
+                      _vm._v(
+                        "\r\n\t\t\t\t\t\t\t\t\t\tGenere un nuevo codigo de barras\r\n\t\t\t\t\t\t\t\t\t"
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "card-body" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "bar-code" } }, [
+                          _vm._v("Nuevo codigo de barras")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.bar_code.name,
+                              expression: "bar_code.name"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: {
+                            type: "text",
+                            placeholder: "Ingrese su nuevo codigo de barras",
+                            id: "bar-code"
+                          },
+                          domProps: { value: _vm.bar_code.name },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.bar_code,
+                                "name",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "bar-code-amount" } }, [
+                          _vm._v(
+                            "\r\n\t\t\t\t\t\t\t\t\t\t\t\tCuantas veces necesita imprimirlo\r\n\t\t\t\t\t\t\t\t\t\t\t"
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.bar_code.amount,
+                              expression: "bar_code.amount"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: {
+                            id: "bar-code-amount",
+                            type: "number",
+                            min: "0",
+                            placeholder: "Cantidad de veces que se imprimira"
+                          },
+                          domProps: { value: _vm.bar_code.amount },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.bar_code,
+                                "amount",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", [_vm._v("Tamaño")]),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "custom-control custom-radio" },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.bar_code.size,
+                                  expression: "bar_code.size"
+                                }
+                              ],
+                              staticClass: "custom-control-input",
+                              attrs: { type: "radio", value: "lg", id: "lg" },
+                              domProps: {
+                                checked: _vm._q(_vm.bar_code.size, "lg")
+                              },
+                              on: {
+                                change: function($event) {
+                                  return _vm.$set(_vm.bar_code, "size", "lg")
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "label",
+                              {
+                                staticClass: "custom-control-label",
+                                attrs: { for: "lg" }
+                              },
+                              [_vm._v("Grande")]
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "custom-control custom-radio" },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.bar_code.size,
+                                  expression: "bar_code.size"
+                                }
+                              ],
+                              staticClass: "custom-control-input",
+                              attrs: { type: "radio", value: "md", id: "md" },
+                              domProps: {
+                                checked: _vm._q(_vm.bar_code.size, "md")
+                              },
+                              on: {
+                                change: function($event) {
+                                  return _vm.$set(_vm.bar_code, "size", "md")
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "label",
+                              {
+                                staticClass: "custom-control-label",
+                                attrs: { for: "md" }
+                              },
+                              [_vm._v("Normal")]
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "custom-control custom-radio" },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.bar_code.size,
+                                  expression: "bar_code.size"
+                                }
+                              ],
+                              staticClass: "custom-control-input",
+                              attrs: { type: "radio", value: "sm", id: "sm" },
+                              domProps: {
+                                checked: _vm._q(_vm.bar_code.size, "sm")
+                              },
+                              on: {
+                                change: function($event) {
+                                  return _vm.$set(_vm.bar_code, "size", "sm")
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "label",
+                              {
+                                staticClass: "custom-control-label",
+                                attrs: { for: "sm" }
+                              },
+                              [_vm._v("Chico")]
+                            )
+                          ]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "form-group" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass:
+                              "custom-control custom-checkbox my-1 mr-sm-2"
+                          },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.bar_code.text,
+                                  expression: "bar_code.text"
+                                }
+                              ],
+                              staticClass: "custom-control-input",
+                              attrs: { type: "checkbox", id: "bar-code-text" },
+                              domProps: {
+                                checked: Array.isArray(_vm.bar_code.text)
+                                  ? _vm._i(_vm.bar_code.text, null) > -1
+                                  : _vm.bar_code.text
+                              },
+                              on: {
+                                change: function($event) {
+                                  var $$a = _vm.bar_code.text,
+                                    $$el = $event.target,
+                                    $$c = $$el.checked ? true : false
+                                  if (Array.isArray($$a)) {
+                                    var $$v = null,
+                                      $$i = _vm._i($$a, $$v)
+                                    if ($$el.checked) {
+                                      $$i < 0 &&
+                                        _vm.$set(
+                                          _vm.bar_code,
+                                          "text",
+                                          $$a.concat([$$v])
+                                        )
+                                    } else {
+                                      $$i > -1 &&
+                                        _vm.$set(
+                                          _vm.bar_code,
+                                          "text",
+                                          $$a
+                                            .slice(0, $$i)
+                                            .concat($$a.slice($$i + 1))
+                                        )
+                                    }
+                                  } else {
+                                    _vm.$set(_vm.bar_code, "text", $$c)
+                                  }
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "label",
+                              {
+                                staticClass: "custom-control-label",
+                                attrs: { for: "bar-code-text" }
+                              },
+                              [
+                                _vm._v(
+                                  "\r\n\t\t\t\t\t\t\t                    \tColocar numero debajo del código\r\n\t\t\t\t\t\t\t                    "
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "card-footer" }, [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "btn btn-primary",
+                          class:
+                            _vm.bar_code.name && _vm.bar_code.amount > 0
+                              ? ""
+                              : "disabled",
+                          attrs: { href: _vm.getLink(), target: "_blank" }
+                        },
+                        [
+                          _c("i", { staticClass: "icon-check" }),
+                          _vm._v(
+                            "\r\n\t\t\t\t\t\t\t\t\t\t\tGenerar codigo\r\n\t\t\t\t\t\t\t\t\t\t"
+                          )
+                        ]
+                      )
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: _vm.bar_codes.length,
+                        expression: "bar_codes.length"
+                      }
+                    ],
+                    staticClass: "col-12 col-lg-6"
+                  },
+                  [
+                    _c("ul", { staticClass: "list-group" }, [
+                      _c("li", { staticClass: "list-group-item active" }, [
+                        _vm._v("Codigos que he generado")
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "list-bar-codes" },
+                        _vm._l(_vm.bar_codes, function(bar_code) {
+                          return _c("li", { staticClass: "list-group-item" }, [
+                            _c("p", [
+                              _c("i", { staticClass: "icon-barcode" }),
+                              _vm._v(
+                                "\r\n\t\t\t\t\t\t\t\t\t\t\t\t" +
+                                  _vm._s(bar_code.name) +
+                                  "\r\n\t\t\t\t\t\t\t\t\t\t\t\t"
+                              ),
+                              _c("span", { staticClass: "float-right" }, [
+                                _vm._v(
+                                  "\r\n\t\t\t\t\t\t\t\t\t\t\t\t\timpreso " +
+                                    _vm._s(bar_code.amount) +
+                                    " veces\r\n\t\t\t\t\t\t\t\t\t\t\t\t"
+                                )
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "small",
+                              {
+                                staticClass: "form-text text-muted",
+                                attrs: { id: "nameHelp" }
+                              },
+                              [
+                                _vm._v(
+                                  "\r\n\t\t\t\t\t\t\t\t\t\t\t\t" +
+                                    _vm._s(_vm.date(bar_code.created_at)) +
+                                    " \r\n\t\t\t\t\t\t\t\t\t\t\t\thace " +
+                                    _vm._s(_vm.since(bar_code.created_at)) +
+                                    "\r\n\t\t\t\t\t\t\t\t\t\t\t"
+                                )
+                              ]
+                            )
+                          ])
+                        }),
+                        0
+                      )
+                    ])
+                  ]
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-footer p-0" })
+          ])
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ingresar/Ingresar.vue?vue&type=template&id=29ccd018&":
 /*!********************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ingresar/Ingresar.vue?vue&type=template&id=29ccd018& ***!
@@ -75692,6 +76265,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Ventas_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/Ventas.vue */ "./resources/js/components/Ventas.vue");
 /* harmony import */ var _components_listado_Listado_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/listado/Listado.vue */ "./resources/js/components/listado/Listado.vue");
 /* harmony import */ var _components_ingresar_Ingresar_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/ingresar/Ingresar.vue */ "./resources/js/components/ingresar/Ingresar.vue");
+/* harmony import */ var _components_codigos_de_barra_CodigosDeBarra_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/codigos-de-barra/CodigosDeBarra.vue */ "./resources/js/components/codigos-de-barra/CodigosDeBarra.vue");
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -75714,11 +76288,13 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 
 
 
+
 Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]);
 Vue.component('nav-component', _components_NavComponent_vue__WEBPACK_IMPORTED_MODULE_0__["default"]);
 Vue.component('ventas', _components_Ventas_vue__WEBPACK_IMPORTED_MODULE_1__["default"]);
 Vue.component('listado', _components_listado_Listado_vue__WEBPACK_IMPORTED_MODULE_2__["default"]);
 Vue.component('ingresar', _components_ingresar_Ingresar_vue__WEBPACK_IMPORTED_MODULE_3__["default"]);
+Vue.component('codigos-de-barra', _components_codigos_de_barra_CodigosDeBarra_vue__WEBPACK_IMPORTED_MODULE_4__["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -75990,6 +76566,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Ventas_vue_vue_type_template_id_4b1f3b5c___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Ventas_vue_vue_type_template_id_4b1f3b5c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/codigos-de-barra/CodigosDeBarra.vue":
+/*!*********************************************************************!*\
+  !*** ./resources/js/components/codigos-de-barra/CodigosDeBarra.vue ***!
+  \*********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _CodigosDeBarra_vue_vue_type_template_id_62053172___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CodigosDeBarra.vue?vue&type=template&id=62053172& */ "./resources/js/components/codigos-de-barra/CodigosDeBarra.vue?vue&type=template&id=62053172&");
+/* harmony import */ var _CodigosDeBarra_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CodigosDeBarra.vue?vue&type=script&lang=js& */ "./resources/js/components/codigos-de-barra/CodigosDeBarra.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _CodigosDeBarra_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _CodigosDeBarra_vue_vue_type_template_id_62053172___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _CodigosDeBarra_vue_vue_type_template_id_62053172___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/codigos-de-barra/CodigosDeBarra.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/codigos-de-barra/CodigosDeBarra.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************!*\
+  !*** ./resources/js/components/codigos-de-barra/CodigosDeBarra.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CodigosDeBarra_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./CodigosDeBarra.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/codigos-de-barra/CodigosDeBarra.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CodigosDeBarra_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/codigos-de-barra/CodigosDeBarra.vue?vue&type=template&id=62053172&":
+/*!****************************************************************************************************!*\
+  !*** ./resources/js/components/codigos-de-barra/CodigosDeBarra.vue?vue&type=template&id=62053172& ***!
+  \****************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CodigosDeBarra_vue_vue_type_template_id_62053172___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./CodigosDeBarra.vue?vue&type=template&id=62053172& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/codigos-de-barra/CodigosDeBarra.vue?vue&type=template&id=62053172&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CodigosDeBarra_vue_vue_type_template_id_62053172___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CodigosDeBarra_vue_vue_type_template_id_62053172___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

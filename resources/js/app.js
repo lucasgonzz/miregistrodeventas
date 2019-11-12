@@ -22,11 +22,13 @@ import navComponent from './components/NavComponent.vue'
 import ventas from './components/Ventas.vue'
 import Listado from './components/listado/Listado.vue'
 import Ingresar from './components/ingresar/Ingresar.vue'
+import CodigosDeBarra from './components/codigos-de-barra/CodigosDeBarra.vue'
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('nav-component', navComponent);
 Vue.component('ventas', ventas);
 Vue.component('listado', Listado);
 Vue.component('ingresar', Ingresar);
+Vue.component('codigos-de-barra', CodigosDeBarra);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
