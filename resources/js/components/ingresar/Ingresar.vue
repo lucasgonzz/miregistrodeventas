@@ -63,6 +63,7 @@
 									<input type="text" 
 											class="form-control focus-red" 
 											placeholder="Ingrese el costo"
+											id="cost"
 											v-model="article.cost">
 									<small class="form-text text-muted">
 										Coloque un . (punto) para agregar centavos
@@ -73,6 +74,7 @@
 									<input type="text" 
 											class="form-control focus-red" 
 											placeholder="Ingrese el precio"
+											id="price"
 											v-model="article.price">
 									<small class="form-text text-muted">
 										Coloque un . (punto) para agregar centavos
@@ -84,12 +86,14 @@
 								<input type="text" 
 										class="form-control focus-red" 
 										placeholder="Ingrese el nombre"
+										id="name"
 										v-model="article.name">
 							</div>
 							<div class="form-group">
 								<label for="created_at">Fecha</label>
 								<input type="date" 
 										@change="remember_date_"
+										id="created_at"
 										class="form-control focus-red"
 										v-model="article.created_at">
 							</div>
@@ -141,6 +145,7 @@
 									<label for="stock">Cantidad</label>
 									<input type="number" 
 											class="form-control focus-red" 
+											id="stock"
 											placeholder="Ingrese la cantidad"
 											v-model="article.stock">
 								</div>
@@ -149,6 +154,7 @@
 								<label for="stock">Cantidad</label>
 								<input type="number" 
 										class="form-control focus-red" 
+										id="stock"
 										placeholder="Ingrese la cantidad"
 										v-model="article.stock">
 							</div>
@@ -216,6 +222,7 @@ export default {
 			remember_provider: true,
 			remember_date: false,
 			bar_codes: [],
+			generated_bar_codes: [],
 			previus_next: 0,
 		}
 	},
@@ -224,6 +231,7 @@ export default {
 			this.getProviders()
 		}
 		this.getBarCodes()
+		this.getGeneratedBarCodes()
 	},
 	methods: {
 		date(date) {
@@ -238,8 +246,18 @@ export default {
 		getBarCodes() {
 			axios.get('articles/bar-codes')
 			.then( res => {
-				console.log(res.data)
+				// console.log(res.data)
 				this.bar_codes = res.data
+			})
+			.catch( err => {
+				console.log(err)
+			})
+		},
+		getGeneratedBarCodes() {
+			axios.get('bar-codes/generated')
+			.then( res => {
+				console.log(res.data)
+				this.generated_bar_codes = res.data
 			})
 			.catch( err => {
 				console.log(err)
@@ -254,6 +272,14 @@ export default {
 				})
 				.catch( err => {
 					console.log(err)
+				})
+			} else {
+				this.generated_bar_codes.forEach(bar_code => {
+					if (bar_code.name == this.article.bar_code) {
+						toastr.success('Codigo generado por usted, se completo la cantidad')
+						this.article.stock = bar_code.amount
+						$('#cost').focus()
+					}
 				})
 			}
 		},
@@ -270,7 +296,7 @@ export default {
 					article: this.article
 				})
 				.then( res => {
-					// console.log(res.data)
+					console.log(res.data)
 					this.clearArticle()
 					toastr.success('Artículo guardado correctamente')
 				})
@@ -303,8 +329,10 @@ export default {
 			this.article.name = article.name
 			this.article.cost = article.cost
 			this.article.price = article.price
-			this.article.provider = article.providers[0].id
-			this.article.providers = article.providers
+			if (this.rol == 'commerce') {
+				this.article.provider = article.providers[0].id
+				this.article.providers = article.providers
+			}
 			this.article.stock = article.stock
 		},
 		previus() {

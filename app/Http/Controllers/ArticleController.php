@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use App\Article;
+use App\BarCode;
 
 use App\Exports\ArticlesExport;
 use App\Imports\ArticlesImport;
@@ -194,6 +195,18 @@ class ArticleController extends Controller
                                             'cost' => $request->article['cost'],
                                             'price' => $request->article['price']
                                         ]);
+        }
+
+        $bar_code = BarCode::where('user_id', $user->id)
+                                ->where('name', $request->article['bar_code'])
+                                ->first();
+        // return;
+        if ($bar_code === null) {
+            return 'No existe';
+        } else {
+            $bar_code->article_id = $article->id;
+            $bar_code->save();
+            return 'ASD';
         }
     }
 
