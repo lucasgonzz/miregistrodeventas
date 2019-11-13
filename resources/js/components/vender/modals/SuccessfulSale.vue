@@ -66,7 +66,7 @@ export default {
     data() {
         return {
             company_name: 0,
-            borders: 0,
+            borders: 0
         }
     },
     methods: {
