@@ -110,10 +110,7 @@
 .icon-filter:before {
   content: "\79";
 }
-.icon-eye-1:before {
-  content: "\78";
-}
-.icon-eye-2:before {
+.icon-eye:before {
   content: "\7a";
 }
 .icon-clock-1:before {

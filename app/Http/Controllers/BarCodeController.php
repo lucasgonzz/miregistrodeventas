@@ -11,16 +11,30 @@ use App\BarCode;
 class BarCodeController extends Controller
 {
     function index() {
-    	return BarCode::where('user_id', Auth()->user()->id)->get();
+    	return BarCode::where('user_id', Auth()->user()->id)
+                        ->orderBy('id', 'DESC')
+                        ->with('article')
+                        ->get();
+    }
+
+    function generated() {
+        return BarCode::where('user_id',  Auth()->user()->id)->get();
     }
 
     function store($bar_code, $amount, $size, $text) {
+        $user = Auth()->user();
+        $barCode = BarCode::where('user_id', $user->id)
+                            ->where('name', $bar_code)
+                            ->first();
 
-    	BarCode::create([
-    		'name' => $bar_code,
-    		'amount' => $amount,
-    		'user_id' => Auth()->user()->id
-    	]);
+        if ($barCode === null) {
+        	BarCode::create([
+        		'name' => $bar_code,
+        		'amount' => $amount,
+        		'user_id' => $user->id
+        	]);
+        }
+
 
         if ($text == 'true') {
             $text_below = true;
@@ -32,28 +46,15 @@ class BarCodeController extends Controller
         $pdf->AddPage();
         $pdf->SetFont('Arial','',10);
         if ($size == 'lg') {
-            if (strlen($bar_code)>8) {
-                $w = 70;
-            } else {
-                $w = 50;
-            }
+            $w = 60;
         } else if ($size == 'md') {
-            if (strlen($bar_code)>8) {
-                $w = 50;
-            } else {
-                $w = 30;
-            }
+            $w = 37;
         } else if ($size == 'sm') {
-            if (strlen($bar_code)>8) {
-                $w = 35;
-            } else {
-                $w = 20;
-            }
+            $w = 25;
         }
-
-        $pdf->setX(0);
         $pdf->setY(5);
         $x = $pdf->GetX();
+        $x_origin = $x;
         $y = $pdf->GetY();
         $user = Auth()->user();
         for ($i=0; $i < $amount ; $i++) {
@@ -63,36 +64,36 @@ class BarCodeController extends Controller
             barcode(public_path().'/storage/barcodes/'.$user->id.'/'.$bar_code.'.png', 
                     $bar_code, 20, 'horizontal', 'code128', $text_below);
             $pdf->Image(public_path().'/storage/barcodes/'.$user->id.'/'.$bar_code.'.png',$x,$y,$w,0,'PNG');
-            $x = $x+$w;
-            if ($x > 200) {
-                $x = 10;
+            $x += $w;
+            if ($x > 210 - $w) {
+                $x = $x_origin;
                 if ($text_below) {
-                    $y += 20;
+                    if ($size == 'lg') {
+                        $y += 20;
+                    } else if ($size == 'md') {
+                        $y += 14;
+                    } else if ($size == 'sm') {
+                        $y += 9;
+                    }
                 } else {
-                    $y += 15;
+                    if ($size == 'lg') {
+                        $y += 12;
+                    } else if ($size == 'md') {
+                        $y += 8;
+                    } else if ($size == 'sm') {
+                        $y += 6;
+                    }
                 }
             }
         }
-
 
         $pdf->Output();
         exit;
 
     }
 
-    function generate($bar_code) {
-        BarCode::create([
-            'name' => $request->barCode['name'],
-            'amount' => (int)$request->barCode['amount'],
-            'user_id' => Auth()->user()->id
-        ]);
-        $pdf=new FPDF();
-        $pdf->AddPage();
-        $pdf->SetFont('Arial','',10);
-
-        $pdf->Code128(50,20,$bar_code,80,20);
-        $pdf->SetXY(50,45);
-
-        $pdf->Output();
+    function delete($id) {
+        // return 'asd';
+        BarCode::find($id)->delete();
     }
 }

@@ -44,6 +44,7 @@ Route::group(['middleware' => ['has.role:provider']], function () {
 	Route::get('/mayoristas/articles/pre-search/{query}', 'ArticleController@pre_search');
 	Route::put('/mayoristas/articles/{id}', 'ArticleController@update');
 	Route::delete('/mayoristas/articles/{id}', 'ArticleController@destroy');
+	Route::get('/mayoristas/bar-codes/generated', 'BarCodeController@generated');
 
 	// Listado exportar
 	Route::get('/mayoristas/pdf/{columns}/{articles_ids}/{orientation}/{header?}', 'PdfController@articles');
@@ -72,6 +73,7 @@ Route::group(['middleware' => ['has.role:commerce']], function () {
 	Route::get('/comercios/articles/get-by-bar-code/{id}', 'ArticleController@getByBarCode');
 	Route::get('/comercios/articles/bar-codes', 'ArticleController@BarCodes');
 	Route::get('/comercios/articles/previus-next/{index}', 'ArticleController@previusNext');
+	Route::get('/comercios/bar-codes/generated', 'BarCodeController@generated');
 
 	// Listado
 	Route::post('/comercios/articles/filter', 'ArticleController@filter');
@@ -99,3 +101,4 @@ Route::get('pdf', 'PdfController@index');
 Route::get('bar-codes', 'BarCodeController@index');
 Route::post('bar-codes', 'BarCodeController@store');
 Route::get('bar-codes/{bar_code}/{amount}/{size}/{text}', 'BarCodeController@store');
+Route::delete('bar-codes/{id}', 'BarCodeController@delete');
