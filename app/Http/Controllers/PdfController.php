@@ -6,9 +6,70 @@ use Illuminate\Http\Request;
 require('fpdf/fpdf.php');
 use fpdf;
 use App\Article;
+use App\Sale;
 
 class PdfController extends Controller
 {
+
+	function ticket_client($company_name, $borders, $sale_id) {
+        $sale = Sale::find($sale_id);
+        $client = $sale->client;
+        $pdf = new PdfTicketClient($client, (bool)$company_name);
+        if ((bool)$borders) {
+        	$borders = 1;
+        } else {
+        	$borders = 'B';
+        }
+        $pdf->addPage();
+        $pdf->setFont('Arial', '', 12);
+        foreach ($sale->articles as $article) {
+        	$pdf->Cell(40,7,$article->bar_code,$borders,0);
+        	$name = $article->name;
+        	if (strlen($name) > 20) {
+        		$name = substr($article->name, 0, 20) . ' ..';
+        	}
+        	$pdf->Cell(45,7,$name,$borders,0);
+        	$pdf->Cell(27,7,'$'.$this->price($article->cost),$borders,0,'L');
+        	$pdf->Cell(27,7,'$'.$this->price($article->price),$borders,0,'L');
+        	$pdf->Cell(20,7,$article->pivot->amount,$borders,0,'C');
+        	$pdf->Cell(30,7,'$'.$article->price * $article->pivot->amount,$borders,0,'L');
+        	$pdf->Ln();
+        }
+        $pdf->Output();
+        exit;
+	}
+
+	function ticket_commerce($company_name, $borders, $sale_id) {
+        $sale = Sale::find($sale_id);
+        $client = $sale->client;
+        $pdf = new PdfTicketCommerce($client, (bool)$company_name);
+        if ((bool)$borders) {
+        	$borders = 1;
+        } else {
+        	$borders = 'B';
+        }
+        $pdf->addPage();
+        $pdf->setFont('Arial', '', 12);
+        foreach ($sale->articles as $article) {
+			$pdf->SetX(5);
+        	$pdf->Cell(40,7,$article->bar_code,$borders,0);
+        	$name = $article->name;
+        	if (strlen($name) > 20) {
+        		$name = substr($article->name,0, 20) . ' ..';
+        	}
+        	$pdf->Cell(45,7,$name,$borders,0);
+        	$pdf->Cell(25,7,'$'.$this->price($article->cost),$borders,0,'L');
+        	$pdf->Cell(25,7,'$'.$this->price($article->price),$borders,0,'L');
+        	$pdf->Cell(15,7,$article->pivot->amount,$borders,0,'C');
+        	$pdf->Cell(25,7,'$'.$article->cost * $article->pivot->amount,$borders,0,'L');
+        	$pdf->Cell(25,7,'$'.$article->price * $article->pivot->amount,$borders,0,'L');
+        	$pdf->Ln();
+        }
+        $pdf->Output();
+        exit;
+	}
+
+
     function articles($columns_string, $articles_ids_string, $orientation, $header = null) {
 
     	$articles;
@@ -96,6 +157,98 @@ class PdfController extends Controller
 		} else {
 			return number_format($new_price, 0, '', '.');			
 		}
+	}
+}
+
+class PdfTicketClient extends fpdf {
+
+	function __construct($client, $company_name) {
+		parent::__construct();
+		$this->client = $client;
+		$this->company_name = $company_name;
+	}
+	
+	function Header() {
+		$this->SetFont('Arial', '', 11, 'C');
+		$this->Write(5,date('d/m/y'));
+		$this->SetX(-60);
+		$this->Write(5,'Cliente: '.$this->client->name);
+		$this->SetY(20);
+		if ($this->company_name) {
+			$this->SetFont('Arial', 'B', 16, 'C');
+			$this->Cell(0,5,Auth()->user()->company_name,0,0,'C');
+			$this->SetY(30);
+		}
+		$this->SetFont('Arial', 'B', 14, 'C');
+		$this->Cell(40, 5, 'Codigo', 0, 0, 'C');
+		$this->Cell(45, 5, 'Artículo', 0, 0, 'C');
+		$this->Cell(27, 5, 'Costo', 0, 0, 'C');
+		$this->Cell(27, 5, 'Precio', 0, 0, 'C');
+		$this->Cell(20, 5, 'Cant.', 0, 0, 'C');
+		$this->Cell(30, 5, 'Sub Total', 0, 0, 'C');
+		$this->SetLineWidth(1);
+		$this->SetDrawColor(100, 174, 238);
+		if ($this->company_name) {
+			$this->SetY(39);
+			$this->Line(10, 37, 200, 37);
+		} else {
+			$this->Line(10, 27, 200, 27);
+			$this->SetY(29);
+		}
+	}
+
+	function Footer() {
+		$this->SetFont('Arial', '', 11);
+		$this->AliasNbPages();
+		$this->SetY(-20);
+		$this->Write(5,'Hoja '.$this->PageNo().'/{nb}');
+	}
+}
+
+class PdfTicketCommerce extends fpdf {
+
+	function __construct($client, $company_name) {
+		parent::__construct();
+		$this->client = $client;
+		$this->company_name = $company_name;
+	}
+	
+	function Header() {
+		$this->SetFont('Arial', '', 11, 'C');
+		$this->Write(5,date('d/m/y'));
+		$this->SetX(-60);
+		$this->Write(5,'Cliente: '.$this->client->name);
+		$this->SetY(20);
+		if ($this->company_name) {
+			$this->SetFont('Arial', 'B', 16, 'C');
+			$this->Cell(0,5,Auth()->user()->company_name,0,0,'C');
+			$this->SetY(30);
+		}
+		$this->SetX(5);
+		$this->SetFont('Arial', 'B', 14, 'C');
+		$this->Cell(40, 5, 'Codigo', 0, 0, 'C');
+		$this->Cell(45, 5, 'Artículo', 0, 0, 'C');
+		$this->Cell(25, 5, 'Costo', 0, 0, 'C');
+		$this->Cell(25, 5, 'Precio', 0, 0, 'C');
+		$this->Cell(15, 5, 'Cant.', 0, 0, 'C');
+		$this->Cell(25, 5, 'T. Costo', 0, 0, 'C');
+		$this->Cell(25, 5, 'Sub Total', 0, 0, 'C');
+		$this->SetLineWidth(1);
+		$this->SetDrawColor(100, 174, 238);
+		if ($this->company_name) {
+			$this->SetY(39);
+			$this->Line(5, 37, 205, 37);
+		} else {
+			$this->Line(5, 27, 205, 27);
+			$this->SetY(29);
+		}
+	}
+
+	function Footer() {
+		$this->SetFont('Arial', '', 11);
+		$this->AliasNbPages();
+		$this->SetY(-20);
+		$this->Write(5,'Hoja '.$this->PageNo().'/{nb}');
 	}
 }
 

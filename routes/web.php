@@ -50,6 +50,15 @@ Route::group(['middleware' => ['has.role:provider']], function () {
 	Route::get('/mayoristas/pdf/{columns}/{articles_ids}/{orientation}/{header?}', 'PdfController@articles');
 	Route::get('/mayoristas/articles/exel', 'ArticleController@export')->name('provider.exel');
 
+	// Vender
+	Route::post('mayoristas/sales', 'SaleController@store');
+	Route::get('mayoristas/sales/cliente/{company_name}/{borders}/{sale_id}', 'PdfController@ticket_client');
+	Route::get('mayoristas/sales/comercio/{company_name}/{borders}/{sale_id}', 'PdfController@ticket_commerce');
+	// Vender - Clientes
+	Route::get('mayoristas/clients', 'ClientController@index');
+	Route::post('mayoristas/clients', 'ClientController@store');
+	Route::delete('mayoristas/clients/{id}', 'ClientController@delete');
+
 	Route::post('/mayoristas/articles/import/exel', 'ArticleController@import');
 
 });

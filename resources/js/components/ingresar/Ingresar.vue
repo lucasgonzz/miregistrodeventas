@@ -148,6 +148,10 @@
 											id="stock"
 											placeholder="Ingrese la cantidad"
 											v-model="article.stock">
+									<small class="form-text text-muted">
+										Si deja este campo vacio no se tendra en cuenta el stock al 
+										momento de hacer una venta
+									</small>
 								</div>
 							</div>
 							<div class="form-group" v-else>
@@ -157,6 +161,10 @@
 										id="stock"
 										placeholder="Ingrese la cantidad"
 										v-model="article.stock">
+								<small class="form-text text-muted">
+									Si deja este campo vacio no se tendra en cuenta el stock al 
+									momento de hacer una venta
+								</small>
 							</div>
 						</div>
 						<div class="card-footer p-0">
@@ -242,11 +250,10 @@ export default {
 		},
 
 
-
+		// Codigos de barra
 		getBarCodes() {
 			axios.get('articles/bar-codes')
 			.then( res => {
-				// console.log(res.data)
 				this.bar_codes = res.data
 			})
 			.catch( err => {
@@ -256,7 +263,6 @@ export default {
 		getGeneratedBarCodes() {
 			axios.get('bar-codes/generated')
 			.then( res => {
-				console.log(res.data)
 				this.generated_bar_codes = res.data
 			})
 			.catch( err => {
@@ -264,6 +270,7 @@ export default {
 			})
 		},
 		isRegister() {
+			// Controla que el codigo no este registrado con otro articulo
 			if (this.bar_codes.includes(this.article.bar_code)) {
 				axios.get('articles/get-by-bar-code/'+this.article.bar_code)
 				.then( res => {
@@ -274,6 +281,7 @@ export default {
 					console.log(err)
 				})
 			} else {
+				// Controla que el codigo haya sido creado por nosotros
 				this.generated_bar_codes.forEach(bar_code => {
 					if (bar_code.name == this.article.bar_code) {
 						toastr.success('Codigo generado por usted, se completo la cantidad')
@@ -290,21 +298,18 @@ export default {
 
 		// Articles
 		saveArticle() {
-			// if (this.article.bar_code && this.article.name 
-				// && this.article.cost && this.article.price && this.article.stock) {
-				axios.post('articles', {
-					article: this.article
-				})
-				.then( res => {
-					console.log(res.data)
-					this.clearArticle()
-					toastr.success('Artículo guardado correctamente')
-				})
-				.catch( err => {
-					console.log('mal')
-					console.log(err)
-				})
-			// }
+			axios.post('articles', {
+				article: this.article
+			})
+			.then( res => {
+				console.log(res.data)
+				this.clearArticle()
+				toastr.success('Artículo guardado correctamente')
+			})
+			.catch( err => {
+				console.log('mal')
+				console.log(err)
+			})
 		},
 		updateArticle() {
 			axios.put('articles/'+this.article.id, {

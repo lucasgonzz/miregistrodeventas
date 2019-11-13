@@ -171,7 +171,7 @@ class ArticleController extends Controller
     }
 
     function store(Request $request) {
-        // return $request->article;
+        
         $user = Auth()->user();
         $article = new Article();
         $article->bar_code = $request->article['bar_code'];

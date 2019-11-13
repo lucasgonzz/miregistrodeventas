@@ -108,7 +108,12 @@
 											<td class="td-price">${{ price(article.price) }}</td>
 											<td v-if="article.previus_price != '0.00'">${{ price(article.previus_price) }}</td>
 											<td v-else>Sin datos</td>
-											<td>{{ article.stock }}</td>
+											<td v-if="article.stock">
+												{{ article.stock }}
+											</td>
+											<td v-else>
+												Sin uso
+											</td>
 											<td>
 												<div class="dropdown">
 													<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -147,7 +152,12 @@
 											<td class="td-price">${{ price(article.price) }}</td>
 											<td v-if="article.previus_price != '0.00'">${{ price(article.previus_price) }}</td>
 											<td v-else>Sin datos</td>
-											<td>{{ article.stock }}</td>
+											<td v-if="article.stock">
+												{{ article.stock }}
+											</td>
+											<td v-else>
+												Sin uso
+											</td>
 											<td>{{ date(article.created_at) }}</td>
 											<td v-if="article.created_at != article.updated_at">
 												{{ date(article.updated_at) }}
@@ -215,7 +225,7 @@ export default {
 		return {
 
 			articles: [],
-			article: {'id': 0, 'bar_code': '','name': '', 'cost': 0, 'price': 0, 'stock': 0, 'providers': [], 'created_at': '', 'updated_at': '', 'creado': '', 'actualizado': '', 'act_fecha': true},
+			article: {'id': 0, 'bar_code': '','name': '', 'cost': 0, 'price': 0, 'stock': 0, 'new_stock': 0, 'providers': [], 'created_at': '', 'updated_at': '', 'creado': '', 'actualizado': '', 'act_fecha': true},
 			search_query: '',
 			pre_search: [],
 			searching: false,
@@ -412,13 +422,16 @@ export default {
 			})
 		},
 		clearArticle() {
+			this.article.id = ''
 			this.article.bar_code = ''
 			this.article.name = ''
 			this.article.cost = ''
 			this.article.price = ''
 			this.article.stock = 0
 			this.article.new_stock = 0
-			this.article.provider = this.providers[0].id
+			if (this.rol == 'commerce') {
+				this.article.provider = this.article.providers[0].id
+			}
 			this.article.created_at = ''
 			this.previus_next = 0
 			console.log(this.article)
