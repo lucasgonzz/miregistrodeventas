@@ -13,26 +13,40 @@
                 </button>
             </div>
             <div class="modal-body">
-                <h5>En la factura se mostrara</h5>
                 <div class="row">
-                    <div class="col">
-                        <div class="custom-control custom-checkbox my-1 mr-sm-2">
-                            <input type="checkbox" 
-                                    v-model="company_name" 
-                                    true-value="1"
-                                    false-value="0"
-                                    class="custom-control-input" id="company_name">
-                            <label class="custom-control-label" for="company_name">El nombre del negocio</label>
-                        </div>
+                    <div class="col-12">
+                        <h5>En la factura se mostrara</h5>
                     </div>
-                    <div class="col">
-                        <div class="custom-control custom-checkbox my-1 mr-sm-2">
-                            <input type="checkbox" 
-                                    v-model="borders" 
-                                    true-value="1"
-                                    false-value="0"
-                                    class="custom-control-input" id="borders">
-                            <label class="custom-control-label" for="borders">Bordes</label>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <div class="custom-control custom-checkbox my-1 mr-sm-2">
+                                <input type="checkbox" 
+                                        v-model="company_name" 
+                                        true-value="1"
+                                        false-value="0"
+                                        class="custom-control-input" id="company_name">
+                                <label class="custom-control-label" for="company_name">El nombre del negocio</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="custom-control custom-checkbox my-1 mr-sm-2">
+                                <input type="checkbox" 
+                                        v-model="borders" 
+                                        true-value="1"
+                                        false-value="0"
+                                        class="custom-control-input" id="borders">
+                                <label class="custom-control-label" for="borders">Bordes</label>
+                            </div>
+                        </div>
+                        <div class="form-group" v-show="articles_per_page != 0">
+                            <div class="form-group">
+                                <label for="cantidad-registros">Artículos por página</label>
+                                <input type="number" 
+                                        v-model="articles_per_page"
+                                        :min="min"
+                                        :max="max"
+                                        class="form-control">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -62,20 +76,36 @@
 </template>
 <script>
 export default {
-    props: ['saleId'],
+    props: ['sale'],
     data() {
         return {
             company_name: 0,
-            borders: 0
+            borders: 0,
+            articles_per_page: 0,
+            max: 0,
+            min: 0,
+        }
+    },
+    created() {
+        if (this.sale.articles.length > 10) {
+            this.articles_per_page = this.sale.articles.length / 2
+            this.min = 5
+            this.max = this.sale.articles.length
         }
     },
     methods: {
         pdfClient() {
-            var link = 'sales/cliente/'+this.company_name+'/'+this.borders+'/'+this.saleId
+            var link = 'sales/cliente/'+this.company_name+
+                        '/'+this.borders+
+                        '/'+this.articles_per_page+
+                        '/'+this.sale.id
             window.open(link)
         },
         pdfCommerce() {
-            var link = 'sales/comercio/'+this.company_name+'/'+this.borders+'/'+this.saleId
+            var link = 'sales/comercio/'+this.company_name+
+                        '/'+this.borders+
+                        '/'+this.articles_per_page+
+                        '/'+this.sale.id
             window.open(link)
         },
     }

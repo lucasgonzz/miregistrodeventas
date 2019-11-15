@@ -4549,7 +4549,7 @@ __webpack_require__.r(__webpack_exports__);
       ventaRealizada: false,
       selected_client: 0,
       bar_codes: [],
-      sale_id: 0
+      sale: {}
     };
   },
   methods: {
@@ -4646,7 +4646,8 @@ __webpack_require__.r(__webpack_exports__);
           client_id: this.selected_client,
           articles: this.articles
         }).then(function (res) {
-          _this2.sale_id = res.data.id;
+          _this2.sale = res.data;
+          console.log(res.data);
           _this2.articles = [];
           _this2.ventaRealizada = true;
           $('#successful-sale').modal('show');
@@ -4884,21 +4885,45 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['saleId'],
+  props: ['sale'],
   data: function data() {
     return {
       company_name: 0,
-      borders: 0
+      borders: 0,
+      articles_per_page: 0,
+      max: 0,
+      min: 0
     };
+  },
+  created: function created() {
+    if (this.sale.articles.length > 10) {
+      this.articles_per_page = this.sale.articles.length / 2;
+      this.min = 5;
+      this.max = this.sale.articles.length;
+    }
   },
   methods: {
     pdfClient: function pdfClient() {
-      var link = 'sales/cliente/' + this.company_name + '/' + this.borders + '/' + this.saleId;
+      var link = 'sales/cliente/' + this.company_name + '/' + this.borders + '/' + this.articles_per_page + '/' + this.sale.id;
       window.open(link);
     },
     pdfCommerce: function pdfCommerce() {
-      var link = 'sales/comercio/' + this.company_name + '/' + this.borders + '/' + this.saleId;
+      var link = 'sales/comercio/' + this.company_name + '/' + this.borders + '/' + this.articles_per_page + '/' + this.sale.id;
       window.open(link);
     }
   }
@@ -65657,7 +65682,7 @@ var render = function() {
     "div",
     { attrs: { id: "vender" } },
     [
-      _c("successful-sale", { attrs: { saleId: _vm.sale_id } }),
+      _c("successful-sale", { attrs: { sale: _vm.sale } }),
       _vm._v(" "),
       _c("clients", {
         attrs: { clients: _vm.clients },
@@ -66243,131 +66268,178 @@ var render = function() {
           _vm._m(0),
           _vm._v(" "),
           _c("div", { staticClass: "modal-body" }, [
-            _c("h5", [_vm._v("En la factura se mostrara")]),
-            _vm._v(" "),
             _c("div", { staticClass: "row" }, [
-              _c("div", { staticClass: "col" }, [
-                _c(
-                  "div",
-                  {
-                    staticClass: "custom-control custom-checkbox my-1 mr-sm-2"
-                  },
-                  [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.company_name,
-                          expression: "company_name"
-                        }
-                      ],
-                      staticClass: "custom-control-input",
-                      attrs: {
-                        type: "checkbox",
-                        "true-value": "1",
-                        "false-value": "0",
-                        id: "company_name"
-                      },
-                      domProps: {
-                        checked: Array.isArray(_vm.company_name)
-                          ? _vm._i(_vm.company_name, null) > -1
-                          : _vm._q(_vm.company_name, "1")
-                      },
-                      on: {
-                        change: function($event) {
-                          var $$a = _vm.company_name,
-                            $$el = $event.target,
-                            $$c = $$el.checked ? "1" : "0"
-                          if (Array.isArray($$a)) {
-                            var $$v = null,
-                              $$i = _vm._i($$a, $$v)
-                            if ($$el.checked) {
-                              $$i < 0 && (_vm.company_name = $$a.concat([$$v]))
-                            } else {
-                              $$i > -1 &&
-                                (_vm.company_name = $$a
-                                  .slice(0, $$i)
-                                  .concat($$a.slice($$i + 1)))
-                            }
-                          } else {
-                            _vm.company_name = $$c
-                          }
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "label",
-                      {
-                        staticClass: "custom-control-label",
-                        attrs: { for: "company_name" }
-                      },
-                      [_vm._v("El nombre del negocio")]
-                    )
-                  ]
-                )
-              ]),
+              _vm._m(1),
               _vm._v(" "),
-              _c("div", { staticClass: "col" }, [
+              _c("div", { staticClass: "col-12" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "custom-control custom-checkbox my-1 mr-sm-2"
+                    },
+                    [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.company_name,
+                            expression: "company_name"
+                          }
+                        ],
+                        staticClass: "custom-control-input",
+                        attrs: {
+                          type: "checkbox",
+                          "true-value": "1",
+                          "false-value": "0",
+                          id: "company_name"
+                        },
+                        domProps: {
+                          checked: Array.isArray(_vm.company_name)
+                            ? _vm._i(_vm.company_name, null) > -1
+                            : _vm._q(_vm.company_name, "1")
+                        },
+                        on: {
+                          change: function($event) {
+                            var $$a = _vm.company_name,
+                              $$el = $event.target,
+                              $$c = $$el.checked ? "1" : "0"
+                            if (Array.isArray($$a)) {
+                              var $$v = null,
+                                $$i = _vm._i($$a, $$v)
+                              if ($$el.checked) {
+                                $$i < 0 &&
+                                  (_vm.company_name = $$a.concat([$$v]))
+                              } else {
+                                $$i > -1 &&
+                                  (_vm.company_name = $$a
+                                    .slice(0, $$i)
+                                    .concat($$a.slice($$i + 1)))
+                              }
+                            } else {
+                              _vm.company_name = $$c
+                            }
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "label",
+                        {
+                          staticClass: "custom-control-label",
+                          attrs: { for: "company_name" }
+                        },
+                        [_vm._v("El nombre del negocio")]
+                      )
+                    ]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "custom-control custom-checkbox my-1 mr-sm-2"
+                    },
+                    [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.borders,
+                            expression: "borders"
+                          }
+                        ],
+                        staticClass: "custom-control-input",
+                        attrs: {
+                          type: "checkbox",
+                          "true-value": "1",
+                          "false-value": "0",
+                          id: "borders"
+                        },
+                        domProps: {
+                          checked: Array.isArray(_vm.borders)
+                            ? _vm._i(_vm.borders, null) > -1
+                            : _vm._q(_vm.borders, "1")
+                        },
+                        on: {
+                          change: function($event) {
+                            var $$a = _vm.borders,
+                              $$el = $event.target,
+                              $$c = $$el.checked ? "1" : "0"
+                            if (Array.isArray($$a)) {
+                              var $$v = null,
+                                $$i = _vm._i($$a, $$v)
+                              if ($$el.checked) {
+                                $$i < 0 && (_vm.borders = $$a.concat([$$v]))
+                              } else {
+                                $$i > -1 &&
+                                  (_vm.borders = $$a
+                                    .slice(0, $$i)
+                                    .concat($$a.slice($$i + 1)))
+                              }
+                            } else {
+                              _vm.borders = $$c
+                            }
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "label",
+                        {
+                          staticClass: "custom-control-label",
+                          attrs: { for: "borders" }
+                        },
+                        [_vm._v("Bordes")]
+                      )
+                    ]
+                  )
+                ]),
+                _vm._v(" "),
                 _c(
                   "div",
                   {
-                    staticClass: "custom-control custom-checkbox my-1 mr-sm-2"
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: _vm.articles_per_page != 0,
+                        expression: "articles_per_page != 0"
+                      }
+                    ],
+                    staticClass: "form-group"
                   },
                   [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.borders,
-                          expression: "borders"
-                        }
-                      ],
-                      staticClass: "custom-control-input",
-                      attrs: {
-                        type: "checkbox",
-                        "true-value": "1",
-                        "false-value": "0",
-                        id: "borders"
-                      },
-                      domProps: {
-                        checked: Array.isArray(_vm.borders)
-                          ? _vm._i(_vm.borders, null) > -1
-                          : _vm._q(_vm.borders, "1")
-                      },
-                      on: {
-                        change: function($event) {
-                          var $$a = _vm.borders,
-                            $$el = $event.target,
-                            $$c = $$el.checked ? "1" : "0"
-                          if (Array.isArray($$a)) {
-                            var $$v = null,
-                              $$i = _vm._i($$a, $$v)
-                            if ($$el.checked) {
-                              $$i < 0 && (_vm.borders = $$a.concat([$$v]))
-                            } else {
-                              $$i > -1 &&
-                                (_vm.borders = $$a
-                                  .slice(0, $$i)
-                                  .concat($$a.slice($$i + 1)))
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", { attrs: { for: "cantidad-registros" } }, [
+                        _vm._v("Artículos por página")
+                      ]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.articles_per_page,
+                            expression: "articles_per_page"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "number", min: _vm.min, max: _vm.max },
+                        domProps: { value: _vm.articles_per_page },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
                             }
-                          } else {
-                            _vm.borders = $$c
+                            _vm.articles_per_page = $event.target.value
                           }
                         }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "label",
-                      {
-                        staticClass: "custom-control-label",
-                        attrs: { for: "borders" }
-                      },
-                      [_vm._v("Bordes")]
-                    )
+                      })
+                    ])
                   ]
                 )
               ])
@@ -66408,7 +66480,7 @@ var render = function() {
             ])
           ]),
           _vm._v(" "),
-          _vm._m(1)
+          _vm._m(2)
         ])
       ])
     ]
@@ -66439,6 +66511,14 @@ var staticRenderFns = [
         },
         [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
       )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-12" }, [
+      _c("h5", [_vm._v("En la factura se mostrara")])
     ])
   },
   function() {
@@ -79992,15 +80072,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!******************************************************************!*\
   !*** ./resources/js/components/vender/modals/SuccessfulSale.vue ***!
   \******************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _SuccessfulSale_vue_vue_type_template_id_a7a31610___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SuccessfulSale.vue?vue&type=template&id=a7a31610& */ "./resources/js/components/vender/modals/SuccessfulSale.vue?vue&type=template&id=a7a31610&");
 /* harmony import */ var _SuccessfulSale_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SuccessfulSale.vue?vue&type=script&lang=js& */ "./resources/js/components/vender/modals/SuccessfulSale.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _SuccessfulSale_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _SuccessfulSale_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -80030,7 +80109,7 @@ component.options.__file = "resources/js/components/vender/modals/SuccessfulSale
 /*!*******************************************************************************************!*\
   !*** ./resources/js/components/vender/modals/SuccessfulSale.vue?vue&type=script&lang=js& ***!
   \*******************************************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

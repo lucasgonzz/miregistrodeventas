@@ -11,7 +11,7 @@ use App\Sale;
 class PdfController extends Controller
 {
 
-	function ticket_client($company_name, $borders, $sale_id) {
+	function ticket_client($company_name, $borders, $per_page, $sale_id) {
         $sale = Sale::find($sale_id);
         $client = $sale->client;
         $pdf = new PdfTicketClient($client, (bool)$company_name);
@@ -22,24 +22,44 @@ class PdfController extends Controller
         }
         $pdf->addPage();
         $pdf->setFont('Arial', '', 12);
+        $count = 1;
+        $cost_per_page = 0;
+        $total_per_page = 0;
         foreach ($sale->articles as $article) {
-        	$pdf->Cell(40,7,$article->bar_code,$borders,0);
-        	$name = $article->name;
-        	if (strlen($name) > 20) {
-        		$name = substr($article->name, 0, 20) . ' ..';
+        	if ($count <= $per_page) {
+	        	$count++;
+	        	$cost_per_page += $article->cost;
+	        	$total_per_page += $article->price;
+	        	$pdf->Cell(40,7,$article->bar_code,$borders,0);
+	        	$name = $article->name;
+	        	if (strlen($name) > 20) {
+	        		$name = substr($article->name, 0, 20) . ' ..';
+	        	}
+	        	$pdf->Cell(45,7,$name,$borders,0);
+	        	$pdf->Cell(27,7,'$'.$this->price($article->cost),$borders,0,'L');
+	        	$pdf->Cell(27,7,'$'.$this->price($article->price),$borders,0,'L');
+	        	$pdf->Cell(20,7,$article->pivot->amount,$borders,0,'C');
+	        	$pdf->Cell(30,7,'$'.$article->price * $article->pivot->amount,$borders,0,'L');
+	        	$pdf->Ln();
+        	} else {
+        		$count--;
+	        	$pdf->Ln(5);
+        		$pdf->Cell(0,5,$count.' arículos en esta página',0,0,'R');
+        		$pdf->Ln();
+        		$pdf->Cell(0,5,'Suma de los costos de esta página: $'.$this->price($cost_per_page),0,0,'L');
+        		$pdf->Ln();
+        		$pdf->Cell(0,5,'Suma de los precios de esta página: $'.$this->price($total_per_page),0,0,'L');
+        		$pdf->addPage();
+        		$count = 1;
+        		$cost_per_page = 0;
+        		$total_per_page = 0;
         	}
-        	$pdf->Cell(45,7,$name,$borders,0);
-        	$pdf->Cell(27,7,'$'.$this->price($article->cost),$borders,0,'L');
-        	$pdf->Cell(27,7,'$'.$this->price($article->price),$borders,0,'L');
-        	$pdf->Cell(20,7,$article->pivot->amount,$borders,0,'C');
-        	$pdf->Cell(30,7,'$'.$article->price * $article->pivot->amount,$borders,0,'L');
-        	$pdf->Ln();
         }
         $pdf->Output();
         exit;
 	}
 
-	function ticket_commerce($company_name, $borders, $sale_id) {
+	function ticket_commerce($company_name, $borders, $per_page, $sale_id) {
         $sale = Sale::find($sale_id);
         $client = $sale->client;
         $pdf = new PdfTicketCommerce($client, (bool)$company_name);
@@ -50,20 +70,43 @@ class PdfController extends Controller
         }
         $pdf->addPage();
         $pdf->setFont('Arial', '', 12);
+        $count = 1;
+        $cost_per_page = 0;
+        $total_per_page = 0;
         foreach ($sale->articles as $article) {
-			$pdf->SetX(5);
-        	$pdf->Cell(40,7,$article->bar_code,$borders,0);
-        	$name = $article->name;
-        	if (strlen($name) > 20) {
-        		$name = substr($article->name,0, 20) . ' ..';
+        	if ($per_page != 0) {
+        		
         	}
-        	$pdf->Cell(45,7,$name,$borders,0);
-        	$pdf->Cell(25,7,'$'.$this->price($article->cost),$borders,0,'L');
-        	$pdf->Cell(25,7,'$'.$this->price($article->price),$borders,0,'L');
-        	$pdf->Cell(15,7,$article->pivot->amount,$borders,0,'C');
-        	$pdf->Cell(25,7,'$'.$article->cost * $article->pivot->amount,$borders,0,'L');
-        	$pdf->Cell(25,7,'$'.$article->price * $article->pivot->amount,$borders,0,'L');
-        	$pdf->Ln();
+        	if ($count <= $per_page) {
+        		$count++;
+	        	$cost_per_page += $article->cost;
+	        	$total_per_page += $article->price;
+				$pdf->SetX(5);
+	        	$pdf->Cell(40,7,$article->bar_code,$borders,0);
+	        	$name = $article->name;
+	        	if (strlen($name) > 20) {
+	        		$name = substr($article->name,0, 20) . ' ..';
+	        	}
+	        	$pdf->Cell(45,7,$name,$borders,0);
+	        	$pdf->Cell(25,7,'$'.$this->price($article->cost),$borders,0,'L');
+	        	$pdf->Cell(25,7,'$'.$this->price($article->price),$borders,0,'L');
+	        	$pdf->Cell(15,7,$article->pivot->amount,$borders,0,'C');
+	        	$pdf->Cell(25,7,'$'.$article->cost * $article->pivot->amount,$borders,0,'L');
+	        	$pdf->Cell(25,7,'$'.$article->price * $article->pivot->amount,$borders,0,'L');
+	        	$pdf->Ln();
+        	} else {
+        		$count--;
+	        	$pdf->Ln(5);
+        		$pdf->Cell(0,5,$count.' arículos en esta página',0,0,'R');
+        		$pdf->Ln();
+        		$pdf->Cell(0,5,'Suma de los costos de esta página: $'.$this->price($cost_per_page),0,0,'L');
+        		$pdf->Ln();
+        		$pdf->Cell(0,5,'Suma de los precios de esta página: $'.$this->price($total_per_page),0,0,'L');
+        		$pdf->addPage();
+        		$count = 1;
+        		$cost_per_page = 0;
+        		$total_per_page = 0;
+        	}
         }
         $pdf->Output();
         exit;
@@ -149,13 +192,18 @@ class PdfController extends Controller
     }
 
 	function price($price) {
-		$centavos = explode('.', $price)[1];
-		$new_price = explode('.', $price)[0];
-		if ($centavos != '00') {
-			$new_price += ".$centavos";
-			return number_format($new_price, 2, ',', '.');
+		$pos = strpos($price, '.');
+		if ($pos != false) {
+			$centavos = explode('.', $price)[1];
+			$new_price = explode('.', $price)[0];
+			if ($centavos != '00') {
+				$new_price += ".$centavos";
+				return number_format($new_price, 2, ',', '.');
+			} else {
+				return number_format($new_price, 0, '', '.');			
+			}
 		} else {
-			return number_format($new_price, 0, '', '.');			
+			return number_format($price, 0, '', '.');
 		}
 	}
 }

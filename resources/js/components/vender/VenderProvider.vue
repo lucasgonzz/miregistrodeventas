@@ -1,6 +1,6 @@
 <template>
 <div id="vender">
-	<successful-sale :saleId="sale_id"></successful-sale>
+	<successful-sale :sale="sale"></successful-sale>
 	<clients @getClients="getClients" 
 				@setClient="setClient"
 				:clients="clients"></clients>
@@ -121,7 +121,7 @@ export default {
 			ventaRealizada: false,
 			selected_client: 0,
 			bar_codes: [],
-			sale_id: 0,
+			sale: {},
 		}
 	},
 	methods: {
@@ -205,7 +205,8 @@ export default {
 					articles: this.articles,
 				})
 				.then(res => {
-					this.sale_id = res.data.id
+					this.sale = res.data
+					console.log(res.data)
 					this.articles = []	
 					this.ventaRealizada = true
 					$('#successful-sale').modal('show')

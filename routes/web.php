@@ -52,8 +52,8 @@ Route::group(['middleware' => ['has.role:provider']], function () {
 
 	// Vender
 	Route::post('mayoristas/sales', 'SaleController@store');
-	Route::get('mayoristas/sales/cliente/{company_name}/{borders}/{sale_id}', 'PdfController@ticket_client');
-	Route::get('mayoristas/sales/comercio/{company_name}/{borders}/{sale_id}', 'PdfController@ticket_commerce');
+	Route::get('mayoristas/sales/cliente/{company_name}/{borders}/{per_page}/{sale_id}', 'PdfController@ticket_client');
+	Route::get('mayoristas/sales/comercio/{company_name}/{borders}/{per_page}/{sale_id}', 'PdfController@ticket_commerce');
 	// Vender - Clientes
 	Route::get('mayoristas/clients', 'ClientController@index');
 	Route::post('mayoristas/clients', 'ClientController@store');

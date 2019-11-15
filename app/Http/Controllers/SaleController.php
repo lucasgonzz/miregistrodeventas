@@ -22,6 +22,7 @@ class SaleController extends Controller
 	    		$article_->save();
     		}
     	}
+        $sale = Sale::where('id', $sale->id)->with('articles')->first();
         return $sale;
     }
 }
