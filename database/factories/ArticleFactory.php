@@ -18,8 +18,10 @@ $factory->define(Article::class, function (Faker $faker) {
     return [
     	'bar_code' => $bar_code,
         'name' => $faker->name,
-        'cost' => $cost,
-        'price' => rand($cost, $cost*2),
+        'cost' => 50,
+        'price' => 100,
+        // 'cost' => $cost,
+        // 'price' => rand($cost, $cost*2),
         'previus_price' => 0,
         'stock' => rand(10, 25),
         'user_id' => rand(1, 2),

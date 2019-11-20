@@ -1,6 +1,6 @@
 <template>
 
-<div class="modal fade" id="successful-sale" tabindex="-1" role="dialog" aria-labelledby="ventas-resumens" aria-hidden="true">
+<div class="modal fade" id="successful-sale" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -79,18 +79,20 @@ export default {
     props: ['sale'],
     data() {
         return {
-            company_name: 0,
+            company_name: 1,
             borders: 0,
             articles_per_page: 0,
             max: 0,
             min: 0,
         }
     },
-    created() {
-        if (this.sale.articles.length > 10) {
-            this.articles_per_page = this.sale.articles.length / 2
-            this.min = 5
-            this.max = this.sale.articles.length
+    watch: {
+        sale() {
+            if (this.sale.articles.length > 10) {
+                this.articles_per_page = this.sale.articles.length / 2
+                this.min = 5
+                this.max = this.sale.articles.length
+            }
         }
     },
     methods: {

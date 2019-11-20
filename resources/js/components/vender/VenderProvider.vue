@@ -40,30 +40,28 @@
 					</form>	
 				</div>
 				<div class="card-body">
-					<div class="vender-table">
-						<h5 class="card-title" v-if="articles.length">Total: ${{ total() }}</h5>
-						<p class="card-text" v-if="articles.length">
-							{{ articles.length }} artículos, {{ cantidad_articulos() }} unidades
-						</p>
-						<table class="table text-center table-striped">
-							<thead>
-								<tr>
-									<th scope="col">Nombre</th>
-									<th scope="col">Precio Unitario</th>
-									<th scope="col">Cantidad</th>
-									<th scope="col">Subtotal</th>
-								</tr>
-							</thead>
-							<tbody v-if="articles.length">
-								<tr v-for="article in articles">
-									<td>{{ article.name }}</td>
-									<th scope="row">${{ price(article.price) }}</th>
-									<td>{{ article.amount }}</td>
-									<td>${{ price(parseFloat(article.price) * article.amount) }}</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
+					<h5 class="card-title" v-if="articles.length">Total: ${{ total() }}</h5>
+					<p class="card-text" v-if="articles.length">
+						{{ articles.length }} artículos, {{ cantidad_articulos() }} unidades
+					</p>
+					<table class="table text-center table-striped">
+						<thead>
+							<tr>
+								<th scope="col">Nombre</th>
+								<th scope="col">Precio Unitario</th>
+								<th scope="col">Cantidad</th>
+								<th scope="col">Subtotal</th>
+							</tr>
+						</thead>
+						<tbody class="vender-table">
+							<tr v-for="article in articles">
+								<td>{{ article.name }}</td>
+								<th scope="row">${{ price(article.price) }}</th>
+								<td>{{ article.amount }}</td>
+								<td>${{ price(parseFloat(article.price) * article.amount) }}</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 				<div class="card-footer">
 					<div class="row">
@@ -188,6 +186,7 @@ export default {
 			if (!repetido) {
 				axios.get('articles/get-by-bar-code/'+this.bar_code)
 				.then(res => {
+					console.log(res.data)
 					var article = res.data
 					article.amount = parseInt(this.amount)
 					this.articles.push(article)
@@ -257,10 +256,19 @@ export default {
 	}
 }
 </script>
-<style>
+<style scoped>
 .vender-table {
-	min-height: 300px;
-	max-height: 300px;
+	display: block;
+	width: 100%;
+	min-height: 250px;
+	max-height: 250px;
 	overflow-y: scroll;
 }
+
+thead, tbody tr {
+    display:table;
+    width:100%;
+    table-layout:fixed;/* even columns width , fix width of table too*/
+}
+
 </style>
