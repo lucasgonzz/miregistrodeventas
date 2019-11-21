@@ -10,10 +10,17 @@ class SaleController extends Controller
 {
 
     function store(Request $request) {
-    	$sale = Sale::create([
-    		'user_id' => Auth()->user()->id,
-    		'client_id' => $request->client_id
-    	]);
+        $user = Auth()->user();
+        if ($user->hasRole('provider')) {
+        	$sale = Sale::create([
+        		'user_id' => $user->id,
+        		'client_id' => $request->client_id
+        	]);
+        } else {
+            $sale = Sale::create([
+                'user_id' => $user->id,
+            ]);
+        }
     	foreach ($request->articles as $article) {
     		$sale->articles()->attach($article['id'], ['amount' => $article['amount']]);
     		$article_ = Article::find($article['id']);

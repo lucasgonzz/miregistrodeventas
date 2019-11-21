@@ -1,4 +1,5 @@
 <template>
+<div class="container">	
 	<div id="ingresar">
 		<providers :providers="providers"
 					@deleteProvider="deleteProvider" 
@@ -203,6 +204,7 @@
 			</div>
 		</div>
 	</div>
+</div>
 </template>
 <script>
 import Providers from './modals/Providers.vue'

@@ -63,6 +63,13 @@ Route::group(['middleware' => ['has.role:provider']], function () {
 
 });
 
+Route::get('a/{a}/{b}', function($a, $b) {
+	return round((7/100)*120.99, 0);
+	return round(($a/100)*$b, 0);
+	return ($a/100)*$b;
+});
+
+
 // Comercios
 Route::group(['middleware' => ['has.role:commerce']], function () {
 	Route::get('/comercios/vender', 'MainController@commerce_vender')->name('vender.commerce');
@@ -74,15 +81,20 @@ Route::group(['middleware' => ['has.role:commerce']], function () {
 	// Codigos de barra
 	Route::get('bar-codes', 'BarCodeController@index');
 
+
 	// Ingresar
 	Route::post('/comercios/articles', 'ArticleController@store');
 	Route::get('/comercios/providers', 'ProviderController@index');
 	Route::post('/comercios/providers', 'ProviderController@store');
 	Route::delete('/comercios/providers/{id}', 'ProviderController@delete');
+	/*
+		*get-by-bar-code tambien se utiliza en la parte de vender
+	*/
 	Route::get('/comercios/articles/get-by-bar-code/{id}', 'ArticleController@getByBarCode');
 	Route::get('/comercios/articles/bar-codes', 'ArticleController@BarCodes');
 	Route::get('/comercios/articles/previus-next/{index}', 'ArticleController@previusNext');
 	Route::get('/comercios/bar-codes/generated', 'BarCodeController@generated');
+
 
 	// Listado
 	Route::post('/comercios/articles/filter', 'ArticleController@filter');
@@ -91,6 +103,11 @@ Route::group(['middleware' => ['has.role:commerce']], function () {
 	Route::get('/comercios/providers', 'ProviderController@index');
 	Route::put('/comercios/articles/{id}', 'ArticleController@update');
 	Route::delete('/comercios/articles/{id}', 'ArticleController@destroy');
+	Route::post('/comercios/articles/update-by-porcentage', 'ArticleController@updateByPorcentage');
+
+	// Vender
+	Route::post('/comercios/sales', 'SaleController@store');
+
 
 	// Listado exportar
 	Route::get('/comercios/configuracion', 'MainController@commerce_config')->name('commerce.config');

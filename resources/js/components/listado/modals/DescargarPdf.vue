@@ -19,12 +19,24 @@
               </div>
               <div class="card-body">
                 <div class="custom-control custom-radio">
-                 <input type="radio" v-model="articulosADescargar" value="todos" id="todos" name="customRadio" class="custom-control-input">
+                 <input type="radio" v-model="articulosADescargar" value="todos" id="todos" name="articulosADescargar" class="custom-control-input">
                   <label class="custom-control-label" for="todos">Todos</label>
                 </div>
                 <div class="custom-control custom-radio">
-                    <input type="radio" v-model="articulosADescargar" value="esta-pagina" id="esta-pagina" name="customRadio" class="custom-control-input">
-                    <label class="custom-control-label" for="esta-pagina">Solo los de esta página</label>
+                    <input type="radio" v-model="articulosADescargar" 
+                            value="esta-pagina" id="esta-pagina" 
+                            name="articulosADescargar" class="custom-control-input">
+                    <label class="custom-control-label" for="esta-pagina">
+                      Solo los de esta página
+                    </label>
+                </div>
+                <div class="custom-control custom-radio" v-show="selectedArticles.length">
+                    <input type="radio" v-model="articulosADescargar" 
+                            value="articulos-seleccionados" name="articulosADescargar" 
+                            id="articulos-seleccionados" class="custom-control-input">
+                    <label class="custom-control-label" for="articulos-seleccionados">
+                      Los artículos seleccionados ({{ selectedArticles.length }})
+                    </label>
                 </div>
               </div>
             </div>
@@ -151,7 +163,7 @@
 </template>
 <script>
 export default {
-    props: ['rol', 'idsArticles', 'filtro'],
+    props: ['rol', 'idsArticles', 'filtro', 'selectedArticles'],
     data() {
       return {
         articulosADescargar: 'esta-pagina',

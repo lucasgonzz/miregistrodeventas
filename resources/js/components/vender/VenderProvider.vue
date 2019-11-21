@@ -40,9 +40,9 @@
 					</form>	
 				</div>
 				<div class="card-body">
-					<h5 class="card-title" v-if="articles.length">Total: ${{ total() }}</h5>
-					<p class="card-text" v-if="articles.length">
-						{{ articles.length }} artículos, {{ cantidad_articulos() }} unidades
+					<h5 class="card-title">Total: ${{ getTotal() }}</h5>
+					<p class="card-text">
+						{{ articles.length }} artículos, {{ cantidadArticulos() }} unidades
 					</p>
 					<table class="table text-center table-striped">
 						<thead>
@@ -51,14 +51,35 @@
 								<th scope="col">Precio Unitario</th>
 								<th scope="col">Cantidad</th>
 								<th scope="col">Subtotal</th>
+								<th scope="col">Eliminar</th>
 							</tr>
 						</thead>
 						<tbody class="vender-table">
 							<tr v-for="article in articles">
 								<td>{{ article.name }}</td>
 								<th scope="row">${{ price(article.price) }}</th>
-								<td>{{ article.amount }}</td>
-								<td>${{ price(parseFloat(article.price) * article.amount) }}</td>
+								<td>
+									<input type="text"
+											class="form-control input-amount"
+											v-model="article.amount">
+									<button @click="up(article)"
+											class="btn btn-primary btn-sm">
+										<i class="icon-up"></i>
+									</button>
+									<button @click="down(article)"
+											class="btn btn-primary btn-sm">
+										<i class="icon-down"></i>
+									</button>
+								</td>
+								<td>
+									${{ price(parseFloat(article.price) * article.amount) }}
+								</td>
+								<td>
+									<button @click="removeArticle(article)"
+											class="btn btn-danger">
+										<i class="icon-cancel"></i>
+									</button>
+								</td>
 							</tr>
 						</tbody>
 					</table>
@@ -120,23 +141,48 @@ export default {
 			selected_client: 0,
 			bar_codes: [],
 			sale: {},
+			total: 0,
+			cantidad_articulos: 0,
+			cantidad_unidades: 0,
 		}
 	},
 	methods: {
-		total() {
+		addTotal(article, repeated = false) {
+			this.total += Number(article.price) * article.amount
+			this.cantidad_unidades += article.amount
+			if (!repeated) {
+				this.cantidad_articulos++
+			}
+		},
+		getTotal() {
 			var total = 0
 			this.articles.forEach( article => {
 				total += article.price * article.amount
 			})
-			return this.price(total)
+			// return price(total)
+			return total
 		},
-		cantidad_articulos() {
+		cantidadArticulos() {
 			var cantidad_articulos = 0
 			this.articles.forEach( article => {
 				cantidad_articulos += article.amount
 			})
 			return cantidad_articulos
 		},
+		// total() {
+		// 	var total = 0
+		// 	this.articles.forEach( article => {
+		// 		total += article.price * article.amount
+		// 	})
+		// 	return this.price(total)
+		// },
+		// cantidad_articulos() {
+		// 	var cantidad_articulos = 0
+		// 	this.articles.forEach( article => {
+		// 		cantidad_articulos += article.amount
+		// 	})
+		// 	return cantidad_articulos
+		// },
 		isFloat(n){
 			return Number(n) === n && n % 1 !== 0;
 		},
@@ -179,6 +225,7 @@ export default {
 			this.articles.forEach(article => {
 				if (article.bar_code == this.bar_code) {
 					article.amount += parseInt(this.amount)
+					// this.addTotal(article, true)
 					this.resetInputs()
 					repetido = true
 				}
@@ -186,15 +233,36 @@ export default {
 			if (!repetido) {
 				axios.get('articles/get-by-bar-code/'+this.bar_code)
 				.then(res => {
-					console.log(res.data)
 					var article = res.data
 					article.amount = parseInt(this.amount)
+					// this.addTotal(article)
 					this.articles.push(article)
 					this.resetInputs()
 				})
 				.catch(err => {
 					console.log(err)
 				})
+			}
+		},
+		removeArticle(article) {
+			// this.total -= article.price * article.amount
+			// this.cantidad_articulos--
+			// this.cantidad_unidades -= article.amount
+			var i = this.articles.indexOf(article)
+			this.articles.splice(i, 1)
+		},
+		up(article) {
+			article.amount++
+			// this.addTotal(article, true)
+		},
+		down(article) {
+			if (article.amount > 1) {
+				article.amount--
+				// this.total -= Number(article.price)
+				// this.cantidad_unidades--
+
+			} else {
+				toastr.error('No se pueden restar mas unidades')
 			}
 		},
 		vender() {
@@ -271,4 +339,9 @@ thead, tbody tr {
     table-layout:fixed;/* even columns width , fix width of table too*/
 }
 
+.input-amount{
+	display: inline-block;
+	width: 50px;
+	margin: 0px;
+}
 </style>

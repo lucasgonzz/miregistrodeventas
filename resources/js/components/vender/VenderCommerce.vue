@@ -18,7 +18,10 @@
 						</div>
 					</div>
 					<div class="col-2">	
-						<button type="submit" class="btn btn-primary mb-2">Vender</button>
+						<button type="submit"
+								@click="vender"
+								:class="articles.length ? '' : 'disabled'" 
+								class="btn btn-primary mb-2">Vender</button>
 					</div>
 				</div>
 			</div>
@@ -34,18 +37,21 @@
 							<th scope="col">Nombre</th>
 							<th scope="col">Quedarian</th>
 							<th scope="col">Cantidad</th>
+							<th scope="col">Opciones</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr v-for="article in articles">
 							<th scope="row">${{ article.price }}</th>
 							<td>{{ article.name }}</td>
-							<td>{{ article.stock - 1 }}</td>
+							<td>{{ article.stock }}</td>
 							<td>
-								<input type="number" 
+								<input type="text" 
 										min="1"
 										class="form-control input-amount"
 										v-model="article.amount">
+							</td>
+							<td>
 								<button @click="up(article)"
 										class="btn btn-primary btn-sm">
 									<i class="icon-up"></i>
@@ -85,8 +91,10 @@ export default {
 	},
 	methods: {
 		addTotal(article, repeated = false) {		
+			console.log(article.price)
 			this.total += Number(article.price)
 			this.cantidad_unidades++
+			article.stock--
 			if (!repeated) {
 				this.cantidad_articulos++
 			}
@@ -115,39 +123,41 @@ export default {
 				})
 			}
 		},
-		up(article) {
-			article.amount++
-			addTotal(article)
-		},
-		down(article) {
-			if (article.amount > 1) {
-				article.amount--
-				this.total -= Number(article.price)
-				this.cantidad_articulos--
-			} else {
-				toastr.error('No se pueden restar mas unidades')
-			}
-		},
 		removeArticle(article) {
-			this.total -= Number(article.price)
+			this.total -= Number(article.price) * article.amount
 			this.cantidad_articulos--
 			this.cantidad_unidades -= article.amount
 			var i = this.articles.indexOf(article)
 			this.articles.splice(i, 1)
 		},
+		up(article) {
+			article.amount++
+			this.addTotal(article, true)
+		},
+		down(article) {
+			if (article.amount > 1) {
+				article.amount--
+				article.stock++
+				this.total -= Number(article.price)
+				this.cantidad_unidades--
+
+			} else {
+				toastr.error('No se pueden restar mas unidades')
+			}
+		},
 
 		vender() {
 			if (this.articles.length > 0) {
 				axios.post('sales', {
-					client_id: this.selected_client,
 					articles: this.articles,
 				})
 				.then(res => {
-					this.sale = res.data
 					console.log(res.data)
 					this.articles = []	
-					this.ventaRealizada = true
-					$('#successful-sale').modal('show')
+					this.total = 0
+					this.cantidad_articulos = 0
+					this.cantidad_unidades = 0
+					toastr.success('Venta realizada correctamente')
 				})
 				.catch(err => {
 					console.log(err)
@@ -164,8 +174,7 @@ export default {
 <style>
 .input-amount{
 	display: inline-block;
-	width: 70px;
-	padding: 0px;
+	width: 50px;
 	margin: 0px;
 }
 </style>

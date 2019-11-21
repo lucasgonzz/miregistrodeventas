@@ -25,7 +25,7 @@ import Ingresar from './components/ingresar/Ingresar.vue'
 import VenderProvider from './components/vender/VenderProvider.vue'
 import VenderCommerce from './components/vender/VenderCommerce.vue'
 import CodigosDeBarra from './components/codigos-de-barra/CodigosDeBarra.vue'
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+// Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('nav-component', navComponent);
 Vue.component('ventas', ventas);
 Vue.component('listado', Listado);

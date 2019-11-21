@@ -1,198 +1,267 @@
 <template>
-<div id="listado">	
-	<editar-articulo :rol="rol" 
-					:article="article" 
-					:providers="providers" 
-					@updateArticle="updateArticle"
-					@clearArticle="clearArticle"></editar-articulo>
-	<confirmar-eliminacion :article="article" 
-							@destroyArticle="destroyArticle"></confirmar-eliminacion>
-	<descargar-pdf :rol="rol" 
-					:ids-articles="idsArticles"
-					:filtro="filtro"></descargar-pdf>
-	<importar></importar>
-	<filtrar :filtro="filtro" 
-				:rol="rol" 
-				:providers="providers"
-				@uncheckProviders="uncheckProviders"
-				@filter="filter"></filtrar>
-	<div class="row justify-content-center">
-		<div class="col-lg-12">	
-			<div class="card">
-				<div class="card-header">
-					<div class="row">
-						<div class="col-10 col-lg-5 p-r-0">
-							<div class="buscador">
-								<input type="text" class="form-control input-search" 
-										placeholder="Buscar por codigo o nombre"
-										v-model="search_query" @keyup="preSearch" @keyup.enter="search">
-								<div class="resultados">
-									<ul>
-										<li @click="selectPreSearch(article.name)" v-for="article in pre_search">
-											{{ article.name }}
-										</li>
-									</ul>
+<div class="container-fluid">	
+	<div id="listado">	
+		<editar-articulo :rol="rol" 
+						:article="article" 
+						:providers="providers" 
+						@updateArticle="updateArticle"
+						@clearArticle="clearArticle"></editar-articulo>
+		<edit-articles @updateByPorcentage="updateByPorcentage"
+						:selected_articles="selected_articles"></edit-articles>
+		<confirmar-eliminacion :article="article" 
+								@destroyArticle="destroyArticle"></confirmar-eliminacion>
+		<descargar-pdf :rol="rol" 
+						:selected_articles="selected_articles"
+						:ids-articles="idsArticles"
+						:filtro="filtro"></descargar-pdf>
+		<importar></importar>
+		<providers-history :article="article"></providers-history>
+		<filtrar :filtro="filtro" 
+					:rol="rol" 
+					:providers="providers"
+					@uncheckProviders="uncheckProviders"
+					@filter="filter"></filtrar>
+		<div class="row justify-content-center">
+			<div class="col-lg-12">	
+				<div class="card">
+					<div class="card-header">
+						<div class="row">
+							<div class="col-10 col-lg-5 p-r-0">
+								<div class="buscador">
+									<input type="text" class="form-control input-search" 
+											placeholder="Buscar por codigo o nombre"
+											v-model="search_query" @keyup="preSearch" @keyup.enter="search">
+									<div class="resultados">
+										<ul>
+											<li @click="selectPreSearch(article.name)" v-for="article in pre_search">
+												{{ article.name }}
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="col-1 p-l-0">
+							  	<button class="btn btn-primary btn-search" @click="search">
+									<i class="icon-search"></i>
+							  	</button>						
+							</div>
+							<div class="col-12 col-lg-6 m-t-10 m-lg-t-0 col-btn">
+								<button class="btn btn-warning m-l-5" @click="showImportar">
+									<i class="icon-upload"></i>
+									Importar Exel
+								</button>
+								<a href="articles/exel" class="btn btn-success m-l-5">
+									<i class="icon-download"></i>
+									Exel
+								</a>
+								<button class="btn btn-danger m-l-5" @click="showDescargarPdf">
+									<i class="icon-download"></i>
+									Pdf
+								</button>
+								<button class="btn btn-secondary m-l-5" @click="showFiltrar">
+									<i class="icon-filter"></i>
+									Filtrar
+								</button>
+							<!-- 
+										:class="selected_articles.length ? '' : 'disabled'"
+							
+							 -->
+								<a @click="showEditArticles"
+										tabindex="-1" 
+										class="btn btn-primary m-l-5">
+									<i class="icon-edit"></i>
+									Actualizar
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="card-body">
+						<div v-show="isLoading" class="m-b-10">
+							<div class="spinner">
+								<div class="spinner-border text-primary" role="status">
+									<span class="sr-only">Loading...</span>
 								</div>
 							</div>
 						</div>
-						<div class="col-1 p-l-0">
-						  	<button class="btn btn-primary btn-search" @click="search">
-								<i class="icon-search"></i>
-						  	</button>						
-						</div>
-						<div class="col-12 col-lg-6 m-t-10 m-lg-t-0">
-							<button class="btn btn-secondary m-l-5 float-right" @click="showFiltrar">
-								<i class="icon-filter"></i>
-								Filtrar
-							</button>
-							<button class="btn btn-danger m-l-5 float-right" @click="showDescargarPdf">
-								<i class="icon-download"></i>
-								Pdf
-							</button>
-							<a href="articles/exel" class="btn btn-success m-l-5 float-right">
-								<i class="icon-download"></i>
-								Exel
-							</a>
-							<button class="btn btn-warning m-l-5 float-right" @click="showImportar">
-								<i class="icon-upload"></i>
-								Importar Exel
-							</button>
-						</div>
-					</div>
-				</div>
-				<div class="card-body">
-					<div v-show="isLoading" class="m-b-10">
-						<div class="spinner">
-							<div class="spinner-border text-primary" role="status">
-								<span class="sr-only">Loading...</span>
+						<div v-show="!isLoading">
+							<info-filtrados :filtro="filtro" :filtrado="filtrado" 
+											:providers="providers"
+											:articles-length="articles.length"></info-filtrados>
+							<div class="table-responsive">						
+								<table class="table">
+									<thead class="thead-dark">
+										<tr v-if="rol == 'commerce'">
+											<th scope="col">
+								                <div class="custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2">
+								                  	<input class="custom-control-input" 
+								                  			v-model="all_selected_articles" 
+								                  			type="checkbox" 
+								                  			id="all_selected_articles">
+								                  	<label class="custom-control-label" 
+								                  			for="all_selected_articles">
+								                  </label>
+								                </div>
+											</th>
+											<th scope="col">Codigo</th>
+											<th scope="col">Nombre</th>
+											<th scope="col">Costo</th>
+											<th scope="col">Precio</th>
+											<th scope="col">Pre anterior</th>
+											<th scope="col">Stock</th>
+											<th scope="col">Proveedor/es</th>
+											<th scope="col">Agregado</th>
+											<th scope="col">Actualizado</th>
+											<th scope="col">Opciones</th>
+										</tr>
+										<tr v-else>
+											<th scope="col">
+								                <div class="custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2">
+								                  	<input class="custom-control-input" 
+								                  			v-model="all_selected_articles" 
+								                  			type="checkbox" 
+								                  			id="all_selected_articles">
+								                  	<label class="custom-control-label" 
+								                  			for="all_selected_articles">
+								                  </label>
+								                </div>
+											</th>
+											<th scope="col">Codigo</th>
+											<th scope="col">Nombre</th>
+											<th scope="col">Costo</th>
+											<th scope="col">Precio</th>
+											<th scope="col">Pre anterior</th>
+											<th scope="col">Stock</th>
+											<th scope="col">Agregado</th>
+											<th scope="col">Actualizado</th>
+											<th scope="col">Opciones</th>
+										</tr>
+									</thead>
+									<tbody>
+										<template v-if="rol == 'commerce'">
+											<tr v-for="article in articles"
+												:class="selected_articles.includes(article.id) ? 'bg-warning' : ''">
+												<td>
+									                <div class="custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2">
+									                  	<input class="custom-control-input" 
+									                  			v-model="selected_articles" 
+									                  			:value="article.id"
+									                  			type="checkbox" 
+									                  			:id="article.id">
+									                  	<label class="custom-control-label" 
+									                  			:for="article.id">
+									                  </label>
+									                </div>
+												</td>
+												<td>{{ article.bar_code }}</td>
+												<td>{{ article.name }}</td>
+												<td>${{ price(article.cost) }}</td>
+												<td class="td-price">${{ price(article.price) }}</td>
+												<td v-if="article.previus_price != '0.00'">${{ price(article.previus_price) }}</td>
+												<td v-else>Sin datos</td>
+												<td v-if="article.stock">
+													{{ article.stock }}
+												</td>
+												<td v-else>
+													Sin uso
+												</td>
+												<td>
+													<div class="dropdown">
+														<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+															Proveedores
+														</button>
+														<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+															<span v-for="provider in article.providers_not_repeated"
+																class="dropdown-item c-n">
+																{{ provider.name }}
+															</span>
+															<span @click="providersHistory(article)"
+																	class="dropdown-item c-p">
+																<i class="icon-calendar"></i>
+																Historial
+															</span>
+														</div>
+													</div>
+												</td>
+												<td>{{ date(article.created_at) }}</td>
+												<td v-if="article.created_at != article.updated_at">
+													{{ date(article.updated_at) }}
+												</td>
+												<td v-else>
+													Sin datos
+												</td>
+												<td class="td-options">
+													<button @click="editArticle(article)" class="btn btn-listado btn-listado-edit">
+														<i class="icon-edit"></i>
+													</button>
+													<button @click="deleteArticle(article)" class="btn btn-listado btn-listado-delete">
+														<i class="icon-trash-2"></i>
+													</button>
+												</td>
+											</tr>
+										</template>
+										<template v-else>								
+											<tr v-for="article in articles"	
+												:class="selected_articles.includes(article.id) ? 'bg-gradinet-primary' : ''">
+												<td>
+									                <div class="custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2">
+									                  	<input class="custom-control-input" 
+									                  			v-model="selected_articles"
+									                  			:value="article.id" 
+									                  			type="checkbox" 
+									                  			:id="article.id">
+									                  	<label class="custom-control-label" 
+									                  			:for="article.id">
+									                  </label>
+									                </div>
+												</td>
+												<td>{{ article.bar_code }}</td>
+												<td>{{ article.name }}</td>
+												<td>${{ price(article.cost) }}</td>
+												<td class="td-price">${{ price(article.price) }}</td>
+												<td v-if="article.previus_price != '0.00'">${{ price(article.previus_price) }}</td>
+												<td v-else>Sin datos</td>
+												<td v-if="article.stock">
+													{{ article.stock }}
+												</td>
+												<td v-else>
+													Sin uso
+												</td>
+												<td>{{ date(article.created_at) }}</td>
+												<td v-if="article.created_at != article.updated_at">
+													{{ date(article.updated_at) }}
+												</td>
+												<td v-else>
+													Sin datos
+												</td>
+												<td class="td-options">
+													<button @click="editArticle(article)" class="btn btn-listado btn-listado-edit">
+														<i class="icon-edit"></i>
+													</button>
+													<button @click="deleteArticle(article)" class="btn btn-listado btn-listado-delete">
+														<i class="icon-trash-2"></i>
+													</button>
+												</td>
+											</tr>								
+										</template>
+									</tbody>
+								</table>
 							</div>
 						</div>
 					</div>
-					<div v-show="!isLoading">
-						<info-filtrados :filtro="filtro" :filtrado="filtrado" 
-										:providers="providers"
-										:articles-length="articles.length"></info-filtrados>
-						<div class="table-responsive">						
-							<table class="table">
-								<thead class="thead-dark">
-									<tr v-if="rol == 'commerce'">
-										<th scope="col">Codigo</th>
-										<th scope="col">Nombre</th>
-										<th scope="col">Costo</th>
-										<th scope="col">Precio</th>
-										<th scope="col">Pre anterior</th>
-										<th scope="col">Stock</th>
-										<th scope="col">Proveedor/es</th>
-										<th scope="col">Agregado</th>
-										<th scope="col">Actualizado</th>
-										<th scope="col">Opciones</th>
-									</tr>
-									<tr v-else>
-										<th scope="col">Codigo</th>
-										<th scope="col">Nombre</th>
-										<th scope="col">Costo</th>
-										<th scope="col">Precio</th>
-										<th scope="col">Pre anterior</th>
-										<th scope="col">Stock</th>
-										<th scope="col">Agregado</th>
-										<th scope="col">Actualizado</th>
-										<th scope="col">Opciones</th>
-									</tr>
-								</thead>
-								<tbody>
-									<template v-if="rol == 'commerce'">
-										<tr v-for="article in articles">
-											<td>{{ article.bar_code }}</td>
-											<td>{{ article.name }}</td>
-											<td>${{ price(article.cost) }}</td>
-											<td class="td-price">${{ price(article.price) }}</td>
-											<td v-if="article.previus_price != '0.00'">${{ price(article.previus_price) }}</td>
-											<td v-else>Sin datos</td>
-											<td v-if="article.stock">
-												{{ article.stock }}
-											</td>
-											<td v-else>
-												Sin uso
-											</td>
-											<td>
-												<div class="dropdown">
-													<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-														Proveedores
-													</button>
-													<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-														<span v-for="provider in article.providers_not_repeated"
-															class="dropdown-item c-n">
-															{{ provider.name }}						
-														</span>
-													</div>
-												</div>
-											</td>
-											<td>{{ date(article.created_at) }}</td>
-											<td v-if="article.created_at != article.updated_at">
-												{{ date(article.updated_at) }}
-											</td>
-											<td v-else>
-												Sin datos
-											</td>
-											<td class="td-options">
-												<button @click="editArticle(article)" class="btn btn-listado btn-listado-edit">
-													<i class="icon-edit"></i>
-												</button>
-												<button @click="deleteArticle(article)" class="btn btn-listado btn-listado-delete">
-													<i class="icon-trash-2"></i>
-												</button>
-											</td>
-										</tr>
-									</template>
-									<template v-else>								
-										<tr v-for="article in articles">
-											<td>{{ article.bar_code }}</td>
-											<td>{{ article.name }}</td>
-											<td>${{ price(article.cost) }}</td>
-											<td class="td-price">${{ price(article.price) }}</td>
-											<td v-if="article.previus_price != '0.00'">${{ price(article.previus_price) }}</td>
-											<td v-else>Sin datos</td>
-											<td v-if="article.stock">
-												{{ article.stock }}
-											</td>
-											<td v-else>
-												Sin uso
-											</td>
-											<td>{{ date(article.created_at) }}</td>
-											<td v-if="article.created_at != article.updated_at">
-												{{ date(article.updated_at) }}
-											</td>
-											<td v-else>
-												Sin datos
-											</td>
-											<td class="td-options">
-												<button @click="editArticle(article)" class="btn btn-listado btn-listado-edit">
-													<i class="icon-edit"></i>
-												</button>
-												<button @click="deleteArticle(article)" class="btn btn-listado btn-listado-delete">
-													<i class="icon-trash-2"></i>
-												</button>
-											</td>
-										</tr>								
-									</template>
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-				<div class="card-footer p-0">
-					<pagination @changePage="changePage" 
-								:filtrado="filtrado"
-								:pagination="pagination"
-								:pages-number="pagesNumber"></pagination>
-					<div class="row p-10">
-						<div class="col">
-							<button v-show="filtrado || searching" 
-									class="btn btn-primary float-right"
-									@click="volverAListar">
-								<i class="icon-undo"></i>
-								Volver a listar todos mis artículos
-							</button>
+					<div class="card-footer p-0">
+						<pagination @changePage="changePage" 
+									:filtrado="filtrado"
+									:pagination="pagination"
+									:pages-number="pagesNumber"></pagination>
+						<div class="row p-10">
+							<div class="col">
+								<button v-show="filtrado || searching" 
+										class="btn btn-primary float-right"
+										@click="volverAListar">
+									<i class="icon-undo"></i>
+									Volver a listar todos mis artículos
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -207,6 +276,8 @@ import DescargarPdf from './modals/DescargarPdf.vue'
 import Importar from './modals/Importar.vue'
 import Filtrar from './modals/Filtrar.vue'
 import EditarArticulo from './modals/EditarArticulo.vue'
+import EditArticles from './modals/EditArticles.vue'
+import ProvidersHistory from './modals/ProvidersHistory.vue'
 import ConfirmarEliminacion from './modals/ConfirmarEliminacion.vue'
 import InfoFiltrados from './modals/InfoFiltrados.vue'
 import Pagination from './Pagination.vue'
@@ -216,6 +287,8 @@ export default {
 		Importar,
 		Filtrar,
 		EditarArticulo,
+		EditArticles,
+		ProvidersHistory,
 		InfoFiltrados,
 		Pagination,
 		ConfirmarEliminacion
@@ -226,11 +299,18 @@ export default {
 
 			articles: [],
 			article: {'id': 0, 'bar_code': '','name': '', 'cost': 0, 'price': 0, 'stock': 0, 'new_stock': 0, 'providers': [], 'created_at': '', 'updated_at': '', 'creado': '', 'actualizado': '', 'act_fecha': true},
+			isLoading: false,
+			all_selected_articles: false,
+			selected_articles: [],
+
+			// Buscar
 			search_query: '',
 			pre_search: [],
 			searching: false,
-			isLoading: false,
+
+			// Provedores
 			providers: [],
+			proiders_history: [],
 			idsArticles: [],
 
 			// Filtros
@@ -260,6 +340,15 @@ export default {
 			columnas_para_imprimir: ['bar_code', 'name', 'cost', 'price', 'created_at', 'updated_at'],
 		}
 	},
+	watch: {
+		all_selected_articles() {
+			if (this.all_selected_articles) {
+				this.selected_articles = this.idsArticles
+			} else {
+				this.selected_articles = []
+			}
+		}
+	},
 	methods: {
 		date(date) {
 			return moment(date).format('DD/MM/YY')
@@ -284,6 +373,7 @@ export default {
 		since(date) {
 			return moment(date).fromNow()
 		},
+		// Se la usa en filtrar y en getArticles
 		setIdsArticles() {
 			this.idsArticles = []
 			this.articles.forEach( article => {
@@ -303,6 +393,7 @@ export default {
 				this.filtrado = true
 				this.articles = res.data
 				this.setIdsArticles()
+				this.filterProviders()
 				$('#listado-filtrar').modal('hide')
 				// console.log(res.data)
 			})
@@ -363,8 +454,8 @@ export default {
 				this.pagination = res.data.pagination;
 				const self = this
 				this.setIdsArticles()
-
 				this.filterProviders()
+				this.all_selected_articles = false
 			})
 			.catch( err => {
 				console.log(err)
@@ -395,9 +486,9 @@ export default {
 			})
 			.then( res => {
 				this.getArticles(1)
-				this.clearArticle()
 				$('#listado-edit-article').modal('hide')
 				toastr.success(`${article.name} se actualizo con exito`)
+				this.clearArticle()
 			})
 			.catch( err => {
 				console.log(err)
@@ -441,6 +532,7 @@ export default {
 		volverAListar() {
 			this.filtrado = false
 			this.searching = false
+			this.search_query = ''
 			this.getArticles(1)
 		},
 
@@ -460,6 +552,31 @@ export default {
 		showFiltrar() {
 			$('#listado-filtrar').modal('show')
 		},
+		
+		// Edit articles
+		showEditArticles() {
+			$('#edit-articles').modal('show')
+		},
+		updateByPorcentage(cost, price, decimals) {
+			axios.post('articles/update-by-porcentage', {
+				cost,
+				price,
+				decimals,
+				articles_ids: this.selected_articles
+			})
+			.then(res => {
+				if (this.filtrado) {
+					this.filter(this.filtro)
+				} else {
+					this.getArticles(1)
+				}
+				$('#edit-articles').modal('hide')
+			})
+			.catch(err => {
+				console.log(err)
+			})
+		},
+
 		uncheckProviders() {
 			this.filtro.providers = []
 		},
@@ -474,6 +591,10 @@ export default {
 			.catch( err => {
 				console.log(err)
 			})
+		},
+		providersHistory(article) {
+			this.article = article
+			$('#providers-history').modal('show')
 		},
 		filterProviders() {
 			// Se crea una propiedad en los articulos donde estan solo 
@@ -526,3 +647,10 @@ export default {
 	}
 }
 </script>
+<style>
+.col-btn {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+}
+</style>

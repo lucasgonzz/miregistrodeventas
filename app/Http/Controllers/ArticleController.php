@@ -50,56 +50,6 @@ class ArticleController extends Controller
                         ->pluck('bar_code');
     }
 
-    function filter(Request $request) {
-        $user = Auth()->user();
-        $mostrar = $request->mostrar;
-        $ordenar = $request->ordenar;
-        $precio_entre = $request->precio_entre;
-
-        $articles = Article::where('user_id', $user->id);
-
-        // Mostrar
-        if ($mostrar == 'desactualizados') {
-                $fecha_actual = date('d-m-Y');
-                $hace_6_meses = date('d-m-Y', strtotime($fecha_actual."- 6 month"));
-                $articles = $articles->whereDate('updated_at', '<=', $hace_6_meses);
-        }
-        if ($mostrar == 'no-vendidos') {
-            $articles = $articles->doesntHave('sales');
-        }
-        if ($mostrar == 'no-stock') {
-            $articles = $articles->where('stock', 0);
-        }
-
-        if ($user->hasRole('commerce')) {
-            $providers = $request->providers;
-            if (count($providers) == 1) {
-                $articles = $articles->with('providers')->whereHas('providers', function(Builder $query) use ($providers) {
-                    $query->where('name', $providers[0]);
-                });
-            } else {
-                $articles = $articles->with('providers')->whereHas('providers', function(Builder $query) use ($providers) {
-                    $query->whereIn('name', $providers);
-                });
-            }
-        }
-
-        // Ordenar
-        if ($ordenar == 'nuevos-viejos') {
-            $articles = $articles->orderBy('id', 'DESC');
-        }
-        if ($ordenar == 'viejos-nuevos') {
-            $articles = $articles->orderBy('id', 'ASC');
-        }
-        if ($ordenar == 'caros-baratos') {
-            $articles = $articles->orderBy('price', 'DESC');
-        }
-        if ($ordenar == 'baratos-caros') {
-            $articles = $articles->orderBy('price', 'ASC');
-        }
-        return $articles->get();
-    }
-
     function search($query) {
         $user = Auth()->user();
         $articles = Article::where('user_id', Auth()->user()->id)
@@ -170,6 +120,35 @@ class ArticleController extends Controller
         return 'bien';
     }
 
+    function updateByPorcentage(Request $request) {
+        // if ($request->round == 'up') {
+        //     $round = PHP_ROUND_HALF_UP;
+        // } else if ($request->round == 'down') {
+        //     $round = PHP_ROUND_HALF_DOWN;
+        // }
+
+        $articles_ids = $request->articles_ids;
+        foreach ($articles_ids as $article_id) {
+            $article = Article::find($article_id);
+            if (!empty($request->cost)) {
+                if($request->decimals) {
+                    $article->cost += round(($request->cost/100)*$article->cost, 2);
+                } else {
+                    $article->cost += round(($request->cost/100)*$article->cost, 0);
+                }
+            }
+            if (!empty($request->price)) {
+                $article->previus_price = $article->price;
+                if($request->decimals) {
+                    $article->price += round(($request->price/100)*$article->price, 2);
+                } else {
+                    $article->price += round(($request->price/100)*$article->price, 0);
+                }
+            }
+            $article->save();
+        }
+    }
+
     function store(Request $request) {
         
         $user = Auth()->user();
@@ -213,6 +192,56 @@ class ArticleController extends Controller
 
     function destroy($id) {
         Article::find($id)->delete();
+    }
+
+    function filter(Request $request) {
+        $user = Auth()->user();
+        $mostrar = $request->mostrar;
+        $ordenar = $request->ordenar;
+        $precio_entre = $request->precio_entre;
+
+        $articles = Article::where('user_id', $user->id);
+
+        // Mostrar
+        if ($mostrar == 'desactualizados') {
+                $fecha_actual = date('d-m-Y');
+                $hace_6_meses = date('d-m-Y', strtotime($fecha_actual."- 6 month"));
+                $articles = $articles->whereDate('updated_at', '<=', $hace_6_meses);
+        }
+        if ($mostrar == 'no-vendidos') {
+            $articles = $articles->doesntHave('sales');
+        }
+        if ($mostrar == 'no-stock') {
+            $articles = $articles->where('stock', 0);
+        }
+
+        if ($user->hasRole('commerce')) {
+            $providers = $request->providers;
+            if (count($providers) == 1) {
+                $articles = $articles->with('providers')->whereHas('providers', function(Builder $query) use ($providers) {
+                    $query->where('name', $providers[0]);
+                });
+            } else {
+                $articles = $articles->with('providers')->whereHas('providers', function(Builder $query) use ($providers) {
+                    $query->whereIn('name', $providers);
+                });
+            }
+        }
+
+        // Ordenar
+        if ($ordenar == 'nuevos-viejos') {
+            $articles = $articles->orderBy('id', 'DESC');
+        }
+        if ($ordenar == 'viejos-nuevos') {
+            $articles = $articles->orderBy('id', 'ASC');
+        }
+        if ($ordenar == 'caros-baratos') {
+            $articles = $articles->orderBy('price', 'DESC');
+        }
+        if ($ordenar == 'baratos-caros') {
+            $articles = $articles->orderBy('price', 'ASC');
+        }
+        return $articles->get();
     }
 
     function export() {
