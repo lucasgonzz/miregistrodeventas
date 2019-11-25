@@ -24,22 +24,10 @@
 								</h5>
 							</div>
 							<div class="col">
-								<button @click="next" 
-										v-show="previus_next > 1" 
-										class="btn btn-primary m-l-5 float-right">
-									<i class="icon-redo"></i>
-									Siguiente
-								</button>
 								<button @click="previus" 
 										class="btn btn-primary m-l-5 float-right">
 									<i class="icon-undo"></i>
 									Anterior
-								</button>
-								<button @click="clearArticle" 
-										v-show="previus_next != 0"
-										class="btn btn-warning float-right">
-									<i class="icon-refresh"></i>
-									Limpiar
 								</button>
 							</div>
 						</div>
@@ -83,12 +71,28 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="name">Nombre</label>
-								<input type="text" 
-										class="form-control focus-red" 
-										placeholder="Ingrese el nombre"
-										id="name"
-										v-model="article.name">
+								<div class="buscador">
+									<label for="name">Nombre</label>
+									<input type="text" 
+											@keyup="setPossibleNames"
+											autocomplete="off" 
+											class="form-control focus-red input-search" 
+											placeholder="Ingrese el nombre"
+											id="name"
+											v-model="article.name">
+									<div class="results m-t-10" v-show="possibles_names.length">
+										<ul class="list-group">
+											<li class="list-group-item active p-t-5 p-b-5">
+												Selecciona tu artículo si aparece en esta lista
+											</li>
+											<li class="list-group-item p-t-5 p-b-5 c-p" @click="selectPossibleName(name)"
+												v-for="name in possibles_names">
+												{{ name }}
+											</li>
+										</ul>
+									</div>
+								</div>
+
 							</div>
 							<div class="form-group">
 								<label for="created_at">Fecha</label>
@@ -228,10 +232,13 @@ export default {
 				act_fecha: true,
 				created_at: new Date().toISOString().slice(0,10),
 			},
+			// pre_search: [],
 			providers: [],
 			remember_provider: true,
 			remember_date: false,
 			bar_codes: [],
+			names: [],
+			possibles_names: [],
 			generated_bar_codes: [],
 			previus_next: 0,
 		}
@@ -241,6 +248,7 @@ export default {
 			this.getProviders()
 		}
 		this.getBarCodes()
+		this.getNames()
 		this.getGeneratedBarCodes()
 	},
 	methods: {
@@ -251,6 +259,16 @@ export default {
 			return moment(date).fromNow()
 		},
 
+		getNames() {
+			axios.get('articles/names')
+			.then(res => {
+				console.log(res.data)
+				this.names = res.data
+			})
+			.catch(err => {
+				console.log(err)
+			})
+		},
 
 		// Codigos de barra
 		getBarCodes() {
@@ -293,6 +311,32 @@ export default {
 				})
 			}
 		},
+		setPossibleNames() {
+			if (this.article.bar_code.length == 0 && this.article.name.length >= 2) {
+				this.possibles_names = []
+				this.names.forEach(name => {
+					var n = this.article.name.charAt(0).toUpperCase() + this.article.name.slice(1)
+
+					if (name.toLowerCase().includes(this.article.name)) {
+						this.possibles_names.push(name)
+					}
+				})				
+			} else {
+				this.possibles_names = []
+			}
+		},
+		selectPossibleName(article_name) {
+			axios.get('articles/search/'+article_name)
+			.then( res => {
+				console.log(res.data)
+				this.setArticle(res.data[0])
+				this.possibles_names = []
+				$('#edit-article').modal('show')
+			})
+			.catch( err => {
+				console.log(err)
+			})
+		},
 
 		remember_date_() {
 			this.remember_date = true
@@ -304,7 +348,7 @@ export default {
 				article: this.article
 			})
 			.then( res => {
-				console.log(res.data)
+				this.bar_codes.push(this.article.bar_code)
 				this.clearArticle()
 				toastr.success('Artículo guardado correctamente')
 			})
@@ -421,3 +465,8 @@ export default {
 	}
 }
 </script>
+<style>
+.results {
+
+}
+</style>

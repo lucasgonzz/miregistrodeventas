@@ -15874,6 +15874,16 @@ a.text-dark:focus {
   margin-right: 0.1em;
 }
 
+.list {
+  position: absolute;
+  box-shadow: 0px 7px 45px -16px rgba(0, 0, 0, 0.75);
+}
+
+.list li:hover {
+  background: #60a8e4;
+  color: #FFF;
+}
+
 .navbar .nav-link {
   font-size: 1.2rem;
   color: rgba(52, 144, 220, 0.7) !important;

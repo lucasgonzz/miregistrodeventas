@@ -15,8 +15,9 @@ use Faker\Generator as Faker;
 $factory->define(Article::class, function (Faker $faker) {
 	$cost = rand(50, 3000);
     $bar_code = rand(1000000000000, 9999999999999);
+    $b_c = rand(1, 2);
     return [
-    	'bar_code' => $bar_code,
+    	'bar_code' => $b_c == 1 ? $bar_code : null,
         'name' => $faker->name,
         'cost' => 50,
         'price' => 100,

@@ -4,24 +4,49 @@
 		<div class="card">
 			<div class="card-header">
 				<div class="form-row">	
-					<div class="col-10">	
+					<div class="col-5">	
 						<div class="input-group mb-2 mr-sm-2">
 							<div class="input-group-prepend">
-							  <div class="input-group-text">Codigo de barras</div>
+							  	<div class="input-group-text">Codigo de barras</div>
 							</div>
 							<input type="text" 
-									v-model="bar_code"
-									id="bar_code"
+									v-model="article.bar_code"
+									id="bar-code"
 									@keyup.enter="addArticle"
 									class="form-control" 
 									placeholder="Ingrese el codigo de barras">
 						</div>
 					</div>
+					<div class="col-5">
+						<div class="input-group mb-2 mr-sm-2">
+							<div class="input-group-prepend">
+							  	<div class="input-group-text">Nombre</div>
+							</div>
+							<input type="text" 
+									v-model="article.name"
+									class="form-control"
+									id="name"
+									@keyup="setPossibleArticles"
+									@keyup.enter="addArticle"
+									placeholder="Ingrese el nombre del artículo"
+									autocomplete="off">
+						</div>
+						<ul class="list-group list" v-show="possible_articles.length">
+							<li class="list-group-item active p-t-5 p-b-5">
+								Que artículo queres vender
+							</li>
+							<li class="list-group-item c-p p-t-5 p-b-5" 
+								v-for="article_name in possible_articles"
+								@click="selectPossibleArticle(article_name)">
+								{{ article_name }}
+							</li>
+						</ul>	
+					</div>
 					<div class="col-2">	
 						<button type="submit"
 								@click="vender"
 								:class="articles.length ? '' : 'disabled'" 
-								class="btn btn-primary mb-2">Vender</button>
+								class="btn btn-primary btn-block mb-2">Vender</button>
 					</div>
 				</div>
 			</div>
@@ -78,20 +103,32 @@
 export default {
 	data() {
 		return {
-			bar_code: '',
+			article: {
+				bar_code: '',
+				name: '',
+				enteredByName: false,
+			},
 			articles: [],
 
 			total: 0,
 			cantidad_articulos: 0,
 			cantidad_unidades: 0,
+			possible_articles: [],
+			// possible_articles: [
+			// 	{name: 'Camion'},
+			// 	{name: 'Casita'},
+			// 	{name: 'Anteojos'},
+			// 	{name: 'Reja'},
+			// ],
+			names: [],
 		}
 	},
 	created() {
-		$('#bar_code').focus()
+		$('#bar-code').focus()
+		this.getNames()
 	},
 	methods: {
 		addTotal(article, repeated = false) {		
-			console.log(article.price)
 			this.total += Number(article.price)
 			this.cantidad_unidades++
 			article.stock--
@@ -99,28 +136,94 @@ export default {
 				this.cantidad_articulos++
 			}
 		},
+		getNames() {
+			axios.get('articles/names')
+			.then(res => {
+				console.log(res.data)
+				this.names = res.data
+			})
+			.catch(err => {
+				console.log(err)
+			})
+		},
+		setPossibleArticles() {
+			// console.log('entro')
+			if (this.article.bar_code.length == 0 && this.article.name.length >= 2) {
+				this.possible_articles = []
+				this.names.forEach(name => {
+					if (name.toLowerCase().includes(this.article.name)) {
+						this.possible_articles.push(name)
+					}
+				})				
+			} else {
+				this.possible_articles = []
+			}
+		},
+		selectPossibleArticle(article_name) {
+			this.article.name = article_name
+			this.addArticle()
+		},
+
+		/*
+			* Agregar artículos a la lista de articulos por ser vendidos
+		*/
 		addArticle() {
 			var repetido = false
-			this.articles.forEach(article => {
-				if (article.bar_code == this.bar_code) {
-					repetido = true
-					article.amount++
-					this.addTotal(article, true)
-					this.bar_code = ''
-				}
-			})
+			// Si se ingresa por nombre revisa que no este repetido
+			if (this.possible_articles.length) {
+				this.articles.forEach(article => {
+					if (article.name == this.article.name) {
+						repetido = true
+						article.amount++
+						this.addTotal(article, true)
+						this.possible_articles = []
+						this.article.name = ''
+						$('#name').focus()
+					}
+				})
+			} else {
+				// Si se ingresa por codigo revisa que no este repetido
+				this.articles.forEach(article => {
+					if (article.bar_code == this.article.bar_code) {
+						repetido = true
+						article.amount++
+						this.addTotal(article, true)
+						this.article.bar_code = ''
+						$('#bar-code').focus()
+					}
+				})
+			}
+
+			// Si no esta repetido se piden los datos
 			if (!repetido) {
-				axios.get('articles/get-by-bar-code/'+this.bar_code)
-				.then(res => {
-					var article = res.data
-					article.amount = 1
-					this.articles.push(article)
-					this.addTotal(article)
-					this.bar_code = ''
-				})
-				.catch(err => {
-					console.log(err)
-				})
+				if (this.possible_articles.length) {
+					axios.get('articles/get-by-name/'+this.article.name)
+					.then(res => {
+						var article = res.data
+						article.amount = 1
+						this.articles.push(article)
+						this.addTotal(article)
+						this.possible_articles = []
+						this.article.name = ''
+						$('#name').focus()
+					})
+					.catch(err => {
+						console.log(err)
+					})
+				} else {
+					axios.get('articles/get-by-bar-code/'+this.article.bar_code)
+					.then(res => {
+						var article = res.data
+						article.amount = 1
+						this.articles.push(article)
+						this.addTotal(article)
+						this.article.bar_code = ''
+						$('#bar-code').focus()
+					})
+					.catch(err => {
+						console.log(err)
+					})
+				}
 			}
 		},
 		removeArticle(article) {
@@ -177,4 +280,9 @@ export default {
 	width: 50px;
 	margin: 0px;
 }
+
+.list {
+	width: 98%
+}
+
 </style>

@@ -28,7 +28,7 @@
 								<button type="button" 
 										class="btn btn-primary focus-red" 
 										@click="saveProvider">
-									Guardar
+									Guardar proveedor
 								</button>
 							</div>
 						</div>

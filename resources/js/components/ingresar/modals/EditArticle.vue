@@ -101,7 +101,6 @@
 						</small>
 					</div>
 				</div>
-				{{previusNext}}
 			</div>
 			<div class="modal-footer">
 				<button @click="clearArticle" type="button" class="btn btn-secondary focus-red" data-dismiss="modal">Cancelar</button>

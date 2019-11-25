@@ -35,8 +35,9 @@ Route::group(['middleware' => ['has.role:provider']], function () {
 
 	// Ingresar
 	Route::post('/mayoristas/articles', 'ArticleController@store');
-	Route::get('/mayoristas/articles/get-by-bar-code/{id}', 'ArticleController@getByBarCode');
-	Route::get('/mayoristas/articles/bar-codes', 'ArticleController@BarCodes');
+	Route::get('/mayoristas/articles/get-by-bar-code/{bar_code}', 'ArticleController@getByBarCode');
+	Route::get('/mayoristas/articles/bar-codes', 'ArticleController@getBarCodes');
+	Route::get('/mayoristas/articles/names', 'ArticleController@getNames');
 
 	// Listado
 	Route::post('/mayoristas/articles/filter', 'ArticleController@filter');
@@ -51,8 +52,9 @@ Route::group(['middleware' => ['has.role:provider']], function () {
 	Route::get('/mayoristas/articles/exel', 'ArticleController@export')->name('provider.exel');
 
 	// Vender
-	Route::post('mayoristas/sales', 'SaleController@store');
-	Route::get('mayoristas/sales/cliente/{company_name}/{borders}/{per_page}/{sale_id}', 'PdfController@ticket_client');
+	Route::post('/mayoristas/sales', 'SaleController@store');
+	Route::get('/mayoristas/articles/get-by-name/{name}', 'ArticleController@getByName');
+	Route::get('/mayoristas/sales/cliente/{company_name}/{borders}/{per_page}/{sale_id}', 'PdfController@ticket_client');
 	Route::get('mayoristas/sales/comercio/{company_name}/{borders}/{per_page}/{sale_id}', 'PdfController@ticket_commerce');
 	// Vender - Clientes
 	Route::get('mayoristas/clients', 'ClientController@index');
@@ -61,12 +63,6 @@ Route::group(['middleware' => ['has.role:provider']], function () {
 
 	Route::post('/mayoristas/articles/import/exel', 'ArticleController@import');
 
-});
-
-Route::get('a/{a}/{b}', function($a, $b) {
-	return round((7/100)*120.99, 0);
-	return round(($a/100)*$b, 0);
-	return ($a/100)*$b;
 });
 
 
@@ -90,8 +86,9 @@ Route::group(['middleware' => ['has.role:commerce']], function () {
 	/*
 		*get-by-bar-code tambien se utiliza en la parte de vender
 	*/
-	Route::get('/comercios/articles/get-by-bar-code/{id}', 'ArticleController@getByBarCode');
-	Route::get('/comercios/articles/bar-codes', 'ArticleController@BarCodes');
+	Route::get('/comercios/articles/get-by-bar-code/{bar_code}', 'ArticleController@getByBarCode');
+	Route::get('/comercios/articles/bar-codes', 'ArticleController@getBarCodes');	
+	Route::get('/comercios/articles/names', 'ArticleController@getNames');
 	Route::get('/comercios/articles/previus-next/{index}', 'ArticleController@previusNext');
 	Route::get('/comercios/bar-codes/generated', 'BarCodeController@generated');
 
@@ -107,7 +104,7 @@ Route::group(['middleware' => ['has.role:commerce']], function () {
 
 	// Vender
 	Route::post('/comercios/sales', 'SaleController@store');
-
+	Route::get('/comercios/articles/get-by-name/{name}', 'ArticleController@getByName');
 
 	// Listado exportar
 	Route::get('/comercios/configuracion', 'MainController@commerce_config')->name('commerce.config');

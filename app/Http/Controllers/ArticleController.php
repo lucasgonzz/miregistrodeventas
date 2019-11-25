@@ -45,9 +45,34 @@ class ArticleController extends Controller
         }
     }
 
-    function barCodes() {
+    function getByName($name) {
+        $user = Auth()->user();
+        if ($user->hasRole('commerce')) {
+            return Article::where('user_id', $user->id)
+                            ->where('name', $name)
+                            ->with('providers')
+                            ->first();
+        } else {
+            return Article::where('user_id', $user->id)
+                            ->where('name', $name)
+                            ->first();
+        }
+        // if ($article === null) {
+        //     return null;
+        // } else {
+        //     return $article;
+        // }
+    }
+
+    function getBarCodes() {
         return Article::where('user_id', Auth()->user()->id)
                         ->pluck('bar_code');
+    }
+
+    function getNames() {
+        return Article::where('user_id', Auth()->user()->id)
+                        ->whereNull('bar_code')
+                        ->pluck('name');
     }
 
     function search($query) {

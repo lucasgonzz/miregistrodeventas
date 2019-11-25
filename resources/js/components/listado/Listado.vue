@@ -152,7 +152,12 @@
 									                  </label>
 									                </div>
 												</td>
-												<td>{{ article.bar_code }}</td>
+												<td v-if="article.bar_code">
+													{{ article.bar_code }}
+												</td>
+												<td v-else>
+													<strong>No tiene</strong>
+												</td>
 												<td>{{ article.name }}</td>
 												<td>${{ price(article.cost) }}</td>
 												<td class="td-price">${{ price(article.price) }}</td>
@@ -214,7 +219,12 @@
 									                  </label>
 									                </div>
 												</td>
-												<td>{{ article.bar_code }}</td>
+												<td v-if="article.bar_code">
+													{{ article.bar_code }}
+												</td>
+												<td v-else>
+													<strong>No tiene</strong>
+												</td>
 												<td>{{ article.name }}</td>
 												<td>${{ price(article.cost) }}</td>
 												<td class="td-price">${{ price(article.price) }}</td>
@@ -652,5 +662,10 @@ export default {
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-end;
+}
+
+.dropdown-item.c-p:hover {
+	background: #3490dc;
+	color: #FFF;
 }
 </style>

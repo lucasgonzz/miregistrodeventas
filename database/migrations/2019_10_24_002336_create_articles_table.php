@@ -15,7 +15,7 @@ class CreateArticlesTable extends Migration
     {
         Schema::create('articles', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('bar_code', 128);
+            $table->string('bar_code', 128)->nullable();
             $table->string('name', 128);
             $table->decimal('cost', 7, 2);
             $table->decimal('price', 7, 2);

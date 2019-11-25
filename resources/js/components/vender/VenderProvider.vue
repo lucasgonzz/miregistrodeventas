@@ -8,36 +8,59 @@
 		<div class="col-lg-9">	
 			<div class="card">
 				<div class="card-header">
-					<form>
-						<div class="form-row">	
-							<div class="col-8">	
-								<div class="input-group mb-2 mr-sm-2">
-									<div class="input-group-prepend">
-									  	<div class="input-group-text">Codigo de barras</div>
-									</div>
-									<input type="text" 
-											v-model="bar_code"
-											id="bar-code"
-											class="form-control" 
-											placeholder="Ingrese el codigo de barras"
-											@keyup.enter="changeToCantidad">
+					<div class="form-row">	
+						<div class="col-5">	
+							<div class="input-group mb-2 mr-sm-2">
+								<div class="input-group-prepend">
+								  	<div class="input-group-text">Codigo de barras</div>
 								</div>
+								<input type="text" 
+										v-model="article.bar_code"
+										id="bar-code"
+										class="form-control" 
+										placeholder="Escaneé el codigo de barras"
+										@keyup.enter="changeToCantidadFromBarCode">
 							</div>
-							<div class="col-4">	
-								<div class="input-group mb-2 mr-sm-2">
-									<div class="input-group-prepend">
-									  	<div class="input-group-text">Cantidad</div>
-									</div>
-									<input type="number" 
-											v-model="amount"
-											@keyup.enter="addArticle"
-											id="cantidad"
-											class="form-control" 
-											placeholder="Cantidad">
+						</div>	
+						<div class="col-5">	
+							<div class="input-group mb-2 mr-sm-2">
+								<div class="input-group-prepend">
+								  	<div class="input-group-text">Nombre</div>
 								</div>
+								<input type="text" 
+										v-model="article.name"
+										id="name"
+										class="form-control" 
+										placeholder="Ingrese el nombre del artículo"
+										autocomplete="off" 
+										@keyup="setPossibleArticles"
+										@keyup.enter="changeToCantidadFromName">
+							</div>
+							<ul class="list-group list" v-show="possible_articles.length">
+								<li class="list-group-item active p-t-5 p-b-5">
+									Selecciona el artículo que queres vender 
+								</li>
+								<li v-for="name in possible_articles"
+									@click="selectPossibleArticle(name)"
+									class="list-group-item c-p p-t-5 p-b-5">
+									{{ name }}
+								</li>
+							</ul>
+						</div>
+						<div class="col-2">	
+							<div class="input-group mb-2 mr-sm-2">
+								<div class="input-group-prepend">
+								  	<div class="input-group-text">Cantidad</div>
+								</div>
+								<input type="number" 
+										v-model="article.amount"
+										@keyup.enter="addArticle"
+										id="cantidad"
+										min="1"
+										class="form-control" >
 							</div>
 						</div>
-					</form>	
+					</div>
 				</div>
 				<div class="card-body">
 					<h5 class="card-title">Total: ${{ getTotal() }}</h5>
@@ -133,8 +156,14 @@ export default {
 	},
 	data() {
 		return {
-			bar_code: '',
-			amount: '',
+			article: {
+				bar_code: '',
+				name: '',
+				amount: 1,
+			},
+			possible_articles: [],
+			names: [],
+
 			clients: [],
 			articles: [],
 			ventaRealizada: false,
@@ -147,124 +176,114 @@ export default {
 		}
 	},
 	methods: {
-		addTotal(article, repeated = false) {
-			this.total += Number(article.price) * article.amount
-			this.cantidad_unidades += article.amount
-			if (!repeated) {
-				this.cantidad_articulos++
-			}
-		},
-		getTotal() {
-			var total = 0
-			this.articles.forEach( article => {
-				total += article.price * article.amount
-			})
-			// return price(total)
-			return total
-		},
-		cantidadArticulos() {
-			var cantidad_articulos = 0
-			this.articles.forEach( article => {
-				cantidad_articulos += article.amount
-			})
-			return cantidad_articulos
-		},
-		// total() {
-		// 	var total = 0
-		// 	this.articles.forEach( article => {
-		// 		total += article.price * article.amount
-		// 	})
-		// 	return this.price(total)
-		// },
-		// cantidad_articulos() {
-		// 	var cantidad_articulos = 0
-		// 	this.articles.forEach( article => {
-		// 		cantidad_articulos += article.amount
-		// 	})
-		// 	return cantidad_articulos
-		// },
-		isFloat(n){
-			return Number(n) === n && n % 1 !== 0;
-		},
-		price(p, punto=true) {
-			if (typeof(p) === 'number') {
-				console.log(p)
-				p = p.toString()+'.00'
-			}
-			var centavos = p.split('.')[1]
-			var price = p.split('.')[0]
-			var formated_price
-			if (punto) {
-				formated_price = numeral(price).format('0,0').split(',').join('.')
-				if (centavos != '00') {
-					formated_price = formated_price + ',' + centavos
-				}
+
+		/* 
+		________________________________________________________________
+		|																|
+		|	* Cambia al campo de cantidad verificando que los datos		|
+		|	* sean correctos											|	
+		|_______________________________________________________________|
+
+		*/
+		changeToCantidadFromName() {
+			if (this.names.includes(this.article.name.replace(/\b\w/g, l => l.toUpperCase()))) {
+				$('#cantidad').focus()
 			} else {
-				formated_price = price
-				if (centavos != '00') {
-					formated_price = formated_price + '.' + centavos
-				}
-			}
-			return formated_price
+				toastr.error('No hay ningun artículo registrado con este nombre')
+				this.article.name = ''
+			}		
 		},
-		changeToCantidad() {
-			if (this.bar_codes.includes(this.bar_code)) {
+		changeToCantidadFromBarCode() {
+			if (this.bar_codes.includes(this.article.bar_code)) {
 				$('#cantidad').focus()
 			} else {
 				toastr.error('Este codigo no pertenece a ningun artículo registrado')
-				this.bar_code = ''
+				this.article.bar_code = ''
 			}
 		},
-		resetInputs() {
-			this.bar_code = ''
-			this.amount = ''
-			$('#bar-code').focus()
+
+		// Metodos para la sugerencia de articulos
+		setPossibleArticles() {
+			this.possible_articles = []
+			if (this.article.name.length >= 2) {
+				this.names.forEach(name => {
+					if(name.toLowerCase().includes(this.article.name)) {
+						this.possible_articles.push(name)
+					}
+				})
+			}
 		},
+		selectPossibleArticle(name) {
+			this.article.name = name
+			this.possible_articles = []
+			this.changeToCantidadFromName()
+		},
+
+
+		// Articulos
 		addArticle() {
 			var repetido = false
-			this.articles.forEach(article => {
-				if (article.bar_code == this.bar_code) {
-					article.amount += parseInt(this.amount)
-					// this.addTotal(article, true)
-					this.resetInputs()
-					repetido = true
-				}
-			})
+
+			// Revisa que no este repetido
+			if (this.article.name != '' && this.article.bar_code == '') {
+				this.articles.forEach(article => {
+					if (article.name == this.article.name) {
+						article.amount += Number(this.article.amount)
+						this.addTotal(article, true)
+						this.resetInputs()
+						repetido = true
+					}
+				})
+			} else if (this.article.bar_code != '' && this.article.name == '') {
+				this.articles.forEach(article => {
+					if (article.bar_code == this.article.bar_code) {
+						article.amount += Number(this.article.amount)
+						this.addTotal(article, true)
+						this.resetInputs()
+						repetido = true
+					}
+				})
+			} else {
+				toastr.error('Agrege su artículo mediante el codigo o mediante el nombre, no los dos a la vez')
+			}
+
+
 			if (!repetido) {
-				axios.get('articles/get-by-bar-code/'+this.bar_code)
-				.then(res => {
-					var article = res.data
-					article.amount = parseInt(this.amount)
-					// this.addTotal(article)
-					this.articles.push(article)
-					this.resetInputs()
-				})
-				.catch(err => {
-					console.log(err)
-				})
+				if (this.article.name != '' && this.article.bar_code == '') {
+					axios.get('articles/get-by-name/'+this.article.name)
+					.then(res => {
+						var article = res.data
+						article.amount = Number(this.article.amount)
+						console.log(article)
+						this.articles.push(article)
+						this.resetInputs()
+					})
+					.catch(err => {
+						console.log(err)
+					})
+				} else if (this.article.bar_code != '' && this.article.name == '') {
+					axios.get('articles/get-by-bar-code/'+this.article.bar_code)
+					.then(res => {
+						var article = res.data
+						article.amount = Number(this.article.amount)
+						console.log(article)
+						this.articles.push(article)
+						this.resetInputs()
+					})
+					.catch(err => {
+						console.log(err)
+					})
+				} else {
+					toastr.error('Agrege su artículo mediante el codigo o mediante el nombre, no los dos a la vez')
+				}
 			}
 		},
 		removeArticle(article) {
-			// this.total -= article.price * article.amount
-			// this.cantidad_articulos--
-			// this.cantidad_unidades -= article.amount
 			var i = this.articles.indexOf(article)
 			this.articles.splice(i, 1)
 		},
-		up(article) {
-			article.amount++
-			// this.addTotal(article, true)
-		},
-		down(article) {
-			if (article.amount > 1) {
-				article.amount--
-				// this.total -= Number(article.price)
-				// this.cantidad_unidades--
 
-			} else {
-				toastr.error('No se pueden restar mas unidades')
-			}
-		},
+		// Venta
 		vender() {
 			if(this.selected_client!=0) {
 				axios.post('sales', {
@@ -290,7 +309,83 @@ export default {
 			this.ventaRealizada = false
 		},
 
-		// Clientes
+
+		// Total y cantidad de articulos
+		addTotal(article, repeated = false) {
+			this.total += Number(article.price) * article.amount
+			this.cantidad_unidades += article.amount
+			if (!repeated) {
+				this.cantidad_articulos++
+			}
+		},
+		getTotal() {
+			var total = 0
+			this.articles.forEach( article => {
+				total += article.price * article.amount
+			})
+			// return price(total)
+			return total
+		},
+		cantidadArticulos() {
+			var cantidad_articulos = 0
+			this.articles.forEach( article => {
+				cantidad_articulos += article.amount
+			})
+			return cantidad_articulos
+		},
+
+
+		// Precios
+		isFloat(n){
+			return Number(n) === n && n % 1 !== 0;
+		},
+		price(p, punto=true) {
+			if (typeof(p) === 'number') {
+				console.log(p)
+				p = p.toString()+'.00'
+			}
+			var centavos = p.split('.')[1]
+			var price = p.split('.')[0]
+			var formated_price
+			if (punto) {
+				formated_price = numeral(price).format('0,0').split(',').join('.')
+				if (centavos != '00') {
+					formated_price = formated_price + ',' + centavos
+				}
+			} else {
+				formated_price = price
+				if (centavos != '00') {
+					formated_price = formated_price + '.' + centavos
+				}
+			}
+			return formated_price
+		},
+
+		// Varios
+		resetInputs() {
+			this.article.bar_code = ''
+			this.article.name = ''
+			this.article.amount = 0
+			$('#bar-code').focus()
+		},
+		up(article) {
+			article.amount++
+			// this.addTotal(article, true)
+		},
+		down(article) {
+			if (article.amount > 1) {
+				article.amount--
+				// this.total -= Number(article.price)
+				// this.cantidad_unidades--
+
+			} else {
+				toastr.error('No se pueden restar mas unidades')
+			}
+		},
+
+		/*
+			* Manejo de los clientes
+		*/
 		getClients() {
 			axios.get('clients')
 			.then(res => {
@@ -308,6 +403,13 @@ export default {
 			$('#clients').modal('show')
 		},
 
+		/*
+
+		* Obtiene lo datos para comenzar
+			* Codigos de barra
+			* Nombres disponibles
+
+		*/
 		getBarCodes() {
 			axios.get('articles/bar-codes')
 			.then(res => {
@@ -317,10 +419,21 @@ export default {
 				console.log(err)
 			})
 		},
+		getNames() {
+			axios.get('articles/names')
+			.then(res => {
+				console.log(res.data)
+				this.names = res.data
+			})
+			.catch(err => {
+				console.log(err)
+			})
+		},
 	},
 	created() {
 		this.getClients()
 		this.getBarCodes()
+		this.getNames()
 	}
 }
 </script>
@@ -343,5 +456,11 @@ thead, tbody tr {
 	display: inline-block;
 	width: 50px;
 	margin: 0px;
+}
+
+.list {
+	position: absolute;
+	top: 100%;
+	width: 98%;
 }
 </style>
