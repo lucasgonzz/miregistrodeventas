@@ -21,6 +21,7 @@ Route::post('user/password', 'UserController@update_password')->name('password')
 
 // Auth::routes();
 
+Route::get('ticket', 'PdfController@ticket');
 
 // Mayoristas
 Route::group(['middleware' => ['has.role:provider']], function () {
@@ -83,8 +84,10 @@ Route::group(['middleware' => ['has.role:commerce']], function () {
 	Route::get('/comercios/providers', 'ProviderController@index');
 	Route::post('/comercios/providers', 'ProviderController@store');
 	Route::delete('/comercios/providers/{id}', 'ProviderController@delete');
+	Route::get('/comercios/imprimir-precios/{articles_id}', 'PdfController@printTicket');
 	/*
-		*get-by-bar-code tambien se utiliza en la parte de vender
+		* get-by-bar-code tambien se utiliza en la parte de vender
+		* imprimir-precios tambien se usa en la parte de listado
 	*/
 	Route::get('/comercios/articles/get-by-bar-code/{bar_code}', 'ArticleController@getByBarCode');
 	Route::get('/comercios/articles/bar-codes', 'ArticleController@getBarCodes');	

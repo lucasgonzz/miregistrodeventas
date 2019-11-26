@@ -62,6 +62,7 @@
 									<i class="icon-filter"></i>
 									Filtrar
 								</button>
+
 							<!-- 
 										:class="selected_articles.length ? '' : 'disabled'"
 							
@@ -71,6 +72,11 @@
 										class="btn btn-primary m-l-5">
 									<i class="icon-edit"></i>
 									Actualizar
+								</a>
+								<a @click="printTickets"
+									class="btn btn-success m-l-5">
+									<span class="icon-tag"></span>
+									Tickets	
 								</a>
 							</div>
 						</div>
@@ -287,6 +293,7 @@ import Importar from './modals/Importar.vue'
 import Filtrar from './modals/Filtrar.vue'
 import EditarArticulo from './modals/EditarArticulo.vue'
 import EditArticles from './modals/EditArticles.vue'
+import PrintTickets from './modals/PrintTickets.vue'
 import ProvidersHistory from './modals/ProvidersHistory.vue'
 import ConfirmarEliminacion from './modals/ConfirmarEliminacion.vue'
 import InfoFiltrados from './modals/InfoFiltrados.vue'
@@ -298,6 +305,7 @@ export default {
 		Filtrar,
 		EditarArticulo,
 		EditArticles,
+		PrintTickets,
 		ProvidersHistory,
 		InfoFiltrados,
 		Pagination,
@@ -562,7 +570,15 @@ export default {
 		showFiltrar() {
 			$('#listado-filtrar').modal('show')
 		},
-		
+		showPrintTickets() {
+			$('#print-tickets').modal('show')
+		},
+		printTickets() {
+			var link = 'imprimir-precios/'+this.selected_articles.join('-')
+			window.open(link)
+		},
+			
+
 		// Edit articles
 		showEditArticles() {
 			$('#edit-articles').modal('show')

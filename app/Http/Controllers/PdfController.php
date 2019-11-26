@@ -11,6 +11,108 @@ use App\Sale;
 class PdfController extends Controller
 {
 
+	function barCodeDirectory() {
+        if(!is_dir(public_path()."/storage/barcodes/".Auth()->user()->id)) {
+            mkdir(public_path().'/storage/barcodes/'.Auth()->user()->id);
+        }
+	}
+
+	function printTicket($articles_id) {
+		require('barcode/barcode.php');
+		// $color = (bool)$color;
+		$user = Auth()->user();
+		$pdf = new fpdf();
+		$pdf->addPage();
+        $x = 10;
+        $y = 10;
+        $mas_largo = 0;
+        $hubo_codigo_de_barras = false;
+        $articles_id = explode('-', $articles_id);
+        foreach ($articles_id as $article_id) {
+        	$article = Article::find($article_id);
+			$bar_code = $article->bar_code;
+			$price = $article->price;
+			$name = $article->name;
+
+			// Se crea el directorio si no existe
+			$this->barCodeDirectory();
+
+			// Se crea la imagen del codigo de barras
+	        if (!is_null($bar_code)) {
+		        barcode(public_path().'/storage/barcodes/'.$user->id.'/'.$bar_code.'.png', 
+		                $bar_code, 20, 'horizontal', 'code128', 1);
+		        $width_image = getimagesize(public_path().'/storage/barcodes/'.$user->id.'/'.$bar_code.'.png');
+		        $image_w = $width_image[0] * 50 / 200;
+		        $hubo_codigo_de_barras = true;
+	        }
+
+	        // Se obtienen los largos del nombre y del precio
+	        $width_name = strlen($name)*2;
+	        $width_price = (strlen($price)+1)*5;
+	        
+	        // Se obtiene el valor mas largo
+	        // entre el nombre, el precio y el codigo de barras
+	        $mas_largo = max(array($width_name, $width_price, isset($image_w) ? $image_w : null));
+
+	        // Si no va a entrar el tiket se empieza desde el margen izquierdo
+	        if ($x > 205-$mas_largo) {
+	        	$x = 10;
+	        	$y += 35;
+	        }
+        	$pdf->Line($x, $y, $x+$mas_largo+4, $y);
+
+	        // Se dibuja la linea de la izquierda
+	        if (is_null($bar_code)) {
+	        	$pdf->Line($x, $y, $x, $y+20);
+	        } else {
+	        	$pdf->Line($x, $y, $x, $y+30);
+	        }
+
+	        // Se aumenta x para que tenga espacio desde los bordes
+	        $x += 2;
+
+			// Se escribe el nombre
+			$pdf->SetTextColor(0,0,0);
+			$pdf->SetFont('Arial', '', 12);
+	        $pdf->SetXY($x, $y);
+	        $pdf->Cell($mas_largo, 7,$name,'B',0,'C');
+			
+			// Se escribe el precio
+	        $pdf->SetXY($x, $y+9);
+	        $pdf->Cell(4,4,'$',0,0,'L');
+			$pdf->SetFont('Arial', '', 28);
+			// if ($color) {
+			// 	$pdf->SetTextColor(236, 35, 35);
+			// }
+			$pdf->SetTextColor(236, 35, 35);
+	        $pdf->Cell($mas_largo-4,10,$price,0,0,'L');
+
+	        // Si hay codigo de barra se escribe la imagen
+	        if (!is_null($bar_code)) {
+		        $pdf->Image(public_path().'/storage/barcodes/'.$user->id.'/'.$bar_code.'.png',$x,$y+20,$image_w,0,'PNG');
+	        }
+
+	        // Se dibuja la linea de la izquierda
+	        if (is_null($bar_code)) {
+	        	$pdf->Line($x+$mas_largo+2, $y, $x+$mas_largo+2, $y+20);
+        		$pdf->Line($x-2, $y+20, $x+$mas_largo+4-2, $y+20);
+	        } else {
+        		$pdf->Line($x-2, $y+30, $x+$mas_largo+4-2, $y+30);
+	        	$pdf->Line($x+$mas_largo+2, $y, $x+$mas_largo+2, $y+30);
+	        }
+
+	        // Se aumenta x con el campo mas largo y se le suman 4
+	        // 2 del espacio que hay con la linea izquierda
+	        // 2 del espacio que hay con la linea de la derecha
+	        // 4 mas para que el proximo este separado
+	        $x += $mas_largo+6;
+
+	        // Cada letra en 26 mide 5
+        }
+        $pdf->Output();
+        exit;
+	}
+
 	/* -------------------------------------------------------------------------------
 		*
 		* Pdf de las ventas

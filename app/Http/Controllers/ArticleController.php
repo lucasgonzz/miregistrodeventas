@@ -186,11 +186,11 @@ class ArticleController extends Controller
         $article->stock = $request->article['stock'];
         $article->user_id = $user->id;
 
-        $date = date('Y-m-d');
-        if ($request->article['created_at'] != $date) {
-            $article->created_at = $request->article['created_at'];
-            $article->updated_at = $request->article['created_at'];
-        }
+        $date = date('Y-m-d H:i:s');
+        // if ($request->article['created_at'] != $date) {
+        //     $article->created_at = $request->article['created_at'];
+        //     $article->updated_at = $request->article['created_at'];
+        // }
 
         $article->save();
         if ($user->hasRole('commerce')) {
@@ -204,14 +204,14 @@ class ArticleController extends Controller
         $bar_code = BarCode::where('user_id', $user->id)
                                 ->where('name', $request->article['bar_code'])
                                 ->first();
-        // return;
         if ($bar_code === null) {
-            return 'No existe';
+            // return 'No existe';
         } else {
             $bar_code->article_id = $article->id;
             $bar_code->save();
-            return 'ASD';
+            // return 'ASD';
         }
+        return $article;
     }
 
 

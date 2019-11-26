@@ -181,10 +181,10 @@
 									</button>
 								</div>
 								<div class="col-3 p-0">
-									<button @click="clearArticle" 
-											class="btn btn-block btn-center btn-danger m-0">
+									<button @click="toPrintTickets" 
+											class="btn btn-block btn-center btn-primary m-0">
 										<i class="icon-refresh"></i>
-										Limpiar
+										Tickets ({{ articles_id_to_print.length }})
 									</button>
 								</div>
 								<div v-if="previus_next == 0" class="col-6 p-0">
@@ -232,6 +232,7 @@ export default {
 				act_fecha: true,
 				created_at: new Date().toISOString().slice(0,10),
 			},
+			articles_id_to_print: [],
 			// pre_search: [],
 			providers: [],
 			remember_provider: true,
@@ -349,6 +350,7 @@ export default {
 			})
 			.then( res => {
 				this.bar_codes.push(this.article.bar_code)
+				this.articles_id_to_print.push(res.data.id)
 				this.clearArticle()
 				toastr.success('Artículo guardado correctamente')
 			})
@@ -369,6 +371,10 @@ export default {
 			.catch( err => {
 				console.log(err)
 			})
+		},
+		toPrintTickets() {
+			var link = 'imprimir-precios/'+this.articles_id_to_print.join('-')
+			window.open(link)
 		},
 		setArticle(article) {
 			this.article.creado = this.date(article.created_at) + ' ' 
