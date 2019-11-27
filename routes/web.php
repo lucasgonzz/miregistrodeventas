@@ -47,6 +47,8 @@ Route::group(['middleware' => ['has.role:provider']], function () {
 	Route::put('/mayoristas/articles/{id}', 'ArticleController@update');
 	Route::delete('/mayoristas/articles/{id}', 'ArticleController@destroy');
 	Route::get('/mayoristas/bar-codes/generated', 'BarCodeController@generated');
+	Route::get('/mayoristas/imprimir-precios/{articles_id}/{company_name}', 'PdfController@printTicket');
+	Route::post('/mayoristas/articles/update-by-porcentage', 'ArticleController@updateByPorcentage');
 
 	// Listado exportar
 	Route::get('/mayoristas/pdf/{columns}/{articles_ids}/{orientation}/{header?}', 'PdfController@articles');
@@ -84,7 +86,7 @@ Route::group(['middleware' => ['has.role:commerce']], function () {
 	Route::get('/comercios/providers', 'ProviderController@index');
 	Route::post('/comercios/providers', 'ProviderController@store');
 	Route::delete('/comercios/providers/{id}', 'ProviderController@delete');
-	Route::get('/comercios/imprimir-precios/{articles_id}', 'PdfController@printTicket');
+	Route::get('/comercios/imprimir-precios/{articles_id}/{company_name}', 'PdfController@printTicket');
 	/*
 		* get-by-bar-code tambien se utiliza en la parte de vender
 		* imprimir-precios tambien se usa en la parte de listado

@@ -4,7 +4,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title">
-					Editar los {{ selected_articles.length }} seleccionados
+					Editar los {{ selected_articles.selected_articles.length }} seleccionados
 				</h5>
 				<button class="close" data-dismiss="modal" aria-label="Close">
 					<i class="icon-cancel"></i>
@@ -74,7 +74,12 @@
 					<label for="decimals" class="col-4 col-form-label text-right"></label>
 					<div class="col-8">
 		                <div class="custom-control custom-checkbox">
-		                    <input type="checkbox" v-model="decimals" class="custom-control-input" id="decimals">
+		                    <input type="checkbox" 
+		                    		v-model="decimals" 
+		                    		true-value="1"
+		                    		false-value="0"
+		                    		class="custom-control-input" 
+		                    		id="decimals">
 		                    <label class="custom-control-label" for="decimals">Dejar decimales</label>
 		                </div>
 					</div>
@@ -101,7 +106,7 @@ export default {
 			porcentage_cost: '',
 			porcentage_price: '',
 			// round: 'up',
-			decimals: false,
+			decimals: 0,
 		}
 	},
 	methods: {
@@ -109,7 +114,6 @@ export default {
 			this.$emit('updateByPorcentage', 
 						Number(this.porcentage_cost), 
 						Number(this.porcentage_price),
-						this.round,
 						this.decimals,
 						)
 			this.porcentage_cost = ''

@@ -30,12 +30,12 @@
                       Solo los de esta página
                     </label>
                 </div>
-                <div class="custom-control custom-radio" v-show="selectedArticles.length">
+                <div class="custom-control custom-radio" v-show="selected_articles.length">
                     <input type="radio" v-model="articulosADescargar" 
                             value="articulos-seleccionados" name="articulosADescargar" 
                             id="articulos-seleccionados" class="custom-control-input">
                     <label class="custom-control-label" for="articulos-seleccionados">
-                      Los artículos seleccionados ({{ selectedArticles.length }})
+                      Los artículos seleccionados ({{ selected_articles.length }})
                     </label>
                 </div>
               </div>
@@ -163,7 +163,7 @@
 </template>
 <script>
 export default {
-    props: ['rol', 'idsArticles', 'filtro', 'selectedArticles'],
+    props: ['rol', 'articles_id', 'filtro', 'selected_articles'],
     data() {
       return {
         articulosADescargar: 'esta-pagina',
@@ -177,7 +177,7 @@ export default {
         getLink() {
             var link = 'pdf/' + this.getColumnasParaImpirimir().join('-') + '/'
             if (this.articulosADescargar == 'esta-pagina') {
-                this.idsArticles.forEach( id => {
+                this.articles_id.forEach( id => {
                     link += id + '-'
                 })
                 link = link.substring(0, link.length-1)

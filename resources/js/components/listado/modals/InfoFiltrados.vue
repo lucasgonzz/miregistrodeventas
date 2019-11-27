@@ -1,10 +1,10 @@
 <template>
-<div class="card m-b-20" v-show="filtrado">
+<div class="card m-b-20" v-show="is_filter">
 	<div class="card-header">
 		<h4 class="h4 m-b-0">Filtros</h4>
 	</div>
 	<div class="card-body">
-		<div class="row m-b-10" v-show="filtrado">
+		<div class="row m-b-10" v-show="is_filter">
 			<div class="col-12 col-lg-3" v-show="filtro.mostrar != 'todos'">
 				<ul class="list-group">
 					<li class="list-group-item active">Mostrando solo artículos que</li>
@@ -61,6 +61,6 @@
 </template>
 <script>
 export default {
-	props: ['filtro', 'filtrado', 'providers', 'articlesLength']
+	props: ['filtro', 'is_filter', 'providers', 'articlesLength']
 }
 </script>

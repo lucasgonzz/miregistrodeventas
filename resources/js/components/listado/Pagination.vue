@@ -1,5 +1,5 @@
 <template>
-<div class="row m-t-10 m-b-10" v-show="!filtrado">
+<div class="row m-t-10 m-b-10" v-show="!is_filter">
 	<div class="col-6 offset-3">
 		<nav>
 			<ul class="pagination m-b-0">
@@ -27,7 +27,7 @@
 </template>
 <script>
 export default {
-	props: ['pagination', 'pagesNumber', 'filtrado'],
+	props: ['pagination', 'pagesNumber', 'is_filter'],
 	methods: {
 		changePage(page) {
 			this.$emit('changePage', page)

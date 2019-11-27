@@ -11,9 +11,10 @@
 		<confirmar-eliminacion :article="article" 
 								@destroyArticle="destroyArticle"></confirmar-eliminacion>
 		<descargar-pdf :rol="rol" 
-						:selected_articles="selected_articles"
-						:ids-articles="idsArticles"
+						:selected_articles="selected_articles.selected_articles"
+						:articles_id="selected_articles.articles_id"
 						:filtro="filtro"></descargar-pdf>
+		<print-tickets :selected_articles="selected_articles"></print-tickets>
 		<importar></importar>
 		<providers-history :article="article"></providers-history>
 		<filtrar :filtro="filtro" 
@@ -62,18 +63,14 @@
 									<i class="icon-filter"></i>
 									Filtrar
 								</button>
-
-							<!-- 
-										:class="selected_articles.length ? '' : 'disabled'"
-							
-							 -->
-								<a @click="showEditArticles"
-										tabindex="-1" 
-										class="btn btn-primary m-l-5">
-									<i class="icon-edit"></i>
-									Actualizar
+								<a href="#" @click.prevent="showEditArticles"
+								:class="selected_articles.selected_articles.length ? '' : 'disabled'"
+									class="btn btn-primary m-l-5">
+									<i class="icon-plus"></i>
+									%
 								</a>
-								<a @click="printTickets"
+								<a href="#" @click.prevent="printTickets"
+								:class="selected_articles.selected_articles.length ? '' : 'disabled'"
 									class="btn btn-success m-l-5">
 									<span class="icon-tag"></span>
 									Tickets	
@@ -82,7 +79,7 @@
 						</div>
 					</div>
 					<div class="card-body">
-						<div v-show="isLoading" class="m-b-10">
+						<div v-show="isLoading" class="spinner-listado">
 							<div class="spinner">
 								<div class="spinner-border text-primary" role="status">
 									<span class="sr-only">Loading...</span>
@@ -90,21 +87,22 @@
 							</div>
 						</div>
 						<div v-show="!isLoading">
-							<info-filtrados :filtro="filtro" :filtrado="filtrado" 
+							<info-filtrados :filtro="filtro" :is_filter="is_filter" 
 											:providers="providers"
 											:articles-length="articles.length"></info-filtrados>
 							<div class="table-responsive">						
 								<table class="table">
 									<thead class="thead-dark">
 										<tr v-if="rol == 'commerce'">
-											<th scope="col">
+											<th scope="col" class="td-checkbox">
 								                <div class="custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2">
 								                  	<input class="custom-control-input" 
-								                  			v-model="all_selected_articles" 
+								                  			v-model="selected_articles.is_all_selected" 
+								                  			@change="selectAllArticles"
 								                  			type="checkbox" 
-								                  			id="all_selected_articles">
+								                  			id="is-all-selected">
 								                  	<label class="custom-control-label" 
-								                  			for="all_selected_articles">
+								                  			for="is-all-selected">
 								                  </label>
 								                </div>
 											</th>
@@ -113,21 +111,22 @@
 											<th scope="col">Costo</th>
 											<th scope="col">Precio</th>
 											<th scope="col">Pre anterior</th>
-											<th scope="col">Stock</th>
+											<th scope="col" class="td-stock">Stock</th>
 											<th scope="col">Proveedor/es</th>
 											<th scope="col">Agregado</th>
 											<th scope="col">Actualizado</th>
 											<th scope="col">Opciones</th>
 										</tr>
 										<tr v-else>
-											<th scope="col">
+											<th scope="col" class="td-checkbox">
 								                <div class="custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2">
 								                  	<input class="custom-control-input" 
-								                  			v-model="all_selected_articles" 
+								                  			v-model="selected_articles.is_all_selected" 
+								                  			@change="selectAllArticles"
 								                  			type="checkbox" 
-								                  			id="all_selected_articles">
+								                  			id="is-all-selected">
 								                  	<label class="custom-control-label" 
-								                  			for="all_selected_articles">
+								                  			for="is-all-selected">
 								                  </label>
 								                </div>
 											</th>
@@ -136,20 +135,20 @@
 											<th scope="col">Costo</th>
 											<th scope="col">Precio</th>
 											<th scope="col">Pre anterior</th>
-											<th scope="col">Stock</th>
+											<th scope="col" class="td-stock">Stock</th>
 											<th scope="col">Agregado</th>
 											<th scope="col">Actualizado</th>
 											<th scope="col">Opciones</th>
 										</tr>
 									</thead>
-									<tbody>
+									<tbody class="vender-table">
 										<template v-if="rol == 'commerce'">
 											<tr v-for="article in articles"
-												:class="selected_articles.includes(article.id) ? 'bg-warning' : ''">
-												<td>
+												:class="selected_articles.selected_articles.includes(article.id) ? 'bg-warning' : ''">
+												<td class="td-checkbox">
 									                <div class="custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2">
 									                  	<input class="custom-control-input" 
-									                  			v-model="selected_articles" 
+									                  			v-model="selected_articles.selected_articles" 
 									                  			:value="article.id"
 									                  			type="checkbox" 
 									                  			:id="article.id">
@@ -169,7 +168,7 @@
 												<td class="td-price">${{ price(article.price) }}</td>
 												<td v-if="article.previus_price != '0.00'">${{ price(article.previus_price) }}</td>
 												<td v-else>Sin datos</td>
-												<td v-if="article.stock">
+												<td v-if="article.stock" class="td-stock">
 													{{ article.stock }}
 												</td>
 												<td v-else>
@@ -197,7 +196,7 @@
 												<td v-if="article.created_at != article.updated_at">
 													{{ date(article.updated_at) }}
 												</td>
-												<td v-else>
+												<td v-else class="td-stock">
 													Sin datos
 												</td>
 												<td class="td-options">
@@ -212,11 +211,11 @@
 										</template>
 										<template v-else>								
 											<tr v-for="article in articles"	
-												:class="selected_articles.includes(article.id) ? 'bg-gradinet-primary' : ''">
-												<td>
+												:class="selected_articles.selected_articles.includes(article.id) ? 'bg-warning' : ''">
+												<td class="td-checkbox">
 									                <div class="custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2">
 									                  	<input class="custom-control-input" 
-									                  			v-model="selected_articles"
+									                  			v-model="selected_articles.selected_articles"
 									                  			:value="article.id" 
 									                  			type="checkbox" 
 									                  			:id="article.id">
@@ -236,10 +235,10 @@
 												<td class="td-price">${{ price(article.price) }}</td>
 												<td v-if="article.previus_price != '0.00'">${{ price(article.previus_price) }}</td>
 												<td v-else>Sin datos</td>
-												<td v-if="article.stock">
+												<td v-if="article.stock" class="td-stock">
 													{{ article.stock }}
 												</td>
-												<td v-else>
+												<td v-else class="td-stock">
 													Sin uso
 												</td>
 												<td>{{ date(article.created_at) }}</td>
@@ -265,14 +264,14 @@
 						</div>
 					</div>
 					<div class="card-footer p-0">
-						<pagination @changePage="changePage" 
-									:filtrado="filtrado"
+						<pagination v-show="!is_filter && !searching"
+									@changePage="changePage" 
+									:is_filter="is_filter"
 									:pagination="pagination"
 									:pages-number="pagesNumber"></pagination>
-						<div class="row p-10">
+						<div class="row p-10" v-show="is_filter || searching">
 							<div class="col">
-								<button v-show="filtrado || searching" 
-										class="btn btn-primary float-right"
+								<button class="btn btn-primary float-right"
 										@click="volverAListar">
 									<i class="icon-undo"></i>
 									Volver a listar todos mis artículos
@@ -329,6 +328,15 @@ export default {
 			// Provedores
 			providers: [],
 			proiders_history: [],
+
+			// Objeto para controlar el seleccionados de articulos para 
+			// ser importados en pdf, exel y para imprimir los tickets
+			selected_articles: {
+				is_all_selected: false,
+				selected_articles: [],
+				articles_id: [],
+				selected_pages: [],
+			},
 			idsArticles: [],
 
 			// Filtros
@@ -341,10 +349,10 @@ export default {
 				},
 				'providers': []
 			},
-			filtrado: false,
+			is_filter: false,
 
 			// Pagination
-			current_page: 0,
+			// current_page: 0,
 			pagination: {
 	            'total' : 0,
 	            'current_page' : 0,
@@ -356,15 +364,6 @@ export default {
 			offset: 2,
 			
 			columnas_para_imprimir: ['bar_code', 'name', 'cost', 'price', 'created_at', 'updated_at'],
-		}
-	},
-	watch: {
-		all_selected_articles() {
-			if (this.all_selected_articles) {
-				this.selected_articles = this.idsArticles
-			} else {
-				this.selected_articles = []
-			}
 		}
 	},
 	methods: {
@@ -391,13 +390,61 @@ export default {
 		since(date) {
 			return moment(date).fromNow()
 		},
-		// Se la usa en filtrar y en getArticles
-		setIdsArticles() {
-			this.idsArticles = []
+
+
+		/* --------------------------------------------------------------------------
+			* Se fija si la pagina actual aparece en las paginas seleccionadas
+			* Si aparece marca la casilla de todos los articulos seleccionados
+			* Sino la desmarca
+		-------------------------------------------------------------------------- */
+		setIsAllSelected() {
+			if (this.selected_articles.selected_pages.includes(this.pagination.current_page)) {
+				this.selected_articles.is_all_selected = true
+			} else {
+				this.selected_articles.is_all_selected = false
+			}
+		},
+		/* --------------------------------------------------------------------------
+			* Es llamado por la casilla de marcar todos los articulos
+			* Si esta activada agregar todos los id de los articulos de la pagina actual
+			a los id de los articulos seleccionados
+		-------------------------------------------------------------------------- */
+		selectAllArticles() {
+			if (this.selected_articles.is_all_selected) {
+				this.selected_articles.articles_id.forEach(article_id => {
+					this.selected_articles.selected_articles.push(article_id)
+				})
+				this.selected_articles.selected_pages.push(this.pagination.current_page)
+			} else {
+				this.selected_articles.articles_id.forEach(article_id => {
+					var index = this.selected_articles.selected_articles.indexOf(article_id)
+					this.selected_articles.selected_articles.splice(index, 1)
+				})
+				var index = this.selected_articles.selected_pages.indexOf(this.pagination.current_page)
+				this.selected_articles.selected_pages.splice(index, 1)
+			}
+		},
+		/* --------------------------------------------------------------------------
+			* Recorre todos los articulos y agrega los id a la propiedad
+			de los articulos seleccionados que almacena los id de los artículos
+			que hay en la pagina
+			* Se la usa en filtrar y en getArticles
+		-------------------------------------------------------------------------- */
+		setArticlesId() {
+			this.selected_articles.articles_id = []
 			this.articles.forEach( article => {
-				this.idsArticles.push(article.id)
+				this.selected_articles.articles_id.push(article.id)
 			})
 		},
+
+		/* --------------------------------------------------------------------------
+			* Toma los valores de filtrado y los manda al metodo de filtrado 
+			de los artículos
+			* Setea la propiedad de filtrado como verdadera
+			* Agrega los articulos obtenidos a los articulos
+			* Setea los id de los artiuclos
+			* Filtra los proveedores para que aparescan solo una vez en la lista
+		-------------------------------------------------------------------------- */
 		filter(filtro) {
 			this.isLoading = true
 			axios.post('articles/filter', {
@@ -408,17 +455,20 @@ export default {
 			})
 			.then( res => {
 				this.isLoading = false
-				this.filtrado = true
+				this.is_filter = true
 				this.articles = res.data
-				this.setIdsArticles()
+				this.setArticlesId()
 				this.filterProviders()
 				$('#listado-filtrar').modal('hide')
-				// console.log(res.data)
 			})
 			.catch( err => {
 				console.log(err)
 			})
 		},
+		
+		/* -----------------------------------------------------------------------------------
+			* Ofrese los posibles resultados para la busqueda de artículos
+		----------------------------------------------------------------------------------- */
 		preSearch() {
 			if (this.search_query.length > 2) {
 				axios.get('articles/pre-search/'+this.search_query)
@@ -435,12 +485,20 @@ export default {
 				$('.resultados').hide()
 			}
 		},
+		
+		/* -----------------------------------------------------------------------------------
+			* Cuando hacemos click en la lista de los posibles articulos a mostrar
+			setea el search_cuery y llama al metodo search
+		----------------------------------------------------------------------------------- */
 		selectPreSearch(query) {
 			this.search_query = query
 			this.search()
 			$('.resultados').hide()
 			$('.input-search').removeClass('input-search-resultados')
 		},
+		/* -----------------------------------------------------------------------------------
+			* Hace una llamada al metodo search del controlador de articulos
+		----------------------------------------------------------------------------------- */
 		search() {
 			this.searching = true
 			this.isLoading = true
@@ -461,24 +519,34 @@ export default {
 		},
 
 
-		// Articulos
+		/*
+			ARTICULOS
+		-----------------------------------------------------------------------------------
+			* Obtiene los articulos
+			* Setea los id de los articulos que ha obtenido
+			* Setea si la casilla de todos los articulos seleccionados esta o no activada
+			* Filtra los proveedores para que no aparescan mas de una vez en la lista
+		-----------------------------------------------------------------------------------
+		*/
 		getArticles(page) {
 			this.isLoading = true
 			axios.get('articles?page=' + page)
 			.then( res => {
 				this.isLoading = false
-				console.log(res.data)
 				this.articles = res.data.articles.data;
 				this.pagination = res.data.pagination;
-				const self = this
-				this.setIdsArticles()
+				this.setArticlesId()
+				this.setIsAllSelected()
 				this.filterProviders()
-				this.all_selected_articles = false
 			})
 			.catch( err => {
 				console.log(err)
 			})
 		},
+		
+		/* -----------------------------------------------------------------------------------
+			* Setea las propiedades del articulos con las del articulo pasado por parametro
+		----------------------------------------------------------------------------------- */
 		editArticle(article) {
 			this.article.id = article.id
 			this.article.bar_code = article.bar_code
@@ -487,7 +555,6 @@ export default {
 			this.article.price = this.price(article.price, false)
 			this.article.stock = article.stock
 			if (this.rol == 'commerce') {
-				// console.log(this.providers[0])
 				this.article.provider = article.providers[0].id
 				this.article.providers = article.providers
 			}
@@ -495,15 +562,21 @@ export default {
 			this.article.updated_at = article.updated_at
 			this.article.creado = this.date(article.created_at)+' '+this.since(article.created_at)
 			this.article.actualizado = this.date(article.updated_at)+' '+this.since(article.updated_at)
-			// console.log(this.article)
 			$('#listado-edit-article').modal('show')
 		},
+		
+		/* -----------------------------------------------------------------------------------
+			* Envia el objeto articulo al metodo update del controlador de articulos
+			* Esconde el modal de editar articulo
+			* Envia notificacion de ariculo actualizado con exito
+			* Reinicia las propiedades del articulo
+		----------------------------------------------------------------------------------- */
 		updateArticle(article) {
 			axios.put('articles/'+this.article.id, {
 				article: article
 			})
 			.then( res => {
-				this.getArticles(1)
+				this.getArticles(this.pagination.current_page)
 				$('#listado-edit-article').modal('hide')
 				toastr.success(`${article.name} se actualizo con exito`)
 				this.clearArticle()
@@ -513,23 +586,37 @@ export default {
 				// location.reload()
 			})
 		},
+		/* -----------------------------------------------------------------------------------
+			* Setea el objeto de articulo
+			* Muestra modal de eliminar articulo
+		----------------------------------------------------------------------------------- */
 		deleteArticle(article) {
-			console.log(article.name)	
-			this.article.id = article.id
-			this.article.name = article.name
+			this.setArticle(article)
 			$('#listado-delete-article').modal('show')
 		},
+		
+		/* -----------------------------------------------------------------------------------
+			* Envia id del articulo a aliminar al metodo delete del controlador de
+			articulos
+			* Obtiene los datos de los articulos actualizados
+			* Esconde modal de eliminacionde articulo
+			* Envia notificacion de eliminacion exitosa
+		----------------------------------------------------------------------------------- */
 		destroyArticle(article_id) {
 			axios.delete('articles/'+article_id)
 			.then( res => {
+				this.getArticles(this.pagination.current_page)
 				$('#listado-delete-article').modal('hide')
-				this.getArticles(1)
 				toastr.success('Artículo eliminado correctamente')
 			})
 			.catch( err => {
 				console.log(err)
 			})
 		},
+		
+		/* -----------------------------------------------------------------------------------
+			* Resetea las propiedades del objeto articulo
+		----------------------------------------------------------------------------------- */
 		clearArticle() {
 			this.article.id = ''
 			this.article.bar_code = ''
@@ -546,12 +633,18 @@ export default {
 			console.log(this.article)
 		},
 
-
+		/* -----------------------------------------------------------------------------------
+			* False la propiedad que indica si esta filtrado o no
+			* False la propiedad que indica si esta buscando o no
+			* Deja el campo del earch_query vacio
+			* Actualiza los articulos 
+		----------------------------------------------------------------------------------- */
 		volverAListar() {
-			this.filtrado = false
+			this.is_filter = false
 			this.searching = false
 			this.search_query = ''
-			this.getArticles(1)
+			this.selected_articles.selected_articles = []
+			this.getArticles(this.pagination.current_page)
 		},
 
 		// Pagination
@@ -574,8 +667,9 @@ export default {
 			$('#print-tickets').modal('show')
 		},
 		printTickets() {
-			var link = 'imprimir-precios/'+this.selected_articles.join('-')
-			window.open(link)
+			// var link = 'imprimir-precios/'+this.selected_articles.join('-')
+			// window.open(link)
+			$('#print-tickets').modal('show')
 		},
 			
 
@@ -588,13 +682,14 @@ export default {
 				cost,
 				price,
 				decimals,
-				articles_ids: this.selected_articles
+				articles_ids: this.selected_articles.selected_articles
 			})
 			.then(res => {
-				if (this.filtrado) {
+				// console.log(res.data)
+				if (this.is_filter) {
 					this.filter(this.filtro)
 				} else {
-					this.getArticles(1)
+					this.getArticles(this.pagination.current_page)
 				}
 				$('#edit-articles').modal('hide')
 			})
@@ -640,7 +735,9 @@ export default {
 	},
 	created() {
 		this.getArticles(1)
-		this.getProviders()
+		if (this.rol == 'commerce') {
+			this.getProviders()
+		}
 	},
 	computed: {
 		isActived: function(){
@@ -683,5 +780,37 @@ export default {
 .dropdown-item.c-p:hover {
 	background: #3490dc;
 	color: #FFF;
+}
+/*
+.vender-table {
+	display: block;
+	width: 100%;
+	min-height: 400px;
+	max-height: 400px;
+	overflow-y: scroll;
+}
+
+.td-checkbox {
+	width: 50px;
+}
+
+.td-stock {
+	width: 70px;
+}
+
+thead, tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    /* even columns width , fix width of table too
+}
+*/
+
+.spinner-listado {
+	position: absolute;
+	width: 100vw;
+	height: 100vh;
+	background: #FFF;
+	z-index: 500;
 }
 </style>

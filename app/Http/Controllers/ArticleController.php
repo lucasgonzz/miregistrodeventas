@@ -146,17 +146,18 @@ class ArticleController extends Controller
     }
 
     function updateByPorcentage(Request $request) {
+        // return $request->decimals;
         // if ($request->round == 'up') {
         //     $round = PHP_ROUND_HALF_UP;
         // } else if ($request->round == 'down') {
         //     $round = PHP_ROUND_HALF_DOWN;
         // }
-
+        $decimals = (bool)$request->decimals;
         $articles_ids = $request->articles_ids;
         foreach ($articles_ids as $article_id) {
             $article = Article::find($article_id);
             if (!empty($request->cost)) {
-                if($request->decimals) {
+                if($decimals) {
                     $article->cost += round(($request->cost/100)*$article->cost, 2);
                 } else {
                     $article->cost += round(($request->cost/100)*$article->cost, 0);
@@ -164,7 +165,7 @@ class ArticleController extends Controller
             }
             if (!empty($request->price)) {
                 $article->previus_price = $article->price;
-                if($request->decimals) {
+                if($decimals) {
                     $article->price += round(($request->price/100)*$article->price, 2);
                 } else {
                     $article->price += round(($request->price/100)*$article->price, 0);

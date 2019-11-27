@@ -17,10 +17,11 @@ class PdfController extends Controller
         }
 	}
 
-	function printTicket($articles_id) {
+	function printTicket($articles_id, $company_name) {
 		require('barcode/barcode.php');
 		// $color = (bool)$color;
 		$user = Auth()->user();
+		$company_name = (bool)$company_name;
 		$pdf = new fpdf();
 		$pdf->addPage();
         $x = 10;
@@ -28,6 +29,7 @@ class PdfController extends Controller
         $mas_largo = 0;
         $hubo_codigo_de_barras = false;
         $articles_id = explode('-', $articles_id);
+        $bar_code_printed = false;
         foreach ($articles_id as $article_id) {
         	$article = Article::find($article_id);
 			$bar_code = $article->bar_code;
@@ -43,29 +45,58 @@ class PdfController extends Controller
 		                $bar_code, 20, 'horizontal', 'code128', 1);
 		        $width_image = getimagesize(public_path().'/storage/barcodes/'.$user->id.'/'.$bar_code.'.png');
 		        $image_w = $width_image[0] * 50 / 200;
-		        $hubo_codigo_de_barras = true;
+		        $bar_code_printed = true;
 	        }
 
-	        // Se obtienen los largos del nombre y del precio
+	        // Se obtienen los largos del nombre, del precio y del nombre de la compania
 	        $width_name = strlen($name)*2;
 	        $width_price = (strlen($price)+1)*5;
+	        $width_company_name = strlen($user->company_name)*1.7;
 	        
 	        // Se obtiene el valor mas largo
 	        // entre el nombre, el precio y el codigo de barras
-	        $mas_largo = max(array($width_name, $width_price, isset($image_w) ? $image_w : null));
+	        $mas_largo = max(array(
+	        						$width_name, 
+	        						$width_price, 
+	        						isset($image_w) ? $image_w : null, 
+	        						isset($width_company_name) ? $width_company_name : null));
 
 	        // Si no va a entrar el tiket se empieza desde el margen izquierdo
 	        if ($x > 205-$mas_largo) {
 	        	$x = 10;
-	        	$y += 35;
+	        	if ($bar_code_printed) {
+	        		if ($company_name) {
+	        			$y += 40;
+	        		} else {
+	        			$y += 35;
+	        		}
+	        	} else {
+	        		dd('asd');
+	        		if ($company_name) {
+	        			$y += 35;
+	        		} else {
+	        			$y += 30;
+	        		}
+	        	}
+	        	$bar_code_printed = false;
 	        }
+
+	        // Se dibuja la linea de la arriba
         	$pdf->Line($x, $y, $x+$mas_largo+4, $y);
 
 	        // Se dibuja la linea de la izquierda
 	        if (is_null($bar_code)) {
-	        	$pdf->Line($x, $y, $x, $y+20);
+	        	if ($company_name) {
+	        		$pdf->Line($x, $y, $x, $y+25);
+	        	} else {
+	        		$pdf->Line($x, $y, $x, $y+20);
+	        	}
 	        } else {
-	        	$pdf->Line($x, $y, $x, $y+30);
+	        	if ($company_name) {
+	        		$pdf->Line($x, $y, $x, $y+35);
+	        	} else {
+	        		$pdf->Line($x, $y, $x, $y+30);
+	        	}
 	        }
 
 	        // Se aumenta x para que tenga espacio desde los bordes
@@ -92,14 +123,44 @@ class PdfController extends Controller
 		        $pdf->Image(public_path().'/storage/barcodes/'.$user->id.'/'.$bar_code.'.png',$x,$y+20,$image_w,0,'PNG');
 	        }
 
-	        // Se dibuja la linea de la izquierda
-	        if (is_null($bar_code)) {
-	        	$pdf->Line($x+$mas_largo+2, $y, $x+$mas_largo+2, $y+20);
-        		$pdf->Line($x-2, $y+20, $x+$mas_largo+4-2, $y+20);
-	        } else {
-        		$pdf->Line($x-2, $y+30, $x+$mas_largo+4-2, $y+30);
-	        	$pdf->Line($x+$mas_largo+2, $y, $x+$mas_largo+2, $y+30);
+	        if ($company_name) {
+	        	$pdf->SetFont('Arial', 'I', 10);
+	        	$pdf->SetTextColor(0,0,0);
+	        	if (!is_null($bar_code)) {
+	        		$pdf->SetXY($x, $y+30);
+	        		$pdf->Write(5,$user->company_name);
+	        	} else {
+	        		$pdf->SetXY($x, $y+20);
+	        		$pdf->Write(5,$user->company_name);
+	        	}
 	        }
+
+	        if (is_null($bar_code)) {
+	        	if ($company_name) {
+		        	// Se dibuja la linea de la derecha
+		        	$pdf->Line($x+$mas_largo+2, $y, $x+$mas_largo+2, $y+25);
+		        	// Se dibuja la linea de la abajo
+	        		$pdf->Line($x-2, $y+25, $x+$mas_largo+4-2, $y+25);
+	        	} else {
+		        	// Se dibuja la linea de la derecha
+		        	$pdf->Line($x+$mas_largo+2, $y, $x+$mas_largo+2, $y+20);
+		        	// Se dibuja la linea de la abajo
+	        		$pdf->Line($x-2, $y+20, $x+$mas_largo+4-2, $y+20);
+	        	}
+	        } else {
+	        	if ($company_name) {
+		        	// Se dibuja la linea de la derecha
+		        	$pdf->Line($x+$mas_largo+2, $y, $x+$mas_largo+2, $y+35);
+		        	// Se dibuja la linea de la abajo
+	        		$pdf->Line($x-2, $y+35, $x+$mas_largo+4-2, $y+35);
+	        	} else {
+		        	// Se dibuja la linea de la derecha
+		        	$pdf->Line($x+$mas_largo+2, $y, $x+$mas_largo+2, $y+30);
+		        	// Se dibuja la linea de la abajo
+	        		$pdf->Line($x-2, $y+30, $x+$mas_largo+4-2, $y+30);
+	        	}
+	        }
+
 
 	        // Se aumenta x con el campo mas largo y se le suman 4
 	        // 2 del espacio que hay con la linea izquierda
