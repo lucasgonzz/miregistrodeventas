@@ -66,8 +66,13 @@ Route::group(['middleware' => ['has.role:provider']], function () {
 
 	Route::post('/mayoristas/articles/import/exel', 'ArticleController@import');
 
-});
+	// Ventas
+	Route::get('/mayoristas/sales', 'SaleController@index');
+	Route::get('/mayoristas/sales/from-date/{from}/{to}/{last_day_inclusive}', 'SaleController@fromDate');
+	Route::get('/mayoristas/sales/previus-next/{previus_next}', 'SaleController@previusNext');
+	Route::get('/mayoristas/sales/pdf/{sales_id}/{company_name}/{articles_cost}/{articles_total_price}/{articles_total_cost}/{borders}/{per_page}', 'SaleController@pdf');
 
+});
 
 // Comercios
 Route::group(['middleware' => ['has.role:commerce']], function () {
@@ -115,6 +120,12 @@ Route::group(['middleware' => ['has.role:commerce']], function () {
 	Route::get('/comercios/configuracion', 'MainController@commerce_config')->name('commerce.config');
 	Route::get('/comercios/pdf/{orientation}/{header}/{columns}/{articles_ids}', 'PdfController@articles');
 	Route::get('/comercios/articles/exel', 'ArticleController@export')->name('commerce.exel');
+	
+	// Ventas
+	Route::get('/comercios/sales', 'SaleController@index');
+	Route::get('/comercios/sales/from-date/{from}/{to}/{last_day_inclusive}', 'SaleController@fromDate');
+	Route::get('/comercios/sales/previus-next/{previus_next}', 'SaleController@previusNext');
+	Route::get('/comercios/sales/pdf/{sales_id}/{company_name}/{articles_cost}/{articles_subtotal_cost}/{articles_total_price}/{articles_total_cost}/{borders}/{per_page}', 'SaleController@pdf');
 });
 
 // Comunes
@@ -130,3 +141,5 @@ Route::get('bar-codes', 'BarCodeController@index');
 Route::post('bar-codes', 'BarCodeController@store');
 Route::get('bar-codes/{bar_code}/{amount}/{size}/{text}', 'BarCodeController@store');
 Route::delete('bar-codes/{id}', 'BarCodeController@delete');
+
+

@@ -14,10 +14,19 @@ use Maatwebsite\Excel\Facades\Excel;
 class ArticleController extends Controller
 {
     function index() {
-    	$articles = Article::where('user_id', Auth()->user()->id)
-                            ->orderBy('id', 'DESC')
-                            ->with('providers')
-                            ->paginate(10);
+        $user = Auth()->user();
+        if ($user->hasRole('commerce')) {
+        	$articles = Article::where('user_id',$user->id)
+                                ->orderBy('id', 'DESC')
+                                ->with(array('providers' => function($q) {
+                                    $q->orderBy('created_at', 'DESC');
+                                }))
+                                ->paginate(10);
+        } else {
+            $articles = Article::where('user_id',$user->id)
+                                ->orderBy('id', 'DESC')
+                                ->paginate(10);
+        }
     	return [
                 'pagination' => [
                     'total' => $articles->total(),
@@ -71,7 +80,7 @@ class ArticleController extends Controller
 
     function getNames() {
         return Article::where('user_id', Auth()->user()->id)
-                        ->whereNull('bar_code')
+                        // ->whereNull('bar_code')
                         ->pluck('name');
     }
 
@@ -130,7 +139,7 @@ class ArticleController extends Controller
         $article->name =  ucwords($updated_article['name']);
         $article->cost = $updated_article['cost'];
         $article->price = $updated_article['price'];
-        $article->stock += $updated_article['new_stock'];
+        $article->stock += (int)$updated_article['new_stock'];
         $article->save();
         if (Auth()->user()->hasRole('commerce')) {
             $article->providers()

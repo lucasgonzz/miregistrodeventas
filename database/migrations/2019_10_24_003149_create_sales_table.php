@@ -17,6 +17,7 @@ class CreateSalesTable extends Migration
             $table->bigIncrements('id');
 
             $table->integer('user_id')->unsigned();
+            $table->integer('num_sale');
             $table->integer('client_id')->nullable()->unsigned();
 
             $table->foreign('user_id')

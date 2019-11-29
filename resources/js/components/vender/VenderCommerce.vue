@@ -79,11 +79,11 @@
 							<td>
 								<button @click="up(article)"
 										class="btn btn-primary btn-sm">
-									<i class="icon-up"></i>
+									<i class="icon-plus"></i>
 								</button>
 								<button @click="down(article)"
 										class="btn btn-primary btn-sm">
-									<i class="icon-down"></i>
+									<i class="icon-minus"></i>
 								</button>
 								<button @click="removeArticle(article)"
 										class="btn btn-danger btn-sm">

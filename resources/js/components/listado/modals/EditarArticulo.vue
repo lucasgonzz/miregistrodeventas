@@ -46,14 +46,20 @@
 					</small>
 				</div>
 				<div class="form-group" v-show="rol == 'commerce' && article.new_stock > 0">
-					<label class="label-block" for="provider">
-						De que proveedor son estas {{ article.new_stock }} unidades
+					<label class="label-block" for="provider_modal">
+						<span v-show="article.new_stock == 1">
+							De que proveedor es esta unidad
+						</span>
+						<span v-show="article.new_stock > 1">
+							De que proveedor son estas {{ article.new_stock }} unidades
+						</span>
 					</label>
-
 					<select v-model="article.provider"
-							id="provider" 
+							id="provider_modal" 
 							class="form-control">
-						<option v-for="provider in providers" :value="provider.id">
+						<option v-for="provider in providers" 
+								:id="'provider_'+provider.id"
+								:value="provider.id">
 							{{ provider.name }}
 						</option>
 					</select>
@@ -113,7 +119,6 @@
 		</div>
 	</div>
 </div>
-
 </template>
 <script>
 export default {

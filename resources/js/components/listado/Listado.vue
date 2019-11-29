@@ -576,14 +576,17 @@ export default {
 				article: article
 			})
 			.then( res => {
-				this.getArticles(this.pagination.current_page)
+				if (this.searching) {
+					this.search()
+				} else {
+					this.getArticles(this.pagination.current_page)
+				}
 				$('#listado-edit-article').modal('hide')
 				toastr.success(`${article.name} se actualizo con exito`)
 				this.clearArticle()
 			})
 			.catch( err => {
 				console.log(err)
-				// location.reload()
 			})
 		},
 		/* -----------------------------------------------------------------------------------

@@ -349,7 +349,10 @@ export default {
 				article: this.article
 			})
 			.then( res => {
-				this.bar_codes.push(this.article.bar_code)
+				if (this.article.bar_code != '') {
+					this.bar_codes.push(this.article.bar_code)
+				}
+				this.names.push(this.article.name)
 				this.articles_id_to_print.push(res.data.id)
 				this.clearArticle()
 				toastr.success('Artículo guardado correctamente')

@@ -19,7 +19,7 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 import navComponent from './components/NavComponent.vue'
-import ventas from './components/Ventas.vue'
+import Ventas from './components/ventas/Ventas.vue'
 import Listado from './components/listado/Listado.vue'
 import Ingresar from './components/ingresar/Ingresar.vue'
 import VenderProvider from './components/vender/VenderProvider.vue'
@@ -27,7 +27,7 @@ import VenderCommerce from './components/vender/VenderCommerce.vue'
 import CodigosDeBarra from './components/codigos-de-barra/CodigosDeBarra.vue'
 // Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('nav-component', navComponent);
-Vue.component('ventas', ventas);
+Vue.component('ventas', Ventas);
 Vue.component('listado', Listado);
 Vue.component('ingresar', Ingresar);
 Vue.component('vender-provider', VenderProvider);
