@@ -30,15 +30,20 @@ Route::group(['middleware' => ['has.role:provider']], function () {
 	Route::get('/mayoristas/listado', 'MainController@provider_listado')->name('listado.provider');
 	Route::get('/mayoristas/ventas', 'MainController@provider_ventas')->name('ventas.provider');
 	Route::get('/mayoristas/articles', 'ArticleController@index');
-
+	Route::get('/mayoristas/codigos-de-barra', 'MainController@codigos_de_barra')->name('bar-codes.provider');
+	
 	// Codigos de barra
-	Route::get('bar-codes', 'BarCodeController@index');
+	Route::get('/mayoristas/bar-codes', 'BarCodeController@index');
+	Route::post('/mayoristas/bar-codes', 'BarCodeController@store');
+	Route::get('/mayoristas/bar-codes/{bar_code}/{amount}/{size}/{text}', 'BarCodeController@store');
+	Route::delete('/mayoristas/bar-codes/{id}', 'BarCodeController@delete');
 
 	// Ingresar
 	Route::post('/mayoristas/articles', 'ArticleController@store');
 	Route::get('/mayoristas/articles/get-by-bar-code/{bar_code}', 'ArticleController@getByBarCode');
 	Route::get('/mayoristas/articles/bar-codes', 'ArticleController@getBarCodes');
 	Route::get('/mayoristas/articles/names', 'ArticleController@getNames');
+	Route::get('/mayoristas/articles/previus-next/{index}', 'ArticleController@previusNext');
 
 	// Listado
 	Route::post('/mayoristas/articles/filter', 'ArticleController@filter');
@@ -49,6 +54,9 @@ Route::group(['middleware' => ['has.role:provider']], function () {
 	Route::get('/mayoristas/bar-codes/generated', 'BarCodeController@generated');
 	Route::get('/mayoristas/imprimir-precios/{articles_id}/{company_name}', 'PdfController@printTicket');
 	Route::post('/mayoristas/articles/update-by-porcentage', 'ArticleController@updateByPorcentage');
+	Route::post('/mayoristas/articles/create-offer', 'ArticleController@createOffer');
+	Route::get('/mayoristas/articles/get-by-ids/{articles_id}', 'ArticleController@getByIds');
+	Route::delete('/mayoristas/articles/delete-offer/{id}', 'ArticleController@deleteOffer');
 
 	// Listado exportar
 	Route::get('/mayoristas/pdf/{columns}/{articles_ids}/{orientation}/{header?}', 'PdfController@articles');
@@ -57,20 +65,22 @@ Route::group(['middleware' => ['has.role:provider']], function () {
 	// Vender
 	Route::post('/mayoristas/sales', 'SaleController@store');
 	Route::get('/mayoristas/articles/get-by-name/{name}', 'ArticleController@getByName');
-	Route::get('/mayoristas/sales/cliente/{company_name}/{borders}/{per_page}/{sale_id}', 'PdfController@ticket_client');
-	Route::get('mayoristas/sales/comercio/{company_name}/{borders}/{per_page}/{sale_id}', 'PdfController@ticket_commerce');
+	Route::get('/mayoristas/sales/cliente/{company_name}/{borders}/{sale_id}', 'PdfController@sale_client');
+	Route::get('mayoristas/sales/comercio/{company_name}/{borders}/{sale_id}', 'PdfController@sale_commerce');
 	// Vender - Clientes
 	Route::get('mayoristas/clients', 'ClientController@index');
 	Route::post('mayoristas/clients', 'ClientController@store');
 	Route::delete('mayoristas/clients/{id}', 'ClientController@delete');
-
 	Route::post('/mayoristas/articles/import/exel', 'ArticleController@import');
 
 	// Ventas
 	Route::get('/mayoristas/sales', 'SaleController@index');
 	Route::get('/mayoristas/sales/from-date/{from}/{to}/{last_day_inclusive}', 'SaleController@fromDate');
-	Route::get('/mayoristas/sales/previus-next/{previus_next}', 'SaleController@previusNext');
-	Route::get('/mayoristas/sales/pdf/{sales_id}/{company_name}/{articles_cost}/{articles_total_price}/{articles_total_cost}/{borders}/{per_page}', 'SaleController@pdf');
+	Route::get('/mayoristas/sales/only-one-date/{date}', 'SaleController@onlyOneDate');
+	Route::get('/mayoristas/sales/previus-next/{previus_next}/{only_one_date?}', 'SaleController@previusNext');
+	Route::get('/mayoristas/sales/pdf/{sales_id}/{company_name}/{articles_cost}/{articles_subtotal_cost}/{articles_total_price}/{articles_total_cost}/{borders}/{per_page}', 'SaleController@pdf');
+	Route::delete('/mayoristas/sales/{id}', 'SaleController@delete');
+	Route::delete('/mayoristas/sales/delete-sales/{sales_id}', 'SaleController@deleteSales');
 
 });
 
@@ -81,9 +91,13 @@ Route::group(['middleware' => ['has.role:commerce']], function () {
 	Route::get('/comercios/listado', 'MainController@commerce_listado')->name('listado.commerce');
 	Route::get('/comercios/ventas', 'MainController@commerce_ventas')->name('ventas.commerce');
 	Route::get('/comercios/articles', 'ArticleController@index');
+	Route::get('/comercios/codigos-de-barra', 'MainController@codigos_de_barra')->name('bar-codes.commerce');
 
 	// Codigos de barra
-	Route::get('bar-codes', 'BarCodeController@index');
+	Route::get('/comercios/bar-codes', 'BarCodeController@index');
+	Route::post('/comercios/bar-codes', 'BarCodeController@store');
+	Route::get('/comercios/bar-codes/{bar_code}/{amount}/{size}/{text}', 'BarCodeController@store');
+	Route::delete('/comercios/bar-codes/{id}', 'BarCodeController@delete');
 
 
 	// Ingresar
@@ -111,7 +125,10 @@ Route::group(['middleware' => ['has.role:commerce']], function () {
 	Route::put('/comercios/articles/{id}', 'ArticleController@update');
 	Route::delete('/comercios/articles/{id}', 'ArticleController@destroy');
 	Route::post('/comercios/articles/update-by-porcentage', 'ArticleController@updateByPorcentage');
-
+	Route::post('/comercios/articles/create-offer', 'ArticleController@createOffer');
+	Route::get('/comercios/articles/get-by-ids/{articles_id}', 'ArticleController@getByIds');
+	Route::delete('/comercios/articles/delete-offer/{id}', 'ArticleController@deleteOffer');
+	
 	// Vender
 	Route::post('/comercios/sales', 'SaleController@store');
 	Route::get('/comercios/articles/get-by-name/{name}', 'ArticleController@getByName');
@@ -124,13 +141,16 @@ Route::group(['middleware' => ['has.role:commerce']], function () {
 	// Ventas
 	Route::get('/comercios/sales', 'SaleController@index');
 	Route::get('/comercios/sales/from-date/{from}/{to}/{last_day_inclusive}', 'SaleController@fromDate');
-	Route::get('/comercios/sales/previus-next/{previus_next}', 'SaleController@previusNext');
+	Route::get('/comercios/sales/only-one-date/{date}', 'SaleController@onlyOneDate');
+	Route::get('/comercios/sales/previus-next/{previus_next}/{only_one_date?}', 'SaleController@previusNext');
 	Route::get('/comercios/sales/pdf/{sales_id}/{company_name}/{articles_cost}/{articles_subtotal_cost}/{articles_total_price}/{articles_total_cost}/{borders}/{per_page}', 'SaleController@pdf');
+	Route::delete('/comercios/sales/{id}', 'SaleController@delete');
+	Route::delete('/comercios/sales/delete-sales/{sales_id}', 'SaleController@deleteSales');
 });
 
 // Comunes
-
-Route::get('codigos-de-barra', 'MainController@codigos_de_barra')->name('bar-codes');
+// Los codigos de barra son comunes para los dos pero los pongo para cada uno por 
+// las rutas de los componentes
 Route::get('empleados', 'MainController@empleados')->name('empleados');
 Route::get('permissions', 'PermissionController@index');
 Route::get('/articles/exel', 'ArticleController@export')->name('exel');

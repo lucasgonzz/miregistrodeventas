@@ -16,6 +16,7 @@
             <label for="articulos-a-mostrar">Mostrar</label>
             <select name="" v-model="filtro.mostrar" id="articulos-a-mostrar" class="form-control">
               <option value="todos">Todos mis artículos</option>
+              <option value="oferta">Los que esten en oferta</option>
               <option value="desactualizados">Los desactualizados</option>
               <option value="no-vendidos">Los que nunca se hayan vendido</option>
               <option value="no-stock">Los que no tengan stock</option>
@@ -51,7 +52,7 @@
                   <div class="input-group-prepend">
                     <div class="input-group-text">$</div>
                   </div>
-                  <input type="text" v-model="filtro.precio_entre.min" placeholder="Precio minimo" class="form-control">
+                  <input type="number" v-model="filtro.precio_entre.min" placeholder="Precio minimo" class="form-control">
                 </div>
               </div>
               <i class="icon-minus p-t-5"></i>
@@ -60,7 +61,7 @@
                   <div class="input-group-prepend">
                     <div class="input-group-text">$</div>
                   </div>
-                  <input type="text" v-model="filtro.precio_entre.max" placeholder="Precio maximo" class="form-control">
+                  <input type="number" v-model="filtro.precio_entre.max" placeholder="Precio maximo" class="form-control">
                 </div>
               </div>
             </div>

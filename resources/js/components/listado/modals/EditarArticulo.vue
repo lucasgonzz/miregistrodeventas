@@ -22,18 +22,28 @@
 				</div>
 				<div class="form-group">
 					<label for="cost">Costo</label>
-					<input type="text" name="cost" v-model="article.cost" id="costo" class="form-control focus-red">
+					<input type="number" name="cost" v-model="article.cost" id="costo" class="form-control focus-red">
 					<small class="form-text text-muted">
 						Para agregar decimales (centavos) coloque un punto para separar las unidades	
 					</small>
 				</div>
-
 				<div class="form-group">
 					<label for="price">Precio</label>
-					<input type="text" name="price" v-model="article.price" class="form-control focus-red">
+					<input type="number" name="price" v-model="article.price" class="form-control focus-red">
 					<small class="form-text text-muted">
 						Para agregar decimales (centavos) coloque un punto para separar las unidades	
 					</small>
+				</div>
+				<div class="form-group" v-show="article.offer_price">
+					<label for="price">Precio de oferta</label>
+					<input type="text" name="price" v-model="article.offer_price" class="form-control focus-red">
+					<small class="form-text text-muted">
+						Para agregar decimales (centavos) coloque un punto para separar las unidades	
+					</small>
+				</div>
+				<div class="form-group" v-show="article.previus_price != 0">
+					<label for="cost">Precio Anterior</label>
+					<input type="text" name="cost" v-model="article.previus_price" class="form-control" disabled>
 				</div>
 				<div class="form-group">
 					<label for="stock">Cantidad para agregar</label>

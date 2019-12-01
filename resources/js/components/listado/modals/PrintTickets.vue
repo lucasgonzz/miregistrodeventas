@@ -46,7 +46,6 @@ export default {
 						+this.selected_articles.selected_articles.join('-')+'/'
 						+this.show_company_name
 			window.open(link)
-
 		}
 	}
 }

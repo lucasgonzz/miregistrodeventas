@@ -99,14 +99,12 @@ export default {
         pdfClient() {
             var link = 'sales/cliente/'+this.company_name+
                         '/'+this.borders+
-                        '/'+this.articles_per_page+
                         '/'+this.sale.id
             window.open(link)
         },
         pdfCommerce() {
             var link = 'sales/comercio/'+this.company_name+
                         '/'+this.borders+
-                        '/'+this.articles_per_page+
                         '/'+this.sale.id
             window.open(link)
         },

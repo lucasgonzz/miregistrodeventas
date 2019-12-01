@@ -1,39 +1,50 @@
 <template>
 <div id="ventas">	
 	<summary :sales="sales"></summary>
-	<from-date @fromDate="fromDate"></from-date>
+	<from-date @fromDate="fromDate"
+				@onlyOneDate="onlyOneDate"></from-date>
 	<sale-details :sale="sale"></sale-details>
 	<generate-pdf :sales_id="selected_sales.selected_sales"></generate-pdf>
+	<confirm-delete-sales @deleteSales="deleteSales"
+						:selected_sales="selected_sales.selected_sales"></confirm-delete-sales>
+	<confirm-delete-sale @deleteSale="deleteSale"></confirm-delete-sale>
 	<div class="row justify-content-center">
 		<div class="col-lg-9">	
 			<div class="card">
 				<div class="card-header">
 					<div class="row justify-content-between align-items-center">
 						<div class="col-5">
-							<strong v-show="!is_from_date && previus_next == 0">
+							<strong v-show="!is_from_date && !is_from_only_one_date && previus_next == 0">
 								Ventas de hoy
 							</strong>
 							<strong v-show="is_from_date">
-								Ventas desde {{ from }} hasta {{ to }} 
+								Ventas desde {{ date(from) }} hasta {{ date(to) }} 
 								<span v-show="last_day_inclusive">(inclusive)</span>
 							</strong>
-							<strong v-show="previus_next != 0">
-								<span v-show="previus_next == 1">
+							<strong v-show="is_from_only_one_date">
+								Ventas del {{ date(only_one_date) }}
+							</strong>
+							<strong v-show="previus_next != 0"
+									class="p-l-5">
+								<span v-show="previus_next == 1 && !is_from_only_one_date">
 									Hace 1 día
 								</span>
-								<span v-show="previus_next > 1">
+								<span v-show="previus_next > 1 && !is_from_only_one_date">
 									Hace {{ previus_next }} días
+								</span>
+								<span v-show="previus_next == 1 && is_from_only_one_date">
+									1 día atras
+								</span>
+								<span v-show="previus_next > 1 && is_from_only_one_date">
+									{{ previus_next }} días atras
+								</span>
+								<span v-show="previus_next < 0 && is_from_only_one_date">
+									{{ Math.abs(previus_next) }} días después
 								</span>
 							</strong>
 						</div>
 						<div class="col-7 col-rigth">
-							<button v-show="is_from_date"
-									class="btn m-l-5 btn-success" 
-									@click="showResumen">
-								<i class="icon-file"></i>
-								Resumen
-							</button>
-							<button v-show="previus_next != 0" 
+							<button v-show="is_from_only_one_date || (previus_next != 0 && !is_from_date)" 
 									class="btn m-l-5 btn-primary" 
 									@click="nextDay">
 								<i class="icon-redo"></i>
@@ -46,7 +57,7 @@
 							<button class="btn m-l-5 btn-primary" 
 									@click="showFromDate">
 								<i class="icon-calendar"></i>
-								Desde y hasta una fecha
+								Por fecha
 							</button>
 							<button v-show="is_from_date" 
 									class="btn m-l-5 btn-primary"
@@ -93,7 +104,9 @@
 										<button type="button" class="btn btn-warning">
 											{{ total_articles }} artículos
 										</button>
-										<button type="button" class="btn btn-warning">Total: ${{ total }}</button>
+										<button type="button" class="btn btn-warning">
+											Total: ${{ total }}
+										</button>
 									</div>
 								</div>
 							</div>
@@ -102,22 +115,37 @@
 			        <div class="row m-b-10">
 			        	<div class="col">
 			        		<img :src="asset+'imgs/arrow.png'" class="img-arrow m-l-10" alt="">
-			        		<button @click="generatePdf"
+			        		<a @click="generatePdf"
+			        			href="#"
 			        				class="btn btn-success" 
 			        				:class="selected_sales.selected_sales.length ? '' : 'disabled'">
 			        			<i class="icon-print"></i>
 			        			Pdf/Imprimir
-			        		</button>
-			        		<button class="btn btn-danger" :class="selected_sales.length ? '' : 'disabled'">
+			        		</a>
+			        		<a class="btn btn-danger" 
+			        			href="#"
+			        			@click.prevent="confirmDeleteSales"
+			        			:class="selected_sales.selected_sales.length ? '' : 'disabled'">
 			        			<i class="icon-trash-2"></i>
 			        			Eliminar
-			        		</button>
+			        		</a>
 			        		<span v-show="selected_sales.selected_sales.length" class="p-l-5">
 			        			{{ selected_sales.selected_sales.length }} ventas seleccionadas
 			        		</span>
 			        	</div>
 			        </div>
-					<div class="row">
+					<div class="row" v-show="is_loading">
+						<div class="col">
+							<div class="spinner-listado">
+								<div class="spinner">
+									<div class="spinner-border text-primary" role="status">
+										<span class="sr-only">Loading...</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row" v-show="!is_loading">
 						<div class="col">
 							<table class="table table-striped">
 								<thead class="thead-dark">
@@ -135,11 +163,14 @@
 						                    </div>
 										</th>
 										<th scope="col">Ver</th>
-										<th v-show="is_from_date || previus_next!=0" scope="col">Fecha</th>
+										<th v-show="is_from_date || previus_next!=0 || is_from_only_one_date" scope="col">
+											Fecha
+										</th>
 										<th scope="col">Hora</th>
 										<th v-show="show_costs" scope="col">Costo</th>
 										<th scope="col">Total</th>
 										<th scope="col">Cant. Artículos</th>
+										<th>Eliminar</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -162,7 +193,7 @@
 												<i class="icon-eye"></i>
 											</button>
 										</td>
-										<td v-show="is_from_date || previus_next!=0">
+										<td v-show="is_from_date || previus_next!=0 || is_from_only_one_date">
 											<i class="icon-calendar"></i>
 											{{ date(sale.created_at) }}
 										</td>
@@ -171,12 +202,18 @@
 											{{ hour(sale.created_at) }}
 										</td>
 										<th v-show="show_costs" scope="row">
-											${{ getCost(sale) }}
+											{{ getCost(sale) }}
 										</th>
 										<th scope="row">
-											${{ getPrice(sale) }}
+											{{ getPrice(sale) }}
 										</th>
 										<td>{{ cantidad_articulos(sale) }}</td>
+										<td>
+											<button @click="confirmDeleteSale(sale)"
+													class="btn btn-danger">
+												<i class="icon-trash-3"></i>
+											</button>
+										</td>
 									</tr>
 								</tbody>
 							</table>
@@ -194,24 +231,32 @@
 <script>
 import FromDate from './modals/FromDate.vue'
 import SaleDetails from './modals/SaleDetails.vue'
+import ConfirmDeleteSales from './modals/ConfirmDeleteSales.vue'
+import ConfirmDeleteSale from './modals/ConfirmDeleteSale.vue'
 import Summary from './modals/Summary.vue'
 import GeneratePdf from './modals/GeneratePdf.vue'
 export default {
 	components: {
 		FromDate,
 		SaleDetails,
+		ConfirmDeleteSale,
+		ConfirmDeleteSales,
 		GeneratePdf,
 		Summary,
 	},
 	data() {
 		return {
+			is_loading: false,
 			is_from_date: false,
+			is_from_only_one_date: false,
+			only_one_date: '',
 			from: '',
 			to: '',
 			show_costs: true,
 			actual_prices: false,
 			selected_sales: [],
 			sales: [],
+			sale: {},
 			total: 0,
 			total_articles: 0,
 			last_day_inclusive: false,
@@ -256,6 +301,23 @@ export default {
 		since(date) {
 			return moment(date).fromNow()
 		},
+		price(p, punto=true) {
+			var centavos = p.split('.')[1]
+			var price = p.split('.')[0]
+			var formated_price
+			if (punto) {
+				formated_price = numeral(price).format('0,0').split(',').join('.')
+				if (centavos != '00') {
+					formated_price = formated_price + ',' + centavos
+				}
+			} else {
+				formated_price = price
+				if (centavos != '00') {
+					formated_price = formated_price + '.' + centavos
+				}
+			}
+			return formated_price
+		},
 		cantidad_articulos(sale) {
 			return sale.articles.length
 		},
@@ -268,7 +330,7 @@ export default {
 					cost += parseFloat(article.pivot.cost)
 				}
 			})
-			return cost
+			return numeral(cost).format('$0,0.00')
 		},
 		getPrice(sale) {
 			var price = 0
@@ -279,38 +341,62 @@ export default {
 					price += parseFloat(article.pivot.price)
 				}
 			})
-			return price
+			return numeral(price).format('$0,0.00')
 		},
+
 		// Metodos del header
 		previusDay() {
 			this.previus_next++
 			this.previusNext()
 		},
 		nextDay() {
-			this.previus_next--
-			this.previusNext()
+			if (this.previus_next == 1) {
+				this.previus_next--
+				this.getSales()
+			} else {
+				this.previus_next--
+				this.previusNext()
+			}
 		},
 		previusNext() {
-			axios.get('sales/previus-next/'+this.previus_next)
-			.then( res => {
-				// console.log(res.data)
-				this.sales = res.data
-				if (this.selected_sales.selected_pages.includes(this.previus_next)) {
-					this.selected_sales.is_all_selected = true
-				} else {
-					this.selected_sales.is_all_selected = false
-				}
-			})
-			.catch( err => {
-				console.log(err)
-			})
+			if (this.only_one_date == '') {
+				axios.get('sales/previus-next/'+this.previus_next)
+				.then( res => {
+					// console.log(res.data)
+					this.sales = res.data
+					if (this.selected_sales.selected_pages.includes(this.previus_next)) {
+						this.selected_sales.is_all_selected = true
+					} else {
+						this.selected_sales.is_all_selected = false
+					}
+				})
+				.catch( err => {
+					console.log(err)
+				})
+			} else {
+				axios.get('sales/previus-next/'+this.previus_next+'/'+this.only_one_date)
+				.then( res => {
+					// console.log(res.data)
+					this.sales = res.data
+					if (this.selected_sales.selected_pages.includes(this.previus_next)) {
+						this.selected_sales.is_all_selected = true
+					} else {
+						this.selected_sales.is_all_selected = false
+					}
+				})
+				.catch(err => {
+					console.log(err)
+				})
+			}
 		},
 
 		// Ventas seleccionadas
 		selectAllSales() {
 			if (this.selected_sales.is_all_selected) {
 				this.sales.forEach(sale => {
-					this.selected_sales.selected_sales.push(sale.id)
+					if (!this.selected_sales.selected_sales.includes(sale.id)) {
+						this.selected_sales.selected_sales.push(sale.id)
+					}
 				})
 				this.selected_sales.selected_pages.push(this.previus_next)
 			} else {
@@ -321,6 +407,53 @@ export default {
 				var index = this.selected_sales.selected_pages.indexOf(this.previus_next)
 				this.selected_sales.selected_pages.splice(index, 1)
 			}
+		},
+		confirmDeleteSales() {
+			$('#delete-sales').modal('show')
+		},
+		deleteSales() {
+			axios.delete('sales/delete-sales/'+this.selected_sales.selected_sales.join('-'))
+			.then(res => {
+				this.selected_sales.selected_sales = []
+				if (this.is_from_date) {
+					this.fromDate()
+				} else {
+					if (this.previus_next != 0) {
+						this.previusNext()
+					} else {
+						this.getSales()
+					}
+				}
+				$('#delete-sales').modal('hide')
+				toastr.success('Se eliminaron las '+this.selected_sales.selected_sales.length+' correctamente')
+			})
+			.catch(err => {
+				console.log(err)
+			})
+		},
+		confirmDeleteSale(sale) {
+			this.sale = sale
+			$('#delete-sale').modal('show')
+		},
+		deleteSale() {
+			axios.delete('sales/'+this.sale.id)
+			.then(res => {
+				this.sale = {}
+				if (this.is_from_date) {
+					this.fromDate()
+				} else {
+					if (this.previus_next != 0) {
+						this.previusNext()
+					} else {
+						this.getSales()
+					}
+				}
+				$('#delete-sale').modal('hide')			
+				toastr.success('Venta eliminada correctamente')
+			})
+			.catch(err => {
+				console.log(err)
+			})
 		},
 
 		// Resumen de ventas
@@ -337,7 +470,9 @@ export default {
 		showFromDate() {
 			$('#from-date').modal('show')
 		},
-		fromDate(from, to, last_day_inclusive) {
+		fromDate(from = this.from, to = this.to, last_day_inclusive = this.last_day_inclusive) {
+			this.is_loading = true
+			$('#from-date').modal('hide')
 			this.from = from
 			this.to = to
 			if (last_day_inclusive == '0') {
@@ -347,10 +482,32 @@ export default {
 			}
 			axios.get('sales/from-date/'+this.from+'/'+this.to+'/'+last_day_inclusive)
 			.then(res => {
-				console.log(res.data)
-				this.sales = res.data
-				this.is_from_date = true
-				$('#from-date').modal('hide')
+				this.is_loading = false
+				if (res.data == false) {
+					toastr.error('No hay ventas entre estas fechas')
+				} else {
+					this.sales = res.data
+					this.is_from_date = true
+				}
+			})
+			.catch(err => {
+				console.log(err)
+			})
+		},
+		onlyOneDate(date) {
+			// Ver tema de previus_next porque capas ya se estuvieron usando
+			this.is_loading = true
+			$('#from-date').modal('hide')
+			axios.get('sales/only-one-date/'+date)
+			.then(res => {
+				this.is_loading = false
+				if (res.data == false) {
+					toastr.error('No hay ventas en esta fecha')
+				} else {
+					this.only_one_date = date
+					this.is_from_only_one_date = true
+					this.sales = res.data
+				}
 			})
 			.catch(err => {
 				console.log(err)

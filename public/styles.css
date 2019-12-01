@@ -167,3 +167,9 @@
 .icon-down:before {
   content: "\52";
 }
+.icon-sale:before {
+  content: "\78";
+}
+.icon-sale-ticket:before {
+  content: "\53";
+}

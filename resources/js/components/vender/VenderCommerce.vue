@@ -67,7 +67,12 @@
 					</thead>
 					<tbody>
 						<tr v-for="article in articles">
-							<th scope="row">${{ article.price }}</th>
+							<th scope="row" v-if="article.offer_price">
+								${{ article.offer_price }}
+							</th>
+							<th scope="row" v-else>
+								${{ article.price }}
+							</th>
 							<td>{{ article.name }}</td>
 							<td>{{ article.stock }}</td>
 							<td>
@@ -128,8 +133,12 @@ export default {
 		this.getNames()
 	},
 	methods: {
-		addTotal(article, repeated = false) {		
-			this.total += Number(article.price)
+		addTotal(article, repeated = false) {	
+			if (article.offer_price) {
+				this.total += parseFloat(article.offer_price)
+			} else {
+				this.total += parseFloat(article.price)
+			}
 			this.cantidad_unidades++
 			article.stock--
 			if (!repeated) {

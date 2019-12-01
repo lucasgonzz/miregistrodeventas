@@ -17,9 +17,10 @@ class CreateArticlesTable extends Migration
             $table->bigIncrements('id');
             $table->string('bar_code', 128)->nullable();
             $table->string('name', 128);
-            $table->decimal('cost', 7, 2);
-            $table->decimal('price', 7, 2);
-            $table->decimal('previus_price', 7, 2)->nullable();
+            $table->decimal('cost', 8, 2);
+            $table->decimal('price', 8, 2);
+            $table->decimal('previus_price', 8, 2)->nullable();
+            $table->decimal('offer_price', 8, 2)->nullable();
             $table->integer('stock')->nullable();
             $table->integer('user_id')->unsigned();
             $table->integer('sub_user_id')->nullable()->unsigned();

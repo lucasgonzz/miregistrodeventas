@@ -75,12 +75,22 @@
                     </a>
                 </li>
                 @endif
+                @if (Auth()->user()->hasRole('provider'))
                 <li class="nav-item">
-                    <a class="nav-link {{ active('codigos-de-barra') }}" href="{{ route('bar-codes') }}">
+                    <a class="nav-link {{ active('mayoristas/codigos-de-barra') }}" href="{{ route('bar-codes.provider') }}">
                         <!-- <i class="icon-list-ol"></i> -->
                         Codigos de barra
                     </a>
                 </li>
+                @endif
+                @if (Auth()->user()->hasRole('commerce'))
+                <li class="nav-item">
+                    <a class="nav-link {{ active('comercios/codigos-de-barra') }}" href="{{ route('bar-codes.commerce') }}">
+                        <!-- <i class="icon-list-ol"></i> -->
+                        Codigos de barra
+                    </a>
+                </li>
+                @endif
                 <li class="nav-item">
                     <a class="nav-link {{ active('empleados') }}" href="{{ route('empleados') }}">
                         <!-- <i class="icon-list-ol"></i> -->

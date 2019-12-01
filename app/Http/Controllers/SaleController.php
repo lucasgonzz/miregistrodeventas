@@ -19,7 +19,7 @@ class SaleController extends Controller
         if ($user->hasRole('provider')) {
             $sales = Sale::where('user_id', $user->id)
                             ->where('created_at', '>=', Carbon::today())
-                            ->with('clients')
+                            ->with('client')
                             ->with('articles')
                             ->get();
         } else {
@@ -31,16 +31,19 @@ class SaleController extends Controller
         return $sales;
     }
 
-    function previusNext($index) {
+    function previusNext($index, $only_one_date = null) {
         $user = Auth()->user();
-        $carbon = Carbon::now();
+        if (is_null($only_one_date)) {
+            $carbon = Carbon::now('America/Argentina/Buenos_Aires');
+        } else {
+            $carbon = Carbon::create($only_one_date);
+        }
         $date = $carbon->subDays($index);
-        // dd($date);
         if ($user->hasRole('provider')) {
             $sales = Sale::where('user_id', Auth()->user()->id)
                                 ->whereDate('created_at', $date)
                                 ->orderBy('id', 'DESC')
-                                ->with('clients')
+                                ->with('client')
                                 ->with('articles')
                                 ->get();
         } else {
@@ -49,6 +52,27 @@ class SaleController extends Controller
                                 ->orderBy('id', 'DESC')
                                 ->with('articles')
                                 ->get();
+        }
+        if (count($sales) >= 1) {
+            return $sales;
+        } else {
+            return false;
+        }
+    }
+
+    function onlyOneDate($date) {
+        $user = Auth()->user();
+        if ($user->hasRole('provider')) {
+            $sales = Sale::where('user_id', $user->id)
+                    ->whereDate('created_at', $date)
+                    ->with('articles')
+                    ->with('client')
+                    ->get();
+        } else {
+            $sales = Sale::where('user_id', $user->id)
+                    ->whereDate('created_at', $date)
+                    ->with('articles')
+                    ->get();            
         }
         return $sales;
     }
@@ -64,7 +88,7 @@ class SaleController extends Controller
             $sales = Sale::where('user_id', $user->id)
                     ->whereBetween('created_at', [$from, $to])
                     ->with('articles')
-                    ->with('clients')
+                    ->with('client')
                     ->get();
         } else {
             $sales = Sale::where('user_id', $user->id)
@@ -75,12 +99,23 @@ class SaleController extends Controller
         return $sales;
     }
 
+    function deleteSales($sales_id) {
+        foreach (explode('-', $sales_id) as $sale_id) {
+            $sale = Sale::find($sale_id);
+            $sale->delete();
+        }
+    }
+
+    function delete($id) {
+        $sale = Sale::find($id);
+        $sale->delete();
+    }
+
     function store(Request $request) {
         $user = Auth()->user();
         $last_sale = Sale::where('user_id', $user->id)
                             ->orderby('created_at','DESC')
-                            ->take(1)
-                            ->get();
+                            ->first();
         if ($last_sale === null) {
             if ($user->hasRole('provider')) {
             	$sale = Sale::create([
@@ -112,6 +147,7 @@ class SaleController extends Controller
                 ]);
             }
         }
+
     	foreach ($request->articles as $article) {
     		$sale->articles()->attach($article['id'], [
                                                         'amount' => $article['amount'],

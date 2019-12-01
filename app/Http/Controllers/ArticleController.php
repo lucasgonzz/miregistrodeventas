@@ -66,11 +66,15 @@ class ArticleController extends Controller
                             ->where('name', $name)
                             ->first();
         }
-        // if ($article === null) {
-        //     return null;
-        // } else {
-        //     return $article;
-        // }
+    }
+
+    function getByIds($articles_id) {
+        $articles_id = explode('-', $articles_id);
+        $articles = [];
+        foreach ($articles_id as $article_id) {
+            $articles[]  = Article::find($article_id);
+        }
+        return $articles;
     }
 
     function getBarCodes() {
@@ -126,6 +130,19 @@ class ArticleController extends Controller
         return $articles[$index-1];
     }
 
+    function createOffer(Request $request) {
+        foreach ($request->articles as $article) {
+            $_article = Article::find($article['id']);
+            $_article->offer_price = $article['offer_price'];
+            $_article->save();
+        }
+        // foreach ($request->articles_id as $article_id) {
+        //     $article = Article::find($article_id);
+        //     $article->offer_price = $article->price - round(($request->porcentage/100)*$article->price, 2);
+        //     $article->save();
+        // }
+    }
+
     function update(Request $request, $id) {
         $article = Article::find($id);
         $updated_article = $request->article;
@@ -151,7 +168,7 @@ class ArticleController extends Controller
                                         'price' => $updated_article['price'],
                                     ]);
         }
-        return 'bien';
+        return $article;
     }
 
     function updateByPorcentage(Request $request) {
@@ -185,7 +202,7 @@ class ArticleController extends Controller
     }
 
     function store(Request $request) {
-        
+        $errores = false;
         $user = Auth()->user();
         $article = new Article();
         $article->bar_code = $request->article['bar_code'];
@@ -196,13 +213,17 @@ class ArticleController extends Controller
         $article->stock = $request->article['stock'];
         $article->user_id = $user->id;
 
-        $date = date('Y-m-d H:i:s');
-        // if ($request->article['created_at'] != $date) {
-        //     $article->created_at = $request->article['created_at'];
-        //     $article->updated_at = $request->article['created_at'];
-        // }
+        $date = date('Y-m-d');
 
+        // Revisar este codigo de la fecha
+        if ($request->article['created_at'] != $date) {
+            $article->created_at = $request->article['created_at'];
+            $article->updated_at = $request->article['created_at'];
+        }
         $article->save();
+        // if (!$article->save()) {
+        //     $errores = true;
+        // }
         if ($user->hasRole('commerce')) {
             $article->providers()->attach($request->article['provider'], [
                                             'amount' => $request->article['stock'],
@@ -229,15 +250,28 @@ class ArticleController extends Controller
         Article::find($id)->delete();
     }
 
+    function deleteOffer($id) {
+        $article = Article::find($id);
+        $article->offer_price = null;
+        $article->save();
+    }
+
     function filter(Request $request) {
         $user = Auth()->user();
         $mostrar = $request->mostrar;
         $ordenar = $request->ordenar;
         $precio_entre = $request->precio_entre;
+        $precio_minimo = (float)$request->precio_entre['min'];
+        $precio_maximo = (float)$request->precio_entre['max'];
+        // return gettype((float)$precio_entre['min']);
+        // return (float)$request->precio_entre['max'];
 
         $articles = Article::where('user_id', $user->id);
 
         // Mostrar
+        if ($mostrar == 'oferta') {
+            $articles = $articles->whereNotNull('offer_price');
+        }
         if ($mostrar == 'desactualizados') {
                 $fecha_actual = date('d-m-Y');
                 $hace_6_meses = date('d-m-Y', strtotime($fecha_actual."- 6 month"));
@@ -276,6 +310,15 @@ class ArticleController extends Controller
         if ($ordenar == 'baratos-caros') {
             $articles = $articles->orderBy('price', 'ASC');
         }
+
+        if ($precio_minimo != '' && $precio_maximo != '') {
+            $articles = $articles->whereBetween('offer_price', 
+                                                    [$precio_minimo, $precio_maximo]
+                                                )->orWhereBetween('price', 
+                                                    [$precio_minimo, $precio_maximo]
+                                                );
+        }
+
         return $articles->get();
     }
 

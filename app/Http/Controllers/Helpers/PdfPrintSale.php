@@ -56,7 +56,10 @@ class PdfPrintSale extends fpdf {
 
 	function printSales($per_page) {
 		$user = Auth()->user();
+		$a = 0;
+		// dd(Sale::find($this->sales_id[1])->articles);
 		foreach ($this->sales_id as $sale_id) {
+			$a++;
             $sale = Sale::find($sale_id);
         	$client = $sale->client;            
         	$this->AddPage();
@@ -66,7 +69,6 @@ class PdfPrintSale extends fpdf {
 
             $articulos_en_esta_pagina = 0;
             $articulos_en_esta_venta = 0;
-            $count_total = 1;
             $suma_costos_pagina = 0;
             $suma_precios_pagina = 0;
             $suma_costos_venta = 0;
@@ -158,6 +160,7 @@ class PdfPrintSale extends fpdf {
             	$this->Cell(100,7,'Suma de todos los precios de esta venta: $'.$this->price($suma_precios_venta),1,0,'C');
             }
         }
+        // dd($a);
         $this->Output();
         exit;
 	}
@@ -223,7 +226,9 @@ class PdfPrintSale extends fpdf {
 		$this->SetXY(100, 10);
 		$this->SetFont('Arial', '', 11, 'C');
 		$this->Cell(50,5,'Venta n°: '.$sale->num_sale,0,0,'R');
-		$this->Cell(50,5,'Cliente: Juan Perez',0,0,'R');
+		if ($user->hasRole('provider')) {
+			$this->Cell(50,5,'Cliente: '.$client->name,0,0,'R');
+		}
 		$this->Ln();
 		$this->SetX(100);
 		$this->Cell(50,5,'Fecha: '.date_format($sale->created_at, 'd/m/y'),0,0,'R');

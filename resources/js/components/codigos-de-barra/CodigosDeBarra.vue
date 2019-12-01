@@ -12,7 +12,6 @@
 					</div>
 					<form>
 						<div class="card-body">
-							<!-- <h5 class="card-title">Genere un pdf con los codigos de barra y la cantidad que necesite</h5> -->
 							<div class="row">
 								<div class="col-12 col-lg-6">
 									<div class="card">
@@ -27,6 +26,10 @@
 														placeholder="Ingrese su nuevo codigo de barras" 
 														id="bar-code"
 														class="form-control">
+												<button @click.prevent="generateCode"
+														class="btn btn-success btn-sm m-t-5">
+													Generar codigo
+												</button>
 											</div>
 											<div class="form-group">
 												<label for="bar-code-amount">
@@ -147,10 +150,29 @@ export default {
 			console.log(this.bar_code_details)
 			$('#bar-code-details').modal('show')
 		},
+		generateCode() {
+			var bar_code = 1
+			var bar_codes = []
+			this.bar_codes.forEach(barCode => {
+				bar_codes.push(Number(barCode.name))
+			})
+			while (bar_codes.includes(bar_code)) {
+				bar_code++
+			}
+			bar_code = String(bar_code)
+			var largo = bar_code.length
+			var bc = '0000000000000'
+			bc = bc.slice(0, 12-largo)
+			bar_code = bc + bar_code
+			this.bar_code.name = bar_code
+			$('#bar-code-amount').focus()
+		},
 		saveBarCode() {
 			var codigo_repetido = false
 			this.bar_codes.forEach(bar_code => {
 				if (bar_code.name == this.bar_code.name) {
+					// Si ya fue generado se pone en true repeated_bar_code para
+					// cuando se abra el modal y muestre porque se esta abriendo
 					codigo_repetido = true
 					this.repeated_bar_code = true
 					this.bar_code_details = bar_code
@@ -163,14 +185,9 @@ export default {
 				setTimeout(() => {
 					this.getBarCodes()
 				}, 1000)
-				this.bar_code = {
-					name: '',
-					amount: 0
-				}
+				this.bar_code.name = ''
+				this.bar_code.amount = 0
 			}
-		},
-		hola() {
-			toastr.success('ads')
 		},
 		deleteBarCode() {
 			axios.delete('bar-codes/'+this.bar_code_details.id)
@@ -186,7 +203,7 @@ export default {
 		getBarCodes() {
 			axios.get('bar-codes')
 			.then( res => {
-				// console.log(res.data)
+				console.log(res.data)
 				this.bar_codes = res.data
 			})
 			.catch( err => {

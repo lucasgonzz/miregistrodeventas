@@ -19,8 +19,8 @@ class CreateArticleSaleTable extends Migration
             $table->integer('article_id');
             $table->integer('sale_id');
             $table->integer('amount');
-            $table->integer('cost')->nullable();
-            $table->integer('price')->nullable();
+            $table->decimal('cost')->nullable();
+            $table->decimal('price')->nullable();
 
             $table->timestamps();
         });

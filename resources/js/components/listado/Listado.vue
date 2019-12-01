@@ -6,8 +6,8 @@
 						:providers="providers" 
 						@updateArticle="updateArticle"
 						@clearArticle="clearArticle"></editar-articulo>
-		<edit-articles @updateByPorcentage="updateByPorcentage"
-						:selected_articles="selected_articles"></edit-articles>
+		<update-by-porcentage @updateByPorcentage="updateByPorcentage"
+						:selected_articles="selected_articles"></update-by-porcentage>
 		<confirmar-eliminacion :article="article" 
 								@destroyArticle="destroyArticle"></confirmar-eliminacion>
 		<descargar-pdf :rol="rol" 
@@ -16,6 +16,8 @@
 						:filtro="filtro"></descargar-pdf>
 		<print-tickets :selected_articles="selected_articles"></print-tickets>
 		<importar></importar>
+		<create-offer :selected_articles="selected_articles"
+						@createOffer="createOffer"></create-offer>
 		<providers-history :article="article"></providers-history>
 		<filtrar :filtro="filtro" 
 					:rol="rol" 
@@ -27,7 +29,7 @@
 				<div class="card">
 					<div class="card-header">
 						<div class="row">
-							<div class="col-10 col-lg-5 p-r-0">
+							<div class="col-10 col-lg-3 p-r-0">
 								<div class="buscador">
 									<input type="text" class="form-control input-search" 
 											placeholder="Buscar por codigo o nombre"
@@ -46,7 +48,29 @@
 									<i class="icon-search"></i>
 							  	</button>						
 							</div>
-							<div class="col-12 col-lg-6 m-t-10 m-lg-t-0 col-btn">
+							<div class="col-12 col-lg-8 m-t-10 m-lg-t-0 col-btn">
+								<strong class="p-r-5 p-t-5"
+										v-show="selected_articles.selected_articles.length">
+									{{ selected_articles.selected_articles.length }} arículos seleccionados
+								</strong>
+								<a href="#" @click.prevent="showCreateOffer"
+									:class="selected_articles.selected_articles.length ? '' : 'disabled'"
+									class="btn btn-danger m-l-5">
+									<i class="icon-sale-ticket"></i>
+									Oferta
+								</a>
+								<a href="#" @click.prevent="showUpdateByPorcentage"
+									:class="selected_articles.selected_articles.length ? '' : 'disabled'"
+									class="btn btn-primary m-l-5">
+									<i class="icon-plus"></i>
+									%
+								</a>
+								<a href="#" @click.prevent="showPrintTickets"
+									:class="selected_articles.selected_articles.length ? '' : 'disabled'"
+									class="btn btn-success m-l-5">
+									<span class="icon-tag"></span>
+									Tickets	
+								</a>
 								<button class="btn btn-warning m-l-5" @click="showImportar">
 									<i class="icon-upload"></i>
 									Importar Exel
@@ -63,219 +87,232 @@
 									<i class="icon-filter"></i>
 									Filtrar
 								</button>
-								<a href="#" @click.prevent="showEditArticles"
-								:class="selected_articles.selected_articles.length ? '' : 'disabled'"
-									class="btn btn-primary m-l-5">
-									<i class="icon-plus"></i>
-									%
-								</a>
-								<a href="#" @click.prevent="printTickets"
-								:class="selected_articles.selected_articles.length ? '' : 'disabled'"
-									class="btn btn-success m-l-5">
-									<span class="icon-tag"></span>
-									Tickets	
-								</a>
 							</div>
 						</div>
 					</div>
 					<div class="card-body">
-						<div v-show="isLoading" class="spinner-listado">
-							<div class="spinner">
-								<div class="spinner-border text-primary" role="status">
-									<span class="sr-only">Loading...</span>
-								</div>
+						<div class="row m-b-10 justify-content-center">
+							<div class="col-3">
+								<pagination v-show="!is_filter && !searching"
+											@changePage="changePage" 
+											:is_filter="is_filter"
+											:pagination="pagination"
+											:pages-number="pagesNumber"></pagination>
 							</div>
 						</div>
-						<div v-show="!isLoading">
-							<info-filtrados :filtro="filtro" :is_filter="is_filter" 
-											:providers="providers"
-											:articles-length="articles.length"></info-filtrados>
-							<div class="table-responsive">						
-								<table class="table">
-									<thead class="thead-dark">
-										<tr v-if="rol == 'commerce'">
-											<th scope="col" class="td-checkbox">
-								                <div class="custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2">
-								                  	<input class="custom-control-input" 
-								                  			v-model="selected_articles.is_all_selected" 
-								                  			@change="selectAllArticles"
-								                  			type="checkbox" 
-								                  			id="is-all-selected">
-								                  	<label class="custom-control-label" 
-								                  			for="is-all-selected">
-								                  </label>
-								                </div>
-											</th>
-											<th scope="col">Codigo</th>
-											<th scope="col">Nombre</th>
-											<th scope="col">Costo</th>
-											<th scope="col">Precio</th>
-											<th scope="col">Pre anterior</th>
-											<th scope="col" class="td-stock">Stock</th>
-											<th scope="col">Proveedor/es</th>
-											<th scope="col">Agregado</th>
-											<th scope="col">Actualizado</th>
-											<th scope="col">Opciones</th>
-										</tr>
-										<tr v-else>
-											<th scope="col" class="td-checkbox">
-								                <div class="custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2">
-								                  	<input class="custom-control-input" 
-								                  			v-model="selected_articles.is_all_selected" 
-								                  			@change="selectAllArticles"
-								                  			type="checkbox" 
-								                  			id="is-all-selected">
-								                  	<label class="custom-control-label" 
-								                  			for="is-all-selected">
-								                  </label>
-								                </div>
-											</th>
-											<th scope="col">Codigo</th>
-											<th scope="col">Nombre</th>
-											<th scope="col">Costo</th>
-											<th scope="col">Precio</th>
-											<th scope="col">Pre anterior</th>
-											<th scope="col" class="td-stock">Stock</th>
-											<th scope="col">Agregado</th>
-											<th scope="col">Actualizado</th>
-											<th scope="col">Opciones</th>
-										</tr>
-									</thead>
-									<tbody class="vender-table">
-										<template v-if="rol == 'commerce'">
-											<tr v-for="article in articles"
-												:class="selected_articles.selected_articles.includes(article.id) ? 'bg-warning' : ''">
-												<td class="td-checkbox">
-									                <div class="custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2">
-									                  	<input class="custom-control-input" 
-									                  			v-model="selected_articles.selected_articles" 
-									                  			:value="article.id"
-									                  			type="checkbox" 
-									                  			:id="article.id">
-									                  	<label class="custom-control-label" 
-									                  			:for="article.id">
-									                  </label>
-									                </div>
-												</td>
-												<td v-if="article.bar_code">
-													{{ article.bar_code }}
-												</td>
-												<td v-else>
-													<strong>No tiene</strong>
-												</td>
-												<td>{{ article.name }}</td>
-												<td>${{ price(article.cost) }}</td>
-												<td class="td-price">${{ price(article.price) }}</td>
-												<td v-if="article.previus_price != '0.00'">${{ price(article.previus_price) }}</td>
-												<td v-else>Sin datos</td>
-												<td v-if="article.stock" class="td-stock">
-													{{ article.stock }}
-												</td>
-												<td v-else>
-													Sin uso
-												</td>
-												<td>
-													<div class="dropdown">
-														<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-															Proveedores
-														</button>
-														<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-															<span v-for="provider in article.providers_not_repeated"
-																class="dropdown-item c-n">
-																{{ provider.name }}
-															</span>
-															<span @click="providersHistory(article)"
-																	class="dropdown-item c-p">
-																<i class="icon-calendar"></i>
-																Historial
-															</span>
-														</div>
-													</div>
-												</td>
-												<td>{{ date(article.created_at) }}</td>
-												<td v-if="article.created_at != article.updated_at">
-													{{ date(article.updated_at) }}
-												</td>
-												<td v-else class="td-stock">
-													Sin datos
-												</td>
-												<td class="td-options">
-													<button @click="editArticle(article)" class="btn btn-listado btn-listado-edit">
-														<i class="icon-edit"></i>
-													</button>
-													<button @click="deleteArticle(article)" class="btn btn-listado btn-listado-delete">
-														<i class="icon-trash-2"></i>
-													</button>
-												</td>
-											</tr>
-										</template>
-										<template v-else>								
-											<tr v-for="article in articles"	
-												:class="selected_articles.selected_articles.includes(article.id) ? 'bg-warning' : ''">
-												<td class="td-checkbox">
-									                <div class="custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2">
-									                  	<input class="custom-control-input" 
-									                  			v-model="selected_articles.selected_articles"
-									                  			:value="article.id" 
-									                  			type="checkbox" 
-									                  			:id="article.id">
-									                  	<label class="custom-control-label" 
-									                  			:for="article.id">
-									                  </label>
-									                </div>
-												</td>
-												<td v-if="article.bar_code">
-													{{ article.bar_code }}
-												</td>
-												<td v-else>
-													<strong>No tiene</strong>
-												</td>
-												<td>{{ article.name }}</td>
-												<td>${{ price(article.cost) }}</td>
-												<td class="td-price">${{ price(article.price) }}</td>
-												<td v-if="article.previus_price != '0.00'">${{ price(article.previus_price) }}</td>
-												<td v-else>Sin datos</td>
-												<td v-if="article.stock" class="td-stock">
-													{{ article.stock }}
-												</td>
-												<td v-else class="td-stock">
-													Sin uso
-												</td>
-												<td>{{ date(article.created_at) }}</td>
-												<td v-if="article.created_at != article.updated_at">
-													{{ date(article.updated_at) }}
-												</td>
-												<td v-else>
-													Sin datos
-												</td>
-												<td class="td-options">
-													<button @click="editArticle(article)" class="btn btn-listado btn-listado-edit">
-														<i class="icon-edit"></i>
-													</button>
-													<button @click="deleteArticle(article)" class="btn btn-listado btn-listado-delete">
-														<i class="icon-trash-2"></i>
-													</button>
-												</td>
-											</tr>								
-										</template>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div>
-					<div class="card-footer p-0">
-						<pagination v-show="!is_filter && !searching"
-									@changePage="changePage" 
-									:is_filter="is_filter"
-									:pagination="pagination"
-									:pages-number="pagesNumber"></pagination>
-						<div class="row p-10" v-show="is_filter || searching">
+						<div class="row m-b-10" v-show="is_filter || searching">
 							<div class="col">
 								<button class="btn btn-primary float-right"
 										@click="volverAListar">
 									<i class="icon-undo"></i>
 									Volver a listar todos mis artículos
 								</button>
+							</div>
+						</div>
+						<div class="row" v-show="isLoading">
+							<div class="col">
+								<div class="spinner-listado">
+									<div class="spinner">
+										<div class="spinner-border text-primary" role="status">
+											<span class="sr-only">Loading...</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row" v-show="!isLoading">
+							<div class="col">
+								<info-filtrados :filtro="filtro" :is_filter="is_filter" 
+												:providers="providers"
+												:articles-length="articles.length">
+								</info-filtrados>
+							</div>
+						</div>
+						<div class="row" v-show="!isLoading">
+							<div class="col">
+								<div class="table-responsive">						
+									<table class="table">
+										<thead class="thead-dark">
+											<tr v-if="rol == 'commerce'">
+												<th scope="col" class="td-checkbox">
+									                <div class="custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2">
+									                  	<input class="custom-control-input" 
+									                  			v-model="selected_articles.is_all_selected" 
+									                  			@change="selectAllArticles"
+									                  			type="checkbox" 
+									                  			id="is-all-selected">
+									                  	<label class="custom-control-label" 
+									                  			for="is-all-selected">
+									                  </label>
+									                </div>
+												</th>
+												<th scope="col">Codigo</th>
+												<th scope="col">Nombre</th>
+												<th scope="col">Costo</th>
+												<th scope="col">Precio</th>
+												<th scope="col" class="td-stock">Stock</th>
+												<th scope="col">Proveedor/es</th>
+												<th scope="col">Ult modificacion</th>
+												<th scope="col">Opciones</th>
+											</tr>
+											<tr v-else>
+												<th scope="col" class="td-checkbox">
+									                <div class="custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2">
+									                  	<input class="custom-control-input" 
+									                  			v-model="selected_articles.is_all_selected" 
+									                  			@change="selectAllArticles"
+									                  			type="checkbox" 
+									                  			id="is-all-selected">
+									                  	<label class="custom-control-label" 
+									                  			for="is-all-selected">
+									                  </label>
+									                </div>
+												</th>
+												<th scope="col">Codigo</th>
+												<th scope="col">Nombre</th>
+												<th scope="col">Costo</th>
+												<th scope="col">Precio</th>
+												<th scope="col" class="td-stock">Stock</th>
+												<th scope="col">Ult modificacion</th>
+												<th scope="col">Opciones</th>
+											</tr>
+										</thead>
+										<tbody class="vender-table">
+											<template v-if="rol == 'commerce'">
+												<tr v-for="article in articles"
+													:class="selected_articles.selected_articles.includes(article.id) ? 'bg-warning' : ''">
+													<td class="td-checkbox">
+										                <div class="custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2">
+										                  	<input class="custom-control-input" 
+										                  			v-model="selected_articles.selected_articles" 
+										                  			:value="article.id"
+										                  			type="checkbox" 
+										                  			:id="article.id">
+										                  	<label class="custom-control-label" 
+										                  			:for="article.id">
+										                  </label>
+										                </div>
+													</td>
+													<td v-if="article.bar_code">
+														{{ article.bar_code }}
+													</td>
+													<td v-else>
+														<strong>No tiene</strong>
+													</td>
+													<td>{{ article.name }}</td>
+													<td>{{ price(article.cost) }}</td>
+
+													<td v-if="article.offer_price"
+														class="td-price">
+														<i class="icon-sale-ticket ticket-price"></i>
+														{{ price(article.offer_price) }}
+													</td>
+													<td v-else
+														class="td-price">
+														{{ price(article.price) }}
+													</td>
+													<td v-if="article.stock" class="td-stock">
+														{{ article.stock }}
+													</td>
+													<td v-else>
+														Sin uso
+													</td>
+													<td>
+														<div class="dropdown">
+															<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+																Proveedores
+															</button>
+															<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+																<span v-for="provider in article.providers_not_repeated"
+																	class="dropdown-item c-n">
+																	{{ provider.name }}
+																</span>
+																<span @click="providersHistory(article)"
+																		class="dropdown-item c-p">
+																	<i class="icon-calendar"></i>
+																	Historial
+																</span>
+															</div>
+														</div>
+													</td>
+													<td>{{ date(article.updated_at) }}</td>
+													<td class="td-options">
+														<button @click="editArticle(article)" class="btn btn-listado btn-listado-edit">
+															<i class="icon-edit"></i>
+														</button>
+														<button @click="deleteArticle(article)" class="btn btn-listado btn-listado-delete">
+															<i class="icon-trash-2"></i>
+														</button>
+														<button @click="deleteOffer(article)"
+																v-show="article.offer_price"
+																class="btn btn-danger btn-sm">
+															<i class="icon-sale-ticket"></i>
+															<i class="icon-cancel"></i>
+															<!-- Terminar Oferta -->
+														</button>
+													</td>
+												</tr>
+											</template>
+											<template v-else>								
+												<tr v-for="article in articles"	
+													:class="selected_articles.selected_articles.includes(article.id) ? 'bg-warning' : ''">
+													<td class="td-checkbox">
+										                <div class="custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2">
+										                  	<input class="custom-control-input" 
+										                  			v-model="selected_articles.selected_articles"
+										                  			:value="article.id" 
+										                  			type="checkbox" 
+										                  			:id="article.id">
+										                  	<label class="custom-control-label" 
+										                  			:for="article.id">
+										                  </label>
+										                </div>
+													</td>
+													<td v-if="article.bar_code">
+														{{ article.bar_code }}
+													</td>
+													<td v-else>
+														<strong>No tiene</strong>
+													</td>
+													<td>{{ article.name }}</td>
+													<td>{{ price(article.cost) }}</td>
+
+													<td v-if="article.offer_price"
+														class="td-price">
+														<i class="icon-sale-ticket ticket-price"></i>
+														{{ price(article.offer_price) }}
+													</td>
+													<td v-else
+														class="td-price">
+														{{ price(article.price) }}
+													</td>
+													<td v-if="article.stock" class="td-stock">
+														{{ article.stock }}
+													</td>
+													<td v-else class="td-stock">
+														Sin uso
+													</td>
+													<td>{{ date(article.updated_at) }}</td>
+													<td class="td-options">
+														<button @click="editArticle(article)" class="btn btn-listado btn-listado-edit">
+															<i class="icon-edit"></i>
+														</button>
+														<button @click="deleteArticle(article)" class="btn btn-listado btn-listado-delete">
+															<i class="icon-trash-2"></i>
+														</button>
+														<button @click="deleteOffer(article)"
+																v-show="article.offer_price"
+																class="btn btn-danger btn-sm">
+															<i class="icon-sale-ticket"></i>
+															<i class="icon-cancel"></i>
+															<!-- Terminar Oferta -->
+														</button>
+													</td>
+												</tr>								
+											</template>
+										</tbody>
+									</table>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -291,7 +328,8 @@ import DescargarPdf from './modals/DescargarPdf.vue'
 import Importar from './modals/Importar.vue'
 import Filtrar from './modals/Filtrar.vue'
 import EditarArticulo from './modals/EditarArticulo.vue'
-import EditArticles from './modals/EditArticles.vue'
+import UpdateByPorcentage from './modals/UpdateByPorcentage.vue'
+import CreateOffer from './modals/CreateOffer.vue'
 import PrintTickets from './modals/PrintTickets.vue'
 import ProvidersHistory from './modals/ProvidersHistory.vue'
 import ConfirmarEliminacion from './modals/ConfirmarEliminacion.vue'
@@ -303,7 +341,8 @@ export default {
 		Importar,
 		Filtrar,
 		EditarArticulo,
-		EditArticles,
+		CreateOffer,
+		UpdateByPorcentage,
 		PrintTickets,
 		ProvidersHistory,
 		InfoFiltrados,
@@ -318,7 +357,6 @@ export default {
 			article: {'id': 0, 'bar_code': '','name': '', 'cost': 0, 'price': 0, 'stock': 0, 'new_stock': 0, 'providers': [], 'created_at': '', 'updated_at': '', 'creado': '', 'actualizado': '', 'act_fecha': true},
 			isLoading: false,
 			all_selected_articles: false,
-			selected_articles: [],
 
 			// Buscar
 			search_query: '',
@@ -334,6 +372,7 @@ export default {
 			selected_articles: {
 				is_all_selected: false,
 				selected_articles: [],
+				articles: [],
 				articles_id: [],
 				selected_pages: [],
 			},
@@ -370,22 +409,8 @@ export default {
 		date(date) {
 			return moment(date).format('DD/MM/YY')
 		},
-		price(p, punto=true) {
-			var centavos = p.split('.')[1]
-			var price = p.split('.')[0]
-			var formated_price
-			if (punto) {
-				formated_price = numeral(price).format('0,0').split(',').join('.')
-				if (centavos != '00') {
-					formated_price = formated_price + ',' + centavos
-				}
-			} else {
-				formated_price = price
-				if (centavos != '00') {
-					formated_price = formated_price + '.' + centavos
-				}
-			}
-			return formated_price
+		price(p) {
+			return numeral(p).format('$0,0.00')
 		},
 		since(date) {
 			return moment(date).fromNow()
@@ -412,7 +437,9 @@ export default {
 		selectAllArticles() {
 			if (this.selected_articles.is_all_selected) {
 				this.selected_articles.articles_id.forEach(article_id => {
-					this.selected_articles.selected_articles.push(article_id)
+					if (!this.selected_articles.selected_articles.includes(article_id)) {
+						this.selected_articles.selected_articles.push(article_id)
+					}
 				})
 				this.selected_articles.selected_pages.push(this.pagination.current_page)
 			} else {
@@ -434,35 +461,6 @@ export default {
 			this.selected_articles.articles_id = []
 			this.articles.forEach( article => {
 				this.selected_articles.articles_id.push(article.id)
-			})
-		},
-
-		/* --------------------------------------------------------------------------
-			* Toma los valores de filtrado y los manda al metodo de filtrado 
-			de los artículos
-			* Setea la propiedad de filtrado como verdadera
-			* Agrega los articulos obtenidos a los articulos
-			* Setea los id de los artiuclos
-			* Filtra los proveedores para que aparescan solo una vez en la lista
-		-------------------------------------------------------------------------- */
-		filter(filtro) {
-			this.isLoading = true
-			axios.post('articles/filter', {
-				mostrar: filtro.mostrar,
-				ordenar: filtro.ordenar,
-				precio_entre: filtro.precio_entre,
-				providers: filtro.providers
-			})
-			.then( res => {
-				this.isLoading = false
-				this.is_filter = true
-				this.articles = res.data
-				this.setArticlesId()
-				this.filterProviders()
-				$('#listado-filtrar').modal('hide')
-			})
-			.catch( err => {
-				console.log(err)
 			})
 		},
 		
@@ -534,6 +532,7 @@ export default {
 			.then( res => {
 				this.isLoading = false
 				this.articles = res.data.articles.data;
+				// console.log(res.data.articles.data)
 				this.pagination = res.data.pagination;
 				this.setArticlesId()
 				this.setIsAllSelected()
@@ -548,18 +547,7 @@ export default {
 			* Setea las propiedades del articulos con las del articulo pasado por parametro
 		----------------------------------------------------------------------------------- */
 		editArticle(article) {
-			this.article.id = article.id
-			this.article.bar_code = article.bar_code
-			this.article.name = article.name
-			this.article.cost = this.price(article.cost, false)
-			this.article.price = this.price(article.price, false)
-			this.article.stock = article.stock
-			if (this.rol == 'commerce') {
-				this.article.provider = article.providers[0].id
-				this.article.providers = article.providers
-			}
-			this.article.created_at = article.created_at
-			this.article.updated_at = article.updated_at
+			this.setArticle(article)
 			this.article.creado = this.date(article.created_at)+' '+this.since(article.created_at)
 			this.article.actualizado = this.date(article.updated_at)+' '+this.since(article.updated_at)
 			$('#listado-edit-article').modal('show')
@@ -576,11 +564,7 @@ export default {
 				article: article
 			})
 			.then( res => {
-				if (this.searching) {
-					this.search()
-				} else {
-					this.getArticles(this.pagination.current_page)
-				}
+				this.updateArticlesList()
 				$('#listado-edit-article').modal('hide')
 				toastr.success(`${article.name} se actualizo con exito`)
 				this.clearArticle()
@@ -589,6 +573,15 @@ export default {
 				console.log(err)
 			})
 		},
+		updateArticlesList() {
+			if (this.searching) {
+				this.search()
+			} else if (this.is_filter) {
+				this.filter(this.filtro)
+			} else {
+				this.getArticles(this.pagination.current_page)
+			}
+		},
 		/* -----------------------------------------------------------------------------------
 			* Setea el objeto de articulo
 			* Muestra modal de eliminar articulo
@@ -596,6 +589,35 @@ export default {
 		deleteArticle(article) {
 			this.setArticle(article)
 			$('#listado-delete-article').modal('show')
+		},
+		deleteOffer(article) {
+			axios.delete('articles/delete-offer/'+article.id)
+			.then(res => {
+				this.updateArticlesList()
+				toastr.success('Oferta eliminada correctamente')
+			})
+			.catch(err => {
+				console.log(err)
+			})
+		},
+		setArticle(article) {
+			// this.article = article
+			this.article.id = article.id
+			this.article.bar_code = article.bar_code
+			this.article.name = article.name
+			this.article.cost = article.cost
+			this.article.price = article.price
+			if (article.offer_price != null) {
+				this.article.offer_price = article.offer_price
+			}
+			this.article.previus_price = article.previus_price
+			this.article.stock = article.stock
+			if (this.rol == 'commerce') {
+				this.article.provider = article.providers[0].id
+				this.article.providers = article.providers
+			}
+			this.article.created_at = article.created_at
+			this.article.updated_at = article.updated_at
 		},
 		
 		/* -----------------------------------------------------------------------------------
@@ -608,7 +630,7 @@ export default {
 		destroyArticle(article_id) {
 			axios.delete('articles/'+article_id)
 			.then( res => {
-				this.getArticles(this.pagination.current_page)
+				this.updateArticlesList()
 				$('#listado-delete-article').modal('hide')
 				toastr.success('Artículo eliminado correctamente')
 			})
@@ -657,28 +679,37 @@ export default {
 		},
 
 		// Modals
-		showDescargarPdf() {
-			$('#listado-descargar-pdf').modal('show')
-		},
-		showImportar() {
-			$('#listado-importar').modal('show')
-		},
-		showFiltrar() {
-			$('#listado-filtrar').modal('show')
-		},
-		showPrintTickets() {
-			$('#print-tickets').modal('show')
-		},
-		printTickets() {
-			// var link = 'imprimir-precios/'+this.selected_articles.join('-')
-			// window.open(link)
-			$('#print-tickets').modal('show')
-		},
-			
+		// Metodos del header
 
-		// Edit articles
-		showEditArticles() {
-			$('#edit-articles').modal('show')
+		getArticlesBySelectedArticles() {
+			axios.get('articles/get-by-ids/'+this.selected_articles.selected_articles.join('-'))
+			.then(res => {
+				this.selected_articles.articles = res.data
+			})
+			.catch(err => {
+				console.log(err)
+			})
+		},
+		showCreateOffer() {
+			this.getArticlesBySelectedArticles()
+			$('#create-offer').modal('show')
+		},
+		createOffer() {
+			axios.post('articles/create-offer', {
+				articles: this.selected_articles.articles,
+				// porcentage: porcentage
+			})
+			.then(res => {
+				this.updateArticlesList()
+				$('#create-offer').modal('hide')
+				toastr.success('Ofertas creadas correctamente')
+			})
+			.catch(err => {
+				console.log(err)
+			})
+		},
+		showUpdateByPorcentage() {
+			$('#update-by-porcentage').modal('show')
 		},
 		updateByPorcentage(cost, price, decimals) {
 			axios.post('articles/update-by-porcentage', {
@@ -689,21 +720,59 @@ export default {
 			})
 			.then(res => {
 				// console.log(res.data)
-				if (this.is_filter) {
-					this.filter(this.filtro)
-				} else {
-					this.getArticles(this.pagination.current_page)
-				}
-				$('#edit-articles').modal('hide')
+				this.updateArticlesList()
+				$('#update-by-porcentage').modal('hide')
 			})
 			.catch(err => {
 				console.log(err)
 			})
 		},
-
+		showPrintTickets() {
+			$('#print-tickets').modal('show')
+		},
+		showImportar() {
+			$('#listado-importar').modal('show')
+		},
+		showDescargarPdf() {
+			$('#listado-descargar-pdf').modal('show')
+		},
+		showFiltrar() {
+			$('#listado-filtrar').modal('show')
+		},
 		uncheckProviders() {
 			this.filtro.providers = []
 		},
+		/* --------------------------------------------------------------------------
+			* Toma los valores de filtrado y los manda al metodo de filtrado 
+			de los artículos
+			* Setea la propiedad de filtrado como verdadera
+			* Agrega los articulos obtenidos a los articulos
+			* Setea los id de los artiuclos
+			* Filtra los proveedores para que aparescan solo una vez en la lista
+		-------------------------------------------------------------------------- */
+		filter(filtro) {
+			this.isLoading = true
+			axios.post('articles/filter', {
+				mostrar: filtro.mostrar,
+				ordenar: filtro.ordenar,
+				precio_entre: filtro.precio_entre,
+				providers: filtro.providers
+			})
+			.then( res => {
+				this.isLoading = false
+				this.is_filter = true
+				console.log(res.data)
+				this.articles = res.data
+				this.setArticlesId()
+				this.filterProviders()
+				$('#listado-filtrar').modal('hide')
+			})
+			.catch( err => {
+				console.log(err)
+			})
+		},
+		
+
 		getProviders() {
 			axios.get('providers')
 			.then( res => {
@@ -716,24 +785,26 @@ export default {
 				console.log(err)
 			})
 		},
+		filterProviders() {
+			if (this.rol == 'commerce') {
+				// Se crea una propiedad en los articulos donde estan solo 
+				// los proveedores que no se repiten
+				this.articles.forEach( article => {
+					var providers_ids = []
+					var providers = []
+					article.providers.forEach( provider => {
+						if (!providers_ids.includes(provider.id)) {
+							providers_ids.push(provider.id)
+							providers.push(provider)
+						}
+					})
+					article.providers_not_repeated = providers
+				})
+			}
+		},
 		providersHistory(article) {
 			this.article = article
 			$('#providers-history').modal('show')
-		},
-		filterProviders() {
-			// Se crea una propiedad en los articulos donde estan solo 
-			// los proveedores que no se repiten
-			this.articles.forEach( article => {
-				var providers_ids = []
-				var providers = []
-				article.providers.forEach( provider => {
-					if (!providers_ids.includes(provider.id)) {
-						providers_ids.push(provider.id)
-						providers.push(provider)
-					}
-				})
-				article.providers_not_repeated = providers
-			})
 		},
 	},
 	created() {
@@ -773,7 +844,7 @@ export default {
 	}
 }
 </script>
-<style>
+<style scoped>
 .col-btn {
 	display: flex;
 	flex-direction: row;
@@ -784,30 +855,6 @@ export default {
 	background: #3490dc;
 	color: #FFF;
 }
-/*
-.vender-table {
-	display: block;
-	width: 100%;
-	min-height: 400px;
-	max-height: 400px;
-	overflow-y: scroll;
-}
-
-.td-checkbox {
-	width: 50px;
-}
-
-.td-stock {
-	width: 70px;
-}
-
-thead, tbody tr {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-    /* even columns width , fix width of table too
-}
-*/
 
 .spinner-listado {
 	position: absolute;
@@ -815,5 +862,18 @@ thead, tbody tr {
 	height: 100vh;
 	background: #FFF;
 	z-index: 500;
+}
+
+.td-price {
+	position: relative;
+	font-weight: bold
+}
+
+.ticket-price {
+	position: absolute;
+	font-size: 30px;
+	color: #E23535;
+	top: -5px;
+	left: -20px;
 }
 </style>

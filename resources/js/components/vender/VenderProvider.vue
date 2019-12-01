@@ -87,11 +87,11 @@
 											v-model="article.amount">
 									<button @click="up(article)"
 											class="btn btn-primary btn-sm">
-										<i class="icon-up"></i>
+										<i class="icon-plus"></i>
 									</button>
 									<button @click="down(article)"
 											class="btn btn-primary btn-sm">
-										<i class="icon-down"></i>
+										<i class="icon-minus"></i>
 									</button>
 								</td>
 								<td>
@@ -159,7 +159,7 @@ export default {
 			article: {
 				bar_code: '',
 				name: '',
-				amount: 1,
+				amount: '',
 			},
 			possible_articles: [],
 			names: [],
@@ -292,7 +292,7 @@ export default {
 				})
 				.then(res => {
 					this.sale = res.data
-					console.log(res.data)
+					// console.log(res.data)
 					this.articles = []	
 					this.ventaRealizada = true
 					$('#successful-sale').modal('show')
@@ -365,7 +365,7 @@ export default {
 		resetInputs() {
 			this.article.bar_code = ''
 			this.article.name = ''
-			this.article.amount = 0
+			this.article.amount = ''
 			$('#bar-code').focus()
 		},
 		up(article) {

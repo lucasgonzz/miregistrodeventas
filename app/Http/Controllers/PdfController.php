@@ -7,6 +7,8 @@ require('fpdf/fpdf.php');
 use fpdf;
 use App\Article;
 use App\Sale;
+use App\Http\Controllers\Helpers\PdfSaleClient;
+use App\Http\Controllers\Helpers\PdfSaleCommerce;
 
 class PdfController extends Controller
 {
@@ -19,85 +21,95 @@ class PdfController extends Controller
 
 	function printTicket($articles_id, $company_name) {
 		require('barcode/barcode.php');
-		// $color = (bool)$color;
 		$user = Auth()->user();
 		$company_name = (bool)$company_name;
 		$pdf = new fpdf();
 		$pdf->addPage();
         $x = 10;
         $y = 10;
-        $mas_largo = 0;
-        $hubo_codigo_de_barras = false;
+        $largo_ticket = 0;
+        // $hubo_codigo_de_barras = false;
         $articles_id = explode('-', $articles_id);
-        $bar_code_printed = false;
+        // $bar_code_printed = false;
         foreach ($articles_id as $article_id) {
         	$article = Article::find($article_id);
 			$bar_code = $article->bar_code;
 			$price = $article->price;
+			$offer_price = $article->offer_price;
 			$name = $article->name;
 
 			// Se crea el directorio si no existe
 			$this->barCodeDirectory();
 
-			// Se crea la imagen del codigo de barras
+	        $widths = [];
+			// Se crea la imagen del codigo de barras si existe
 	        if (!is_null($bar_code)) {
 		        barcode(public_path().'/storage/barcodes/'.$user->id.'/'.$bar_code.'.png', 
 		                $bar_code, 20, 'horizontal', 'code128', 1);
 		        $width_image = getimagesize(public_path().'/storage/barcodes/'.$user->id.'/'.$bar_code.'.png');
-		        $image_w = $width_image[0] * 50 / 200;
+		        $widths['bar_code'] = $width_image[0] * 50 / 200;
 		        $bar_code_printed = true;
 	        }
 
-	        // Se obtienen los largos del nombre, del precio y del nombre de la compania
-	        $width_name = strlen($name)*2;
-	        $width_price = (strlen($price)+1)*5;
-	        $width_company_name = strlen($user->company_name)*1.7;
-	        
+	        // Se obtienen los largos del nombre, del precio, del preci de oferta
+	        // y del nombre de la compania
+	        $widths['name'] = strlen($name)*2;
+	        $widths['price'] = (strlen($this->price_ticket($price))+1)*5;
+	        if (!is_null($offer_price)) {
+	        	$offer_price_width = (strlen($this->price_ticket($offer_price))+1)*5;
+	        	$old_price_width = (strlen($this->price_ticket($price))+1)*3;
+	        	$widths['offer_price'] = $offer_price_width;
+	        	$widths['old_price'] = $old_price_width;
+	        	$widths['offer_price_old_price'] = $offer_price_width + $old_price_width;
+	        }
+	        $widths['company_name'] = strlen($user->company_name)*1.7;
+
 	        // Se obtiene el valor mas largo
 	        // entre el nombre, el precio y el codigo de barras
-	        $mas_largo = max(array(
-	        						$width_name, 
-	        						$width_price, 
-	        						isset($image_w) ? $image_w : null, 
-	        						isset($width_company_name) ? $width_company_name : null));
+	        $largo_ticket = max(array(
+	        						$widths['name'], 
+	        						$widths['price'], 
+	        						isset($widths['bar_code']) ? $widths['bar_code'] : null, 
+	        						isset($widths['offer_price_old_price']) ? $widths['offer_price_old_price'] : null, 
+	        						isset($widths['company_name']) ? $widths['company_name'] : null));
 
-	        // Si no va a entrar el tiket se empieza desde el margen izquierdo
-	        if ($x > 205-$mas_largo) {
+	        /* ----------------------------------------------------------------------------
+				* Se le resta el largo del futuro ticket a lo que queda de pagina 
+				* Si lo que va de x es mayor que queda de pagina se baja de linea
+				* Si se pinto un codigo de barra se baja mas que si no se pinto
+				* Si se pinto el nombre de la compania tambien
+	        ----------------------------------------------------------------------------  */
+	        if ($x > 205-$largo_ticket) {
 	        	$x = 10;
-	        	if ($bar_code_printed) {
-	        		if ($company_name) {
-	        			$y += 40;
-	        		} else {
-	        			$y += 35;
-	        		}
-	        	} else {
-	        		dd('asd');
-	        		if ($company_name) {
-	        			$y += 35;
-	        		} else {
-	        			$y += 30;
-	        		}
-	        	}
-	        	$bar_code_printed = false;
+	        	$y += 40;
 	        }
+        	if ($y + 40 > 280) {
+        		// dd($name);
+        		$y = 10;
+        		$pdf->AddPage();
+        	} 
 
-	        // Se dibuja la linea de la arriba
-        	$pdf->Line($x, $y, $x+$mas_largo+4, $y);
 
-	        // Se dibuja la linea de la izquierda
-	        if (is_null($bar_code)) {
-	        	if ($company_name) {
-	        		$pdf->Line($x, $y, $x, $y+25);
-	        	} else {
-	        		$pdf->Line($x, $y, $x, $y+20);
-	        	}
-	        } else {
-	        	if ($company_name) {
-	        		$pdf->Line($x, $y, $x, $y+35);
-	        	} else {
-	        		$pdf->Line($x, $y, $x, $y+30);
-	        	}
+	        /* ----------------------------------------------------------------------------
+				* Se dibuja la linea de arriba
+				* Se le suman cuatro porque tiene 2 de espacio entre los bordes
+	        ----------------------------------------------------------------------------  */
+        	$pdf->Line($x, $y, $x+$largo_ticket+4, $y);
+
+	        /* ----------------------------------------------------------------------------
+				* Se dibuja la linea de la izquierda
+				* Si no tiene codigo de barras se baja menos
+				* Si se pinta el nombre de la compania se baja mas
+				* Si se pinto el nombre de la compania tambien
+	        ----------------------------------------------------------------------------  */
+	        $alto_linea = 22;
+	        if (!is_null($bar_code)) {
+	        	$alto_linea += 10;
 	        }
+	        if ($company_name) {
+	        	$alto_linea += 4;
+	        }
+	        $pdf->Line($x, $y, $x, $y+$alto_linea);
 
 	        // Se aumenta x para que tenga espacio desde los bordes
 	        $x += 2;
@@ -106,72 +118,88 @@ class PdfController extends Controller
 			$pdf->SetTextColor(0,0,0);
 			$pdf->SetFont('Arial', '', 12);
 	        $pdf->SetXY($x, $y);
-	        $pdf->Cell($mas_largo, 7,$name,'B',0,'C');
+	        $pdf->Cell($largo_ticket, 7,$name,'B',0,'C');
 			
-			// Se escribe el precio
+	        /* ----------------------------------------------------------------------------
+				* Se escribe el precio
+				* Primero el signo de $ (peso)
+	        ----------------------------------------------------------------------------  */
 	        $pdf->SetXY($x, $y+9);
 	        $pdf->Cell(4,4,'$',0,0,'L');
+
+	        /* ----------------------------------------------------------------------------
+				* Se tiene precio de oferta se escribe en rojo
+				* Se le restan 4 al tamaño de la celda porque 4 es lo que 
+				mide el signo de peso
+				* Se dibuja el precio y despues se lo tacha
+				* Se coloca X en el valor de x mas lo que mide el precio de oferta
+				para que desde ahi arranque a dibujarce el precio actual
+	        ----------------------------------------------------------------------------  */
 			$pdf->SetFont('Arial', '', 28);
-			// if ($color) {
-			// 	$pdf->SetTextColor(236, 35, 35);
-			// }
-			$pdf->SetTextColor(236, 35, 35);
-	        $pdf->Cell($mas_largo-4,10,$price,0,0,'L');
+			if (!is_null($offer_price)) {
+				$pdf->SetTextColor(226, 53, 53);
+		        $pdf->Cell($largo_ticket-4,10,$this->price_ticket($offer_price),0,0,'L');
+
+		        // Se dibuja el precio y despues se lo tacha
+		        $pdf->SetTextColor(0,0,0);
+		        $pdf->SetFont('Arial', '', 12);
+		        $pdf->SetXY($x+$widths['offer_price'], $y+9);
+		        $pdf->Cell(4,4,'$',0,0,'L');
+		        $pdf->SetX($x+$widths['offer_price']+2);
+		        $pdf->SetFont('Arial', '', 16);
+		        $pdf->Cell($widths['old_price'], 5, $this->price_ticket($price),0,0);
+		        $pdf->SetLineWidth(.6);
+		        $pdf->Line($x+$widths['offer_price'], $y+10, $x+$widths['offer_price_old_price']+1, $y+12);
+			} else {
+				$pdf->SetTextColor(0,0,0);
+		        $pdf->Cell($largo_ticket-4,10,$this->price_ticket($price),0,0,'L');
+			}
 
 	        // Si hay codigo de barra se escribe la imagen
 	        if (!is_null($bar_code)) {
-		        $pdf->Image(public_path().'/storage/barcodes/'.$user->id.'/'.$bar_code.'.png',$x,$y+20,$image_w,0,'PNG');
+		        $pdf->Image(
+		        				public_path().'/storage/barcodes/'.$user->id.'/'.$bar_code.'.png',
+		        				$x,
+		        				$y+20,
+		        				$widths['bar_code'],
+		        				0,
+		        				'PNG'
+		        			);
 	        }
 
+	        $pdf->SetLineWidth(.3);
 	        if ($company_name) {
 	        	$pdf->SetFont('Arial', 'I', 10);
 	        	$pdf->SetTextColor(0,0,0);
 	        	if (!is_null($bar_code)) {
 	        		$pdf->SetXY($x, $y+30);
-	        		$pdf->Write(5,$user->company_name);
+	        		$pdf->Cell($largo_ticket,5,$user->company_name,'T',0);
 	        	} else {
 	        		$pdf->SetXY($x, $y+20);
-	        		$pdf->Write(5,$user->company_name);
+	        		$pdf->Cell($largo_ticket,5,$user->company_name,'T',0);
 	        	}
 	        }
 
-	        if (is_null($bar_code)) {
-	        	if ($company_name) {
-		        	// Se dibuja la linea de la derecha
-		        	$pdf->Line($x+$mas_largo+2, $y, $x+$mas_largo+2, $y+25);
-		        	// Se dibuja la linea de la abajo
-	        		$pdf->Line($x-2, $y+25, $x+$mas_largo+4-2, $y+25);
-	        	} else {
-		        	// Se dibuja la linea de la derecha
-		        	$pdf->Line($x+$mas_largo+2, $y, $x+$mas_largo+2, $y+20);
-		        	// Se dibuja la linea de la abajo
-	        		$pdf->Line($x-2, $y+20, $x+$mas_largo+4-2, $y+20);
-	        	}
-	        } else {
-	        	if ($company_name) {
-		        	// Se dibuja la linea de la derecha
-		        	$pdf->Line($x+$mas_largo+2, $y, $x+$mas_largo+2, $y+35);
-		        	// Se dibuja la linea de la abajo
-	        		$pdf->Line($x-2, $y+35, $x+$mas_largo+4-2, $y+35);
-	        	} else {
-		        	// Se dibuja la linea de la derecha
-		        	$pdf->Line($x+$mas_largo+2, $y, $x+$mas_largo+2, $y+30);
-		        	// Se dibuja la linea de la abajo
-	        		$pdf->Line($x-2, $y+30, $x+$mas_largo+4-2, $y+30);
-	        	}
-	        }
+	        // Linea derecha
+		    $pdf->Line($x+$largo_ticket+2, $y, $x+$largo_ticket+2, $y+$alto_linea);
+		    // Linea de abajo
+	        $pdf->Line($x-2, $y+$alto_linea, $x+$largo_ticket+2, $y+$alto_linea);
 
 
 	        // Se aumenta x con el campo mas largo y se le suman 4
 	        // 2 del espacio que hay con la linea izquierda
 	        // 2 del espacio que hay con la linea de la derecha
 	        // 4 mas para que el proximo este separado
-	        $x += $mas_largo+6;
+	        $x += $largo_ticket+6;
 
 	        // Cada letra en 26 mide 5
         }
         $pdf->Output();
         exit;
+	}
+
+	function price_ticket($price) {
+		return number_format($price, 2, ',', '.');
 	}
 
 	/* -------------------------------------------------------------------------------
@@ -180,67 +208,15 @@ class PdfController extends Controller
 		*
  	-------------------------------------------------------------------------------*/
 
-	function ticket_client($company_name, $borders, $per_page, $sale_id) {
-        $sale = Sale::find($sale_id);
-        $client = $sale->client;
-        $pdf = new PdfTicketClient($client, (bool)$company_name);
-        if ((bool)$borders) {
-        	$borders = 1;
-        } else {
-        	$borders = 'B';
-        }
-        $pdf->addPage();
-        $pdf->setFont('Arial', '', 12);
-
-        $articles = $sale->articles;
-
-		if ($per_page != 0) {
-			$count = 0;
-			$count_total = 0;
-			$cost = 0;
-			$price = 0;
-			foreach ($articles as $article) {
-				$count_total++;
-				if ($count < $per_page && $count_total < count($articles)) {
-					$cost += $article->cost;
-					$price += $article->price;
-					$count++;
-					$this->printArticle($pdf, $article, $borders);
-				} else {
-		        	$pdf->SetY(-40);
-	        		$pdf->Cell(0,5,$count.' arículos en esta página',0,0,'R');
-	        		// $pdf->Ln();
-	        		// $pdf->Cell(0,5,'Suma de los costos de esta página: $'.$this->price($cost),0,0,'R');
-	        		$pdf->Ln();
-	        		$pdf->Cell(0,5,'Suma de los precios de esta página: $'.$this->price($price),0,0,'R');
-	        		if (count($articles) > $count_total) {
-	        			$pdf->addPage();
-	        		}
-					$count = 0;
-					$cost = 0;
-					$price = 0;
-				}				
-			}
-		} else {
-			foreach ($articles as $article) {
-				$this->printArticle($pdf, $article, $borders);
-			}
-		}
-
-        
-        $pdf->Output();
-        exit;
+	function sale_client($company_name, $borders, $sale_id) {
+        $pdf = new PdfSaleClient($sale_id, (bool)$company_name, (bool)$borders);
+        $pdf->printSale();
 	}
 
-	function ticket_commerce($company_name, $borders, $per_page, $sale_id) {
-        $sale = Sale::find($sale_id);
-        $client = $sale->client;
-        $pdf = new PdfTicketCommerce($client, (bool)$company_name);
-        if ((bool)$borders) {
-        	$borders = 1;
-        } else {
-        	$borders = 'B';
-        }
+	function sale_commerce($company_name, $borders, $sale_id) {
+        $pdf = new PdfSaleCommerce($sale_id, (bool)$company_name, (bool)$borders);
+        $pdf->printSale();
+        
         $articles = $sale->articles;
         $pdf->addPage();
         $pdf->setFont('Arial', '', 12);
@@ -256,14 +232,14 @@ class PdfController extends Controller
 					$cost += $article->cost;
 					$price += $article->price;
 					$count++;
-					$this->printArticle($pdf, $article, $borders, true);
+					$pdf->printArticle($pdf, $article, $borders, true);
 				} else {
 		        	$pdf->SetY(-40);
 	        		$pdf->Cell(0,5,$count.' arículos en esta página',0,0,'R');
 	        		$pdf->Ln();
-	        		$pdf->Cell(0,5,'Suma de los costos de esta página: $'.$this->price($cost),0,0,'R');
+	        		$pdf->Cell(0,5,'Suma de los costos de esta página: $'.$pdf->price($cost),0,0,'R');
 	        		$pdf->Ln();
-	        		$pdf->Cell(0,5,'Suma de los precios de esta página: $'.$this->price($price),0,0,'R');
+	        		$pdf->Cell(0,5,'Suma de los precios de esta página: $'.$pdf->price($price),0,0,'R');
 	        		if (count($articles) > $count_total) {
 	        			$pdf->addPage();
 	        		}
@@ -274,35 +250,12 @@ class PdfController extends Controller
 			}
 		} else {
 			foreach ($articles as $article) {
-				$this->printArticle($pdf, $article, $borders, true);
+				$pdf->printArticle($pdf, $article, $borders, true);
 			}
 		}
 
         $pdf->Output();
         exit;
-	}
-
-
-	function printArticle($pdf, $article, $borders, $commerce = false) {
-		if ($commerce) {
-			$pdf->SetX(5);
-		} else {
-			$pdf->SetX(10);
-		}
-		$pdf->Cell(40,7,$article->bar_code,$borders,0);
-    	$name = $article->name;
-    	if (strlen($name) > 20) {
-    		$name = substr($article->name, 0, 20) . ' ..';
-    	}
-    	$pdf->Cell(45,7,$name,$borders,0);
-    	$pdf->Cell($commerce ? 25 : 27,7,'$'.$this->price($article->cost),$borders,0,'C');
-    	$pdf->Cell($commerce ? 25 : 27,7,'$'.$this->price($article->price),$borders,0,'C');
-    	$pdf->Cell($commerce ? 15 : 20,7,$article->pivot->amount,$borders,0,'C');
-    	if ($commerce) {
-	    	$pdf->Cell(25,7,'$'.$article->cost * $article->pivot->amount,$borders,0,'L');
-    	}
-    	$pdf->Cell($commerce ? 25 : 30,7,'$'.$article->price * $article->pivot->amount,$borders,0,'L');
-    	$pdf->Ln();
 	}
 
 	/* -------------------------------------------------------------------------------
@@ -383,7 +336,7 @@ class PdfController extends Controller
 					}
 					if ($column=='price' || $column=='cost' || $column=='previus_price') {
 						$align = 'R';
-						$article->{$column} = $this->price($article->{$column});
+						$article->{$column} = $pdf->price($article->{$column});
 					}
 					if ($column=='stock') {
 						$align = 'R';
@@ -415,189 +368,9 @@ class PdfController extends Controller
 	}
 }
 
-class PdfTicketClient extends fpdf {
-
-	function __construct($client, $company_name) {
-		parent::__construct();
-		$this->client = $client;
-		$this->company_name = $company_name;
-	}
-	
-	function Header() {
-		$this->SetFont('Arial', '', 11, 'C');
-		$this->Write(5,date('d/m/y'));
-		$this->SetX(-60);
-		$this->Write(5,'Cliente: '.$this->client->name);
-		$this->SetY(20);
-		if ($this->company_name) {
-			$this->SetFont('Arial', 'B', 16, 'C');
-			$this->Cell(0,5,Auth()->user()->company_name,0,0,'C');
-			$this->SetY(30);
-		}
-		$this->SetX(10);
-		$this->SetFont('Arial', 'B', 14, 'C');
-		$this->Cell(40, 5, 'Codigo', 0, 0, 'C');
-		$this->Cell(45, 5, 'Artículo', 0, 0, 'C');
-		$this->Cell(27, 5, 'Costo', 0, 0, 'C');
-		$this->Cell(27, 5, 'Precio', 0, 0, 'C');
-		$this->Cell(20, 5, 'Cant.', 0, 0, 'C');
-		$this->Cell(30, 5, 'Sub Total', 0, 0, 'C');
-		$this->SetLineWidth(1);
-		$this->SetDrawColor(100, 174, 238);
-		if ($this->company_name) {
-			$this->SetY(39);
-			$this->Line(10, 37, 200, 37);
-		} else {
-			$this->Line(10, 27, 200, 27);
-			$this->SetY(29);
-		}
-	}
-
-	function Footer() {
-		$this->SetFont('Arial', '', 11);
-		$this->AliasNbPages();
-		$this->SetY(-20);
-		$this->Write(5,'Hoja '.$this->PageNo().'/{nb}');
-	}
-}
-
-class PdfTicketCommerce extends fpdf {
-
-	function __construct($client, $company_name) {
-		parent::__construct();
-		$this->client = $client;
-		$this->company_name = $company_name;
-	}
-	
-	function Header() {
-		$this->SetFont('Arial', '', 11, 'C');
-		$this->Write(5,date('d/m/y'));
-		$this->SetX(-60);
-		$this->Write(5,'Cliente: '.$this->client->name);
-		$this->SetY(20);
-		if ($this->company_name) {
-			$this->SetFont('Arial', 'B', 16, 'C');
-			$this->Cell(0,5,Auth()->user()->company_name,0,0,'C');
-			$this->SetY(30);
-		}
-		$this->SetX(5);
-		$this->SetFont('Arial', 'B', 14, 'C');
-		$this->Cell(40, 5, 'Codigo', 0, 0, 'C');
-		$this->Cell(45, 5, 'Artículo', 0, 0, 'C');
-		$this->Cell(25, 5, 'Costo', 0, 0, 'C');
-		$this->Cell(25, 5, 'Precio', 0, 0, 'C');
-		$this->Cell(15, 5, 'Cant.', 0, 0, 'C');
-		$this->Cell(25, 5, 'T. Costo', 0, 0, 'C');
-		$this->Cell(25, 5, 'Sub Total', 0, 0, 'C');
-		$this->SetLineWidth(1);
-		$this->SetDrawColor(100, 174, 238);
-		if ($this->company_name) {
-			$this->SetY(39);
-			$this->Line(5, 37, 205, 37);
-		} else {
-			$this->Line(5, 27, 205, 27);
-			$this->SetY(29);
-		}
-	}
-
-	function Footer() {
-		$this->SetFont('Arial', '', 11);
-		$this->AliasNbPages();
-		$this->SetY(-20);
-		$this->Write(5,'Hoja '.$this->PageNo().'/{nb}');
-	}
-}
 
 
-class Pdf extends fpdf {
 
-	function __construct($orientation, $columns, $header) {
-		if ($orientation == 'normal') {
-			parent::__construct('P','mm','A4');
-		} else {
-			parent::__construct('L','mm','A4');
-		}
-		$this->orientation = $orientation;
-		$this->columns = $columns;
-		$this->header = $header;
-	}
 
-	function Header() {
 
-		// Margenes
-		$width = 0;
-		foreach ($this->columns as $column => $w) {
-			$width += $w;
-		}
-		if ($this->orientation == 'normal') {
-			$margins = (210 - $width) / 2;
-		} else {
-			$margins = (297 - $width) / 2;
-		}
-		$this->SetMargins($margins, 10, $margins);
 
-		$this->SetFont('Arial','',11);
-		// Marca de la empresa
-		$this->SetX(10);
-		$this->Write(5,'Miregistrodeventas.com');
-
-		$this->SetY(15);
-		$this->SetX(10);
-
-		if (!is_null($this->header)) {
-			// Fecha
-			if (in_array('date', $this->header)) {
-				$this->Write(5,date('d/m/y'));
-			}
-
-			// Nombre del negocio del usuario
-			if (in_array('company_name', $this->header)) {
-				$this->SetY(20);
-				$this->SetFont('Arial','B',16);
-				$this->Cell(0,5,Auth()->user()->company_name,0,0,'C');
-			}
-		}
-		$this->SetY(30);
-		$this->setFont('Arial', 'B', 12);
-
-		foreach ($this->columns as $column => $w) {
-			switch ($column) {
-				case 'bar_code':
-					$column_es = 'Código';
-					break;
-				case 'name':
-					$column_es = 'Nombre';
-					break;
-				case 'cost':
-					$column_es = 'Costo';
-					break;
-				case 'price':
-					$column_es = 'Precio';
-					break;
-				case 'stock':
-					$column_es = 'Stock';
-					break;
-				case 'previus_price':
-					$column_es = 'P. Anterior';
-					break;
-				case 'created_at':
-					$column_es = 'Ingresado';
-					break;
-				case 'updated_at':
-					$column_es = 'Actualizado';
-					break;
-			}
-			$this->Cell($w,5,$column_es,0,0,'C');
-			$this->Line($margins, 37, $margins+$width, 37);
-		}
-		$this->Ln(10);
-	}
-
-	function Footer() {
-		$this->AliasNbPages();
-		$this->SetY(-15);
-		$this->SetX(10);
-		$this->setFont('Arial', '', 11);
-		$this->Write(5,$this->PageNo().'/{nb}');
-	}
-}
