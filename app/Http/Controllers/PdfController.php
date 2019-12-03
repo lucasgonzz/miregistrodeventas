@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-require('fpdf/fpdf.php');
+// require('fpdf/fpdf.php');
 use fpdf;
 use App\Article;
 use App\Sale;
@@ -21,6 +21,7 @@ class PdfController extends Controller
 
 	function printTicket($articles_id, $company_name) {
 		require('barcode/barcode.php');
+		require('fpdf/fpdf.php');
 		$user = Auth()->user();
 		$company_name = (bool)$company_name;
 		$pdf = new fpdf();
@@ -217,45 +218,45 @@ class PdfController extends Controller
         $pdf = new PdfSaleCommerce($sale_id, (bool)$company_name, (bool)$borders);
         $pdf->printSale();
         
-        $articles = $sale->articles;
-        $pdf->addPage();
-        $pdf->setFont('Arial', '', 12);
+  //       $articles = $sale->articles;
+  //       $pdf->addPage();
+  //       $pdf->setFont('Arial', '', 12);
 
-        if ($per_page != 0) {
-			$count = 0;
-			$count_total = 0;
-			$cost = 0;
-			$price = 0;
-			foreach ($articles as $article) {
-				$count_total++;
-				if ($count < $per_page && $count_total < count($articles)) {
-					$cost += $article->cost;
-					$price += $article->price;
-					$count++;
-					$pdf->printArticle($pdf, $article, $borders, true);
-				} else {
-		        	$pdf->SetY(-40);
-	        		$pdf->Cell(0,5,$count.' arículos en esta página',0,0,'R');
-	        		$pdf->Ln();
-	        		$pdf->Cell(0,5,'Suma de los costos de esta página: $'.$pdf->price($cost),0,0,'R');
-	        		$pdf->Ln();
-	        		$pdf->Cell(0,5,'Suma de los precios de esta página: $'.$pdf->price($price),0,0,'R');
-	        		if (count($articles) > $count_total) {
-	        			$pdf->addPage();
-	        		}
-					$count = 0;
-					$cost = 0;
-					$price = 0;
-				}				
-			}
-		} else {
-			foreach ($articles as $article) {
-				$pdf->printArticle($pdf, $article, $borders, true);
-			}
-		}
+  //       if ($per_page != 0) {
+		// 	$count = 0;
+		// 	$count_total = 0;
+		// 	$cost = 0;
+		// 	$price = 0;
+		// 	foreach ($articles as $article) {
+		// 		$count_total++;
+		// 		if ($count < $per_page && $count_total < count($articles)) {
+		// 			$cost += $article->cost;
+		// 			$price += $article->price;
+		// 			$count++;
+		// 			$pdf->printArticle($pdf, $article, $borders, true);
+		// 		} else {
+		//         	$pdf->SetY(-40);
+	 //        		$pdf->Cell(0,5,$count.' arículos en esta página',0,0,'R');
+	 //        		$pdf->Ln();
+	 //        		$pdf->Cell(0,5,'Suma de los costos de esta página: $'.$pdf->price($cost),0,0,'R');
+	 //        		$pdf->Ln();
+	 //        		$pdf->Cell(0,5,'Suma de los precios de esta página: $'.$pdf->price($price),0,0,'R');
+	 //        		if (count($articles) > $count_total) {
+	 //        			$pdf->addPage();
+	 //        		}
+		// 			$count = 0;
+		// 			$cost = 0;
+		// 			$price = 0;
+		// 		}				
+		// 	}
+		// } else {
+		// 	foreach ($articles as $article) {
+		// 		$pdf->printArticle($pdf, $article, $borders, true);
+		// 	}
+		// }
 
-        $pdf->Output();
-        exit;
+  //       $pdf->Output();
+  //       exit;
 	}
 
 	/* -------------------------------------------------------------------------------

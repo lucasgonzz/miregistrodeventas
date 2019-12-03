@@ -39,6 +39,7 @@
 						<h6 class="h6">
 							<strong>Complete con los datos del artículo que quiera ingresar</strong>
 						</h6>
+							
 						<div class="form-group">
 							<label for="bar_code">Codigo de Barras</label>
 							<input 
@@ -58,6 +59,7 @@
 								<input type="text" 
 										@keyup="setPossibleNames"
 										@keyup.enter="changeToCost"
+										required 
 										autocomplete="off" 
 										class="form-control focus-red input-search" 
 										placeholder="Ingrese el nombre"
@@ -82,6 +84,7 @@
 								<input type="number" 
 										class="form-control focus-red" 
 										placeholder="Ingrese el costo"
+										required 
 										id="cost"
 										@keyup.enter="changeToPrice"
 										@keyup="calculatePorcentageForPrice"
@@ -95,6 +98,7 @@
 								<input type="number" 
 										class="form-control focus-red" 
 										placeholder="Ingrese el precio"
+										required 
 										id="price"
 										@keyup.enter="changeToDate"
 										v-model="article.price">
@@ -143,6 +147,7 @@
 									<select v-model="article.provider" 
 											@keyup.enter="changeToStock"
 											name="providers" 
+											required 
 											id="providers" 
 											class="form-control">
 										<option v-for="provider in providers" 
@@ -199,7 +204,7 @@
 					<div class="card-footer p-0">
 						<div class="row m-0">
 							<div class="col-4 p-0">
-								<button @click="showPrintTickets" 
+								<button @click.prevent="showPrintTickets" 
 										class="btn btn-block btn-left btn-primary m-0">
 									<i class="icon-tag"></i>
 									Tickets ({{ articles_id_to_print.length }})
@@ -410,28 +415,50 @@ export default {
 		remember_date_() {
 			this.remember_date = true
 		},
+		validate() {
+			var ok = true
+			if (this.article.name == '') {
+				ok = false
+				toastr.error('El campo nombre es obligatorio')
+				$('#name').focus()
+			}
+			if (this.article.cost == '') {
+				ok = false
+				toastr.error('El campo costo es obligatorio')
+				$('#cost').focus()
+			}
+			if (this.article.price == '') {
+				ok = false
+				toastr.error('El campo precio es obligatorio')
+				$('#price').focus()
+			}
+			return ok
+		},
 
 		// Articles
 		saveArticle() {
-			axios.post('articles', {
-				article: this.article
-			})
-			.then( res => {
-				var article = res.data
-				if (this.article.bar_code != '') {
-					this.bar_codes.push(this.article.bar_code)
-				}
-				this.names.push(this.article.name)
-				this.articles.push(article)
-				this.articles_id_to_print.push(article.id)
-				this.clearArticle()
-				toastr.success('Artículo guardado correctamente')
-				$('#bar_code').focus()
-			})
-			.catch( err => {
-				toastr.error('Error al guardar el artículo, revise sus datos e intentelo nuevamente por favor')
-				console.log(err)
-			})
+			var ok = this.validate()
+			if ( ok ) {
+				axios.post('articles', {
+					article: this.article
+				})
+				.then( res => {
+					var article = res.data
+					if (this.article.bar_code != '') {
+						this.bar_codes.push(this.article.bar_code)
+					}
+					this.names.push(this.article.name)
+					this.articles.push(article)
+					this.articles_id_to_print.push(article.id)
+					this.clearArticle()
+					toastr.success('Artículo guardado correctamente')
+					$('#bar_code').focus()
+				})
+				.catch( err => {
+					toastr.error('Error al guardar el artículo, revise sus datos e intentelo nuevamente por favor')
+					console.log(err)
+				})
+			}
 		},
 		updateArticle() {
 			axios.put('articles/'+this.article.id, {
@@ -467,6 +494,7 @@ export default {
 			this.article.name = article.name
 			this.article.cost = article.cost
 			this.article.price = article.price
+			this.article.offer_price = article.offer_price
 			if (this.rol == 'commerce') {
 				this.article.provider = article.providers[0].id
 				this.article.providers = article.providers

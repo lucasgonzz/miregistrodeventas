@@ -25,6 +25,7 @@ import Ingresar from './components/ingresar/Ingresar.vue'
 import VenderProvider from './components/vender/VenderProvider.vue'
 import VenderCommerce from './components/vender/VenderCommerce.vue'
 import CodigosDeBarra from './components/codigos-de-barra/CodigosDeBarra.vue'
+import Empleados from './components/empleados/Empleados.vue'
 // Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('nav-component', navComponent);
 Vue.component('ventas', Ventas);
@@ -33,6 +34,7 @@ Vue.component('ingresar', Ingresar);
 Vue.component('vender-provider', VenderProvider);
 Vue.component('vender-commerce', VenderCommerce);
 Vue.component('codigos-de-barra', CodigosDeBarra);
+Vue.component('empleados', Empleados);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

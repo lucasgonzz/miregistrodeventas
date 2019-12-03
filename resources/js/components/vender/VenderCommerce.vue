@@ -67,12 +67,14 @@
 					</thead>
 					<tbody>
 						<tr v-for="article in articles">
-							<th scope="row" v-if="article.offer_price">
+							<td v-if="article.offer_price"
+								class="td-price text-danger">
+								<i class="icon-sale-ticket ticket-price"></i>
 								${{ article.offer_price }}
-							</th>
-							<th scope="row" v-else>
+							</td>
+							<td class="td-price" v-else>
 								${{ article.price }}
-							</th>
+							</td>
 							<td>{{ article.name }}</td>
 							<td>{{ article.stock }}</td>
 							<td>
@@ -140,7 +142,11 @@ export default {
 				this.total += parseFloat(article.price)
 			}
 			this.cantidad_unidades++
-			article.stock--
+			if (article.stock != 'No tiene datos' && article.stock) {
+				article.stock--
+			} else {
+				article.stock = 'No tiene datos'
+			}
 			if (!repeated) {
 				this.cantidad_articulos++
 			}
@@ -208,6 +214,7 @@ export default {
 				if (this.possible_articles.length) {
 					axios.get('articles/get-by-name/'+this.article.name)
 					.then(res => {
+						// console.log(res.data)
 						var article = res.data
 						article.amount = 1
 						this.articles.push(article)
@@ -249,7 +256,9 @@ export default {
 		down(article) {
 			if (article.amount > 1) {
 				article.amount--
-				article.stock++
+				if (article.stock != 'No tiene datos') {
+					article.stock++
+				}
 				this.total -= Number(article.price)
 				this.cantidad_unidades--
 
@@ -291,7 +300,20 @@ export default {
 }
 
 .list {
-	width: 98%
+	width: 98%;
+	z-index: 500;
 }
 
+.td-price {
+	position: relative;
+	font-weight: bold;
+}
+
+.ticket-price {
+	position: absolute;
+	font-size: 30px;
+	color: #E23535;
+	top: -5px;
+	left: 0px;
+}
 </style>

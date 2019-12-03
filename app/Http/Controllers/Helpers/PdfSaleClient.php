@@ -106,7 +106,7 @@ class PdfSaleClient extends fpdf {
 	function printArticle($article) {
 		$this->SetX(5);
 		$this->SetDrawColor(51,51,51);
-		$this->SetLineWidth(.6);
+		$this->SetLineWidth(.4);
 		$this->SetFont('Arial', '', 12);
 		
 		$this->Cell(50,10,$article->bar_code,$this->borders,0,'L');
@@ -137,6 +137,14 @@ class PdfSaleClient extends fpdf {
 		}
 	}
 
+	function getTotalUnidades() {
+		$total_unidades = 0;
+		foreach ($this->sale->articles as $article) {
+			$total_unidades += $article->pivot->amount;
+		}
+		return $total_unidades;
+	}
+
 	function __Header() {
 		$user = Auth()->user();
 		$this->SetXY(10, 10);
@@ -153,15 +161,16 @@ class PdfSaleClient extends fpdf {
 		// Se escribe la fecha
 		$this->SetXY(100, 10);
 		$this->SetFont('Arial', '', 11, 'C');
-		$this->Cell(50,5,'Venta n°: '.$this->sale->num_sale,0,0,'R');
-		$this->Cell(50,5,'Cliente: '.$client->name,0,0,'R');
+		$this->Cell(50,5,'Venta n°: '.$this->sale->num_sale,0,0,'L');
+		$this->Cell(50,5,'Cliente: '.$client->name,0,0,'L');
 		$this->Ln();
 		$this->SetX(100);
-		$this->Cell(50,5,'Fecha: '.date_format($this->sale->created_at, 'd/m/y'),0,0,'R');
-		$this->Cell(50,5,'Hora: '.date_format($this->sale->created_at, 'H:m'),0,0,'R');
+		$this->Cell(50,5,'Fecha: '.date_format($this->sale->created_at, 'd/m/y'),0,0,'L');
+		$this->Cell(50,5,'Hora: '.date_format($this->sale->created_at, 'H:m'),0,0,'L');
 		$this->Ln();
 		$this->SetX(100);
-		$this->Cell(50,5,'Artículos vendidos: '.count($this->sale->articles),0,0,'R');
+		$this->Cell(50,5,'Artículos vendidos: '.count($this->sale->articles),0,0,'L');
+		$this->Cell(50,5,'Unidades vendidas: '.$this->getTotalUnidades(),0,0,'L');
 		$this->SetLineWidth(.6);
 		$this->Line(5,27,205,27);
 

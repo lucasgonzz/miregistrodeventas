@@ -37,6 +37,9 @@ class MainController extends Controller
     function provider_ventas() {
         return view('provider.main.ventas');
     }
+    function provider_empleados() {
+        return view('provider.main.empleados');
+    }
 
     // Commerce
     function commerce_vender() {
@@ -50,6 +53,9 @@ class MainController extends Controller
     }
     function commerce_ventas() {
         return view('commerce.main.ventas');
+    }
+    function commerce_empleados() {
+        return view('commerce.main.empleados');
     }
     function commerce_config() {
         return view('commerce.main.config');

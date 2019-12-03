@@ -165,7 +165,7 @@ class SaleController extends Controller
     }
 
     function pdf($sales_id, $company_name, $articles_cost, $articles_subtotal_cost, $articles_total_price, 
-                            $articles_total_cost, $borders, $per_page) {
+                            $articles_total_cost, $borders) {
         $sales_id = explode('-', $sales_id);
         $pdf = new PdfPrintSale(
                                     $sales_id, 
@@ -176,7 +176,7 @@ class SaleController extends Controller
                                     (bool)$articles_total_cost, 
                                     (bool)$borders
                                 );
-        $pdf->printSales($per_page);
+        $pdf->printSales();
         // $print_article = new PdfPrintArticle();
         
     }

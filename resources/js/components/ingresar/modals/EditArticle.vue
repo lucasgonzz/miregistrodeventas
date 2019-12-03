@@ -75,6 +75,13 @@
 						Para agregar decimales (centavos) coloque un punto para separar las unidades	
 					</small>
 				</div>
+				<div class="form-group" v-show="article.offer_price">
+					<label for="price">Precio de oferta</label>
+					<input type="number" name="price" v-model="article.offer_price" class="form-control focus-red">
+					<small class="form-text text-muted">
+						Para agregar decimales (centavos) coloque una coma para separar las unidades	
+					</small>
+				</div>
 				<div class="form-group">
 					<label for="stock">Cantidad para agregar</label>
 					<input type="number" 

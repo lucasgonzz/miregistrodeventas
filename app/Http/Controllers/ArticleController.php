@@ -147,6 +147,14 @@ class ArticleController extends Controller
         $article = Article::find($id);
         $updated_article = $request->article;
 
+        if (isset($updated_article['new_bar_code'])) {
+            $article->bar_code = $updated_article['new_bar_code'];
+        }
+
+        if (isset($updated_article['offer_price'])) {
+            $article->offer_price = $updated_article['offer_price'];
+        }
+
         if ($article->price != $updated_article['price']) {
             $article->previus_price = $article->price;
         }
@@ -248,6 +256,12 @@ class ArticleController extends Controller
 
     function destroy($id) {
         Article::find($id)->delete();
+    }
+
+    function destroyArticles($ids) {
+        foreach (explode('-', $ids) as $article_id) {
+            Article::find($article_id)->delete();
+        }
     }
 
     function deleteOffer($id) {

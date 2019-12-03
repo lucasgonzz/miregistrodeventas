@@ -17,13 +17,13 @@ class UsersTableSeeder extends Seeder
         	'company_name' => 'Lucas Distribuidora',
         	'password' => bcrypt('1234'),
         ]);
-        $lucas->roles()->sync([1]);
+        $lucas->roles()->sync([1,2]);
 
         $marcos = User::create([
         	'name' => 'Marcos',
         	'company_name' => 'Lo de Marcos',
         	'password' => bcrypt('1234'),
         ]);
-        $marcos->roles()->sync([2]);
+        $marcos->roles()->sync([1,3]);
     }
 }

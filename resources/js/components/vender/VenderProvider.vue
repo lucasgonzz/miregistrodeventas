@@ -80,7 +80,7 @@
 						<tbody class="vender-table">
 							<tr v-for="article in articles">
 								<td>{{ article.name }}</td>
-								<th scope="row">${{ price(article.price) }}</th>
+								<th scope="row">{{ price(article.price) }}</th>
 								<td>
 									<input type="text"
 											class="form-control input-amount"
@@ -95,7 +95,7 @@
 									</button>
 								</td>
 								<td>
-									${{ price(parseFloat(article.price) * article.amount) }}
+									{{ price(parseFloat(article.price) * article.amount) }}
 								</td>
 								<td>
 									<button @click="removeArticle(article)"
@@ -176,7 +176,9 @@ export default {
 		}
 	},
 	methods: {
-
+		price(p) {
+			return numeral(p).format('$0,0.00')
+		},
 		/* 
 		________________________________________________________________
 		|																|
@@ -324,7 +326,7 @@ export default {
 				total += article.price * article.amount
 			})
 			// return price(total)
-			return total
+			return this.price(total)
 		},
 		cantidadArticulos() {
 			var cantidad_articulos = 0
@@ -339,27 +341,27 @@ export default {
 		isFloat(n){
 			return Number(n) === n && n % 1 !== 0;
 		},
-		price(p, punto=true) {
-			if (typeof(p) === 'number') {
-				console.log(p)
-				p = p.toString()+'.00'
-			}
-			var centavos = p.split('.')[1]
-			var price = p.split('.')[0]
-			var formated_price
-			if (punto) {
-				formated_price = numeral(price).format('0,0').split(',').join('.')
-				if (centavos != '00') {
-					formated_price = formated_price + ',' + centavos
-				}
-			} else {
-				formated_price = price
-				if (centavos != '00') {
-					formated_price = formated_price + '.' + centavos
-				}
-			}
-			return formated_price
-		},
+		// price(p, punto=true) {
+		// 	if (typeof(p) === 'number') {
+		// 		console.log(p)
+		// 		p = p.toString()+'.00'
+		// 	}
+		// 	var centavos = p.split('.')[1]
+		// 	var price = p.split('.')[0]
+		// 	var formated_price
+		// 	if (punto) {
+		// 		formated_price = numeral(price).format('0,0').split(',').join('.')
+		// 		if (centavos != '00') {
+		// 			formated_price = formated_price + ',' + centavos
+		// 		}
+		// 	} else {
+		// 		formated_price = price
+		// 		if (centavos != '00') {
+		// 			formated_price = formated_price + '.' + centavos
+		// 		}
+		// 	}
+		// 	return formated_price
+		// },
 
 		// Varios
 		resetInputs() {
@@ -462,5 +464,6 @@ thead, tbody tr {
 	position: absolute;
 	top: 100%;
 	width: 98%;
+	z-index: 500;
 }
 </style>

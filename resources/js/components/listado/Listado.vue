@@ -15,6 +15,8 @@
 						:articles_id="selected_articles.articles_id"
 						:filtro="filtro"></descargar-pdf>
 		<print-tickets :selected_articles="selected_articles"></print-tickets>
+		<delete-articles :selected_articles="selected_articles"
+						@deleteArticles="deleteArticles"></delete-articles>
 		<importar></importar>
 		<create-offer :selected_articles="selected_articles"
 						@createOffer="createOffer"></create-offer>
@@ -71,10 +73,16 @@
 									<span class="icon-tag"></span>
 									Tickets	
 								</a>
-								<button class="btn btn-warning m-l-5" @click="showImportar">
+								<a href="#" @click.prevent="showDeleteArticles"
+									:class="selected_articles.selected_articles.length ? '' : 'disabled'"
+									class="btn btn-danger m-l-5">
+									<i class="icon-trash-3"></i>
+									Eliminar
+								</a>
+								<!-- <button class="btn btn-warning m-l-5" @click="showImportar">
 									<i class="icon-upload"></i>
 									Importar Exel
-								</button>
+								</button> -->
 								<a href="articles/exel" class="btn btn-success m-l-5">
 									<i class="icon-download"></i>
 									Exel
@@ -331,6 +339,7 @@ import EditarArticulo from './modals/EditarArticulo.vue'
 import UpdateByPorcentage from './modals/UpdateByPorcentage.vue'
 import CreateOffer from './modals/CreateOffer.vue'
 import PrintTickets from './modals/PrintTickets.vue'
+import DeleteArticles from './modals/DeleteArticles.vue'
 import ProvidersHistory from './modals/ProvidersHistory.vue'
 import ConfirmarEliminacion from './modals/ConfirmarEliminacion.vue'
 import InfoFiltrados from './modals/InfoFiltrados.vue'
@@ -343,6 +352,7 @@ export default {
 		EditarArticulo,
 		CreateOffer,
 		UpdateByPorcentage,
+		DeleteArticles,
 		PrintTickets,
 		ProvidersHistory,
 		InfoFiltrados,
@@ -547,6 +557,7 @@ export default {
 			* Setea las propiedades del articulos con las del articulo pasado por parametro
 		----------------------------------------------------------------------------------- */
 		editArticle(article) {
+			console.log(article)
 			this.setArticle(article)
 			this.article.creado = this.date(article.created_at)+' '+this.since(article.created_at)
 			this.article.actualizado = this.date(article.updated_at)+' '+this.since(article.updated_at)
@@ -630,6 +641,7 @@ export default {
 		destroyArticle(article_id) {
 			axios.delete('articles/'+article_id)
 			.then( res => {
+				this.selected_articles.selected_articles = []
 				this.updateArticlesList()
 				$('#listado-delete-article').modal('hide')
 				toastr.success('Artículo eliminado correctamente')
@@ -729,6 +741,21 @@ export default {
 		},
 		showPrintTickets() {
 			$('#print-tickets').modal('show')
+		},
+		showDeleteArticles() {
+			$('#delete-articles').modal('show')
+		},
+		deleteArticles() {
+			axios.delete('articles/delete-articles/'+this.selected_articles.selected_articles.join('-'))
+			.then(res => {
+				this.selected_articles.selected_articles = []
+				this.updateArticlesList()
+				toastr.success('Artículos eliminados correctamente')
+				$('#delete-articles').modal('hide')
+			})
+			.catch(err => {
+				console.log(err)
+			})
 		},
 		showImportar() {
 			$('#listado-importar').modal('show')

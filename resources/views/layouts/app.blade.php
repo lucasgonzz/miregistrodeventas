@@ -6,6 +6,7 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="user" content="{{ Auth()->user() }}">
     <meta name="asset" content="{{ asset('') }}">
     <title>{{ config('app.name', 'Laravel') }}</title>
 

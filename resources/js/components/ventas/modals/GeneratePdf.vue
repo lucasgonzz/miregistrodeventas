@@ -86,7 +86,7 @@
                                 <label class="custom-control-label" for="borders">Bordes</label>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <div class="form-group">
                                 <label for="cantidad-registros">Maximo de artículos por página</label>
                                 <input type="number" 
@@ -95,7 +95,7 @@
                                         max="25"
                                         class="form-control">
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -121,7 +121,7 @@ export default {
             articles_total_price: 1,
             articles_total_cost: 0,
             borders: 0,
-            articles_per_page: 25,
+            // articles_per_page: 25,
         }
     },
     methods: {
@@ -137,8 +137,8 @@ export default {
                         '/'+this.articles_subtotal_cost+
                         '/'+this.articles_total_price+
                         '/'+this.articles_total_cost+
-                        '/'+this.borders+
-                        '/'+this.articles_per_page
+                        '/'+this.borders
+                        // '/'+this.articles_per_page
             window.open(link)
     	},
     }

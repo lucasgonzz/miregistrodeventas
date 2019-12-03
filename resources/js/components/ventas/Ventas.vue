@@ -84,7 +84,7 @@
 				                        </label>
 				                    </div>
 								</div>
-								<div class="form-group">
+								<!--<div class="form-group">
 				                    <div class="custom-control custom-checkbox my-1 mr-sm-2">
 				                        <input class="custom-control-input c-p" 
 				                            v-model="actual_prices" 
@@ -95,7 +95,7 @@
 				                            Mostrar precios actuales
 				                        </label>
 				                    </div>
-								</div>
+								</div> -->
 								<div class="form-group">
 									<div class="btn-group" role="group" aria-label="Basic example">
 										<button type="button" class="btn btn-warning">
@@ -105,7 +105,7 @@
 											{{ total_articles }} artículos
 										</button>
 										<button type="button" class="btn btn-warning">
-											Total: ${{ total }}
+											Total: {{ price(total) }}
 										</button>
 									</div>
 								</div>
@@ -129,9 +129,9 @@
 			        			<i class="icon-trash-2"></i>
 			        			Eliminar
 			        		</a>
-			        		<span v-show="selected_sales.selected_sales.length" class="p-l-5">
+			        		<strong v-show="selected_sales.selected_sales.length" class="p-l-5">
 			        			{{ selected_sales.selected_sales.length }} ventas seleccionadas
-			        		</span>
+			        		</strong>
 			        	</div>
 			        </div>
 					<div class="row" v-show="is_loading">
@@ -167,9 +167,10 @@
 											Fecha
 										</th>
 										<th scope="col">Hora</th>
+										<th scope="col">Cant. Artículos</th>
+										<th scope="col">Cant. Unidades</th>
 										<th v-show="show_costs" scope="col">Costo</th>
 										<th scope="col">Total</th>
-										<th scope="col">Cant. Artículos</th>
 										<th>Eliminar</th>
 									</tr>
 								</thead>
@@ -201,16 +202,17 @@
 											<i class="icon-clock-1"></i>
 											{{ hour(sale.created_at) }}
 										</td>
+										<td>{{ cantidad_articulos(sale) }}</td>
+										<td>{{ cantidad_unidades(sale) }}</td>
 										<th v-show="show_costs" scope="row">
 											{{ getCost(sale) }}
 										</th>
 										<th scope="row">
 											{{ getPrice(sale) }}
 										</th>
-										<td>{{ cantidad_articulos(sale) }}</td>
 										<td>
 											<button @click="confirmDeleteSale(sale)"
-													class="btn btn-danger">
+													class="btn btn-danger btn-sm">
 												<i class="icon-trash-3"></i>
 											</button>
 										</td>
@@ -279,9 +281,9 @@ export default {
 			this.sales.forEach(sale => {
 				sale.articles.forEach(article => {
 					if (this.actual_prices) {
-						this.total += parseFloat(article.price)
+						this.total += parseFloat(article.price) * article.pivot.amount
 					} else {
-						this.total += parseFloat(article.pivot.price)
+						this.total += parseFloat(article.pivot.price) * article.pivot.amount
 					}
 					this.total_articles++
 				})
@@ -301,33 +303,44 @@ export default {
 		since(date) {
 			return moment(date).fromNow()
 		},
-		price(p, punto=true) {
-			var centavos = p.split('.')[1]
-			var price = p.split('.')[0]
-			var formated_price
-			if (punto) {
-				formated_price = numeral(price).format('0,0').split(',').join('.')
-				if (centavos != '00') {
-					formated_price = formated_price + ',' + centavos
-				}
-			} else {
-				formated_price = price
-				if (centavos != '00') {
-					formated_price = formated_price + '.' + centavos
-				}
-			}
-			return formated_price
+		price(p) {
+			return numeral(p).format('$0,0.00')
+			// price = price.replace(',', '.')
 		},
+		// price(p, punto=true) {
+		// 	var centavos = p.split('.')[1]
+		// 	var price = p.split('.')[0]
+		// 	var formated_price
+		// 	if (punto) {
+		// 		formated_price = numeral(price).format('0,0').split(',').join('.')
+		// 		if (centavos != '00') {
+		// 			formated_price = formated_price + ',' + centavos
+		// 		}
+		// 	} else {
+		// 		formated_price = price
+		// 		if (centavos != '00') {
+		// 			formated_price = formated_price + '.' + centavos
+		// 		}
+		// 	}
+		// 	return formated_price
+		// },
 		cantidad_articulos(sale) {
 			return sale.articles.length
+		},
+		cantidad_unidades(sale) {
+			var cantidad_unidades = 0
+			sale.articles.forEach(article => {
+				cantidad_unidades += article.pivot.amount
+			})
+			return cantidad_unidades
 		},
 		getCost(sale) {
 			var cost = 0
 			sale.articles.forEach(article => {
 				if (this.actual_prices) {
-					cost += parseFloat(article.cost)
+					cost += parseFloat(article.cost) * article.pivot.amount
 				} else {
-					cost += parseFloat(article.pivot.cost)
+					cost += parseFloat(article.pivot.cost) * article.pivot.amount
 				}
 			})
 			return numeral(cost).format('$0,0.00')
@@ -336,9 +349,9 @@ export default {
 			var price = 0
 			sale.articles.forEach(article => {
 				if (this.actual_prices) {
-					price += parseFloat(article.price)
+					price += parseFloat(article.price) * article.pivot.amount
 				} else {
-					price += parseFloat(article.pivot.price)
+					price += parseFloat(article.pivot.price) * article.pivot.amount
 				}
 			})
 			return numeral(price).format('$0,0.00')

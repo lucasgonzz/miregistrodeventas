@@ -54,7 +54,7 @@ class PdfPrintSale extends fpdf {
 		$this->margins = (210 - array_sum($widths)) / 2;
 	}
 
-	function printSales($per_page) {
+	function printSales() {
 		$user = Auth()->user();
 		$a = 0;
 		// dd(Sale::find($this->sales_id[1])->articles);

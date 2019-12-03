@@ -2,7 +2,7 @@
     <div class="container">
         <a class="navbar-brand" href="">
             <!-- {{ config('app.name', '') }} -->
-            Mi resumen de ventas
+            Mi registro de ventas
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="">
             <span class="navbar-toggler-icon"></span>
@@ -12,91 +12,93 @@
             <!-- Left Side Of Navbar -->
             <ul class="navbar-nav mr-auto">
                 @if (Auth()->user()->hasRole('provider'))
-                <li class="nav-item">
-                    <a class="nav-link {{ active('mayoristas/vender') }}" href="{{ route('vender.provider') }}">
-                        <!-- <i class="icon-tag"></i> -->
-                        Vender
-                    </a>
-                </li>
+                    @if (Auth()->user()->hasPermissionTo('sale.create'))
+                    <li class="nav-item">
+                        <a class="nav-link {{ active('mayoristas/vender') }}" href="{{ route('vender.provider') }}">
+                            <!-- <i class="icon-tag"></i> -->
+                            Vender
+                        </a>
+                    </li>
+                    @endif
+                    @if (Auth()->user()->hasPermissionTo('article.create'))
+                    <li class="nav-item">
+                        <a class="nav-link {{ active('mayoristas/ingresar') }}" href="{{ route('ingresar.provider') }}">
+                            <!-- <i class="icon-plus"></i> -->
+                            Ingresar
+                        </a>
+                    </li>
+                    @endif
+                    @if (Auth()->user()->hasPermissionTo('article.index'))
+                    <li class="nav-item">
+                        <a class="nav-link {{ active('mayoristas/listado') }}" href="{{ route('listado.provider') }}">
+                            <!-- <i class="icon-list-ol"></i> -->
+                            Listado
+                        </a>
+                    </li>
+                    @endif
+                    @if (Auth()->user()->hasPermissionTo('sale.index'))
+                    <li class="nav-item">
+                        <a class="nav-link {{ active('mayoristas/ventas') }}" href="{{ route('ventas.provider') }}">
+                            <!-- <i class="icon-list-ol"></i> -->
+                            Ventas
+                        </a>
+                    </li>
+                    @endif
+                    @if (Auth()->user()->hasPermissionTo('bar_code.create'))
+                    <li class="nav-item">
+                        <a class="nav-link {{ active('mayoristas/codigos-de-barra') }}" href="{{ route('bar-codes.provider') }}">
+                            <!-- <i class="icon-list-ol"></i> -->
+                            Codigos de barra
+                        </a>
+                    </li>
+                    @endif
+                    @if (Auth()->user()->hasRole('admin'))
+                    <li class="nav-item">
+                        <a class="nav-link {{ active('mayoristas/empleados') }}" href="{{ route('empleados.provider') }}">
+                            <!-- <i class="icon-list-ol"></i> -->
+                            Empleados
+                        </a>
+                    </li>
+                    @endif
                 @endif
                 @if (Auth()->user()->hasRole('commerce'))
-                <li class="nav-item">
-                    <a class="nav-link {{ active('comercios/vender') }}" href="{{ route('vender.commerce') }}">
-                        <!-- <i class="icon-tag"></i> -->
-                        Vender
-                    </a>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ active('comercios/vender') }}" href="{{ route('vender.commerce') }}">
+                            <!-- <i class="icon-tag"></i> -->
+                            Vender
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ active('comercios/ingresar') }}" href="{{ route('ingresar.commerce') }}">
+                            <!-- <i class="icon-plus"></i> -->
+                            Ingresar
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ active('comercios/listado') }}" href="{{ route('listado.commerce') }}">
+                            <!-- <i class="icon-list-ol"></i> -->
+                            Listado
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ active('comercios/ventas') }}" href="{{ route('ventas.commerce') }}">
+                            <!-- <i class="icon-list-ol"></i> -->
+                            Ventas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ active('comercios/codigos-de-barra') }}" href="{{ route('bar-codes.commerce') }}">
+                            <!-- <i class="icon-list-ol"></i> -->
+                            Codigos de barra
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ active('comercios/empleados') }}" href="{{ route('empleados.commerce') }}">
+                            <!-- <i class="icon-list-ol"></i> -->
+                            Empleados
+                        </a>
+                    </li>
                 @endif
-                @if (Auth()->user()->hasRole('provider'))
-                <li class="nav-item">
-                    <a class="nav-link {{ active('mayoristas/ingresar') }}" href="{{ route('ingresar.provider') }}">
-                        <!-- <i class="icon-plus"></i> -->
-                        Ingresar
-                    </a>
-                </li>
-                @endif
-                @if (Auth()->user()->hasRole('commerce'))
-                <li class="nav-item">
-                    <a class="nav-link {{ active('comercios/ingresar') }}" href="{{ route('ingresar.commerce') }}">
-                        <!-- <i class="icon-plus"></i> -->
-                        Ingresar
-                    </a>
-                </li>
-                @endif
-                @if (Auth()->user()->hasRole('provider'))
-                <li class="nav-item">
-                    <a class="nav-link {{ active('mayoristas/listado') }}" href="{{ route('listado.provider') }}">
-                        <!-- <i class="icon-list-ol"></i> -->
-                        Listado
-                    </a>
-                </li>
-                @endif
-                @if (Auth()->user()->hasRole('commerce'))
-                <li class="nav-item">
-                    <a class="nav-link {{ active('comercios/listado') }}" href="{{ route('listado.commerce') }}">
-                        <!-- <i class="icon-list-ol"></i> -->
-                        Listado
-                    </a>
-                </li>
-                @endif
-                @if (Auth()->user()->hasRole('provider'))
-                <li class="nav-item">
-                    <a class="nav-link {{ active('mayoristas/ventas') }}" href="{{ route('ventas.provider') }}">
-                        <!-- <i class="icon-list-ol"></i> -->
-                        Ventas
-                    </a>
-                </li>
-                @endif
-                @if (Auth()->user()->hasRole('commerce'))
-                <li class="nav-item">
-                    <a class="nav-link {{ active('comercios/ventas') }}" href="{{ route('ventas.commerce') }}">
-                        <!-- <i class="icon-list-ol"></i> -->
-                        Ventas
-                    </a>
-                </li>
-                @endif
-                @if (Auth()->user()->hasRole('provider'))
-                <li class="nav-item">
-                    <a class="nav-link {{ active('mayoristas/codigos-de-barra') }}" href="{{ route('bar-codes.provider') }}">
-                        <!-- <i class="icon-list-ol"></i> -->
-                        Codigos de barra
-                    </a>
-                </li>
-                @endif
-                @if (Auth()->user()->hasRole('commerce'))
-                <li class="nav-item">
-                    <a class="nav-link {{ active('comercios/codigos-de-barra') }}" href="{{ route('bar-codes.commerce') }}">
-                        <!-- <i class="icon-list-ol"></i> -->
-                        Codigos de barra
-                    </a>
-                </li>
-                @endif
-                <li class="nav-item">
-                    <a class="nav-link {{ active('empleados') }}" href="{{ route('empleados') }}">
-                        <!-- <i class="icon-list-ol"></i> -->
-                        Empleados
-                    </a>
-                </li>
             </ul>
 
             <!-- Right Side Of Navbar -->

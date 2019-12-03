@@ -22,6 +22,8 @@
                             <label for="client-name">Nombre del cliente</label>
                             <input type="text" 
                                     class="form-control"
+                                    id="client-name"
+                                    @keyup.enter="saveClient"
                                     placeholder="Nombre del nuevo cliente" 
                                     v-model="client.name">
                         </div>
@@ -72,19 +74,24 @@ export default {
             return moment(d).fromNow()
         },
         saveClient() {
-            axios.post('clients', {
-                client: this.client
-            })
-            .then(res => {
-                this.client.name = ''
-                this.$emit('getClients')
-                this.$emit('setClient', res.data)
-                $('#clients').modal('hide')
-                toastr.success('Cliente guardado correctamente')
-            })
-            .catch(err => {
-                console.log(err)
-            })
+            if (this.client.name != '') {
+                axios.post('clients', {
+                    client: this.client
+                })
+                .then(res => {
+                    this.client.name = ''
+                    this.$emit('getClients')
+                    this.$emit('setClient', res.data)
+                    $('#clients').modal('hide')
+                    toastr.success('Cliente guardado correctamente')
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+            } else {
+                toastr.error('Escribi el nombr del cliente para poder guardarlo')
+                $('#client-name').focus()
+            }
         },
         deleteClient(client) {
             axios.delete('clients/'+client.id)

@@ -12,7 +12,30 @@
 			</div>
 			<div class="modal-body">
 				<div class="form-group">
-					<!-- as{{article.creado}} -->
+					<div class="input-group mb-2 mr-sm-2">
+						<div class="input-group-prepend">
+						  	<div class="input-group-text"><i class="icon-barcode"></i></div>
+						</div>
+						<input v-if="article.bar_code"
+								type="text" 
+								name="bar-code" 
+								v-model="article.bar_code" 
+								class="form-control" disabled>
+						<input v-else
+								type="text" 
+								v-model="article.new_bar_code" 
+								name="bar-code" 
+								:placeholder="'Ingrese un codigo de barras para '+article.name" 
+								class="form-control">
+					</div>
+					<a v-show="!article.bar_code"
+						href="#" 
+						@click.prevent="createBarCode"
+						class="btn btn-link">
+						¿No tiene codigo de barras? Crea uno aca
+					</a>
+				</div>
+				<div class="form-group">
 					<label for="cost">Agregado</label>
 					<input type="text" name="cost" v-model="article.creado" class="form-control" disabled>
 				</div>
@@ -24,26 +47,26 @@
 					<label for="cost">Costo</label>
 					<input type="number" name="cost" v-model="article.cost" id="costo" class="form-control focus-red">
 					<small class="form-text text-muted">
-						Para agregar decimales (centavos) coloque un punto para separar las unidades	
+						Para agregar decimales (centavos) coloque una coma para separar las unidades	
 					</small>
 				</div>
 				<div class="form-group">
 					<label for="price">Precio</label>
 					<input type="number" name="price" v-model="article.price" class="form-control focus-red">
 					<small class="form-text text-muted">
-						Para agregar decimales (centavos) coloque un punto para separar las unidades	
+						Para agregar decimales (centavos) coloque una coma para separar las unidades	
 					</small>
 				</div>
 				<div class="form-group" v-show="article.offer_price">
 					<label for="price">Precio de oferta</label>
-					<input type="text" name="price" v-model="article.offer_price" class="form-control focus-red">
+					<input type="number" name="price" v-model="article.offer_price" class="form-control focus-red">
 					<small class="form-text text-muted">
-						Para agregar decimales (centavos) coloque un punto para separar las unidades	
+						Para agregar decimales (centavos) coloque una coma para separar las unidades	
 					</small>
 				</div>
 				<div class="form-group" v-show="article.previus_price != 0">
 					<label for="cost">Precio Anterior</label>
-					<input type="text" name="cost" v-model="article.previus_price" class="form-control" disabled>
+					<input type="number" name="cost" v-model="article.previus_price" class="form-control" disabled>
 				</div>
 				<div class="form-group">
 					<label for="stock">Cantidad para agregar</label>

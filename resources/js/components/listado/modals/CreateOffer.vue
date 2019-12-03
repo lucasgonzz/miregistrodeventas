@@ -19,7 +19,7 @@
 									<div class="input-group-text">Porcentaje para la oferta</div>
 								</div>
 								<input type="number" 
-										v-model="procentage_offer"
+										v-model="porcentage_offer"
 										min="0"
 										max="99"
 										class="form-control" 
@@ -79,20 +79,26 @@ export default {
 	props: ['selected_articles'],
 	data() {
 		return {
-			procentage_offer: 1,
+			porcentage_offer: 1,
 			articles: [],
 		}
 	},
 	watch: {
-		procentage_offer() {
+		porcentage_offer() {
 			this.selected_articles.articles.forEach(article => {
-				article.offer_price = parseFloat(article.price) - (this.procentage_offer / 100) * parseFloat(article.price)
+				var porcentage = parseFloat(article.price) - 
+							(this.porcentage_offer / 100) * 
+							parseFloat(article.price)
+				article.offer_price = this.price(porcentage)
 			})
 		}
 	},
 	methods: {
 		createOffer() {
 			this.$emit('createOffer')
+		},
+		price(p) {
+			return numeral(p).format('0.00')
 		},
 		deleteArticle(article) {
 			var index_article = this.selected_articles.articles.indexOf(article)
