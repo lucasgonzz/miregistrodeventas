@@ -14,14 +14,17 @@
 						<p class="m-t-0 m-b-0">
 							<strong>
 								{{ provider.name }}
-							</strong> se le compraron {{ provider.pivot.amount }}
-							<span class="float-right">
+							</strong> 
+							<span v-if="provider.pivot.amount">
+								se le compraron {{ provider.pivot.amount }}
+							</span>
+							<span class="float-right" v-if="provider.pivot.cost">
 								costo: ${{ provider.pivot.cost }}
 							</span>
 						</p>
-						<p class="m-t-0 m-b-0">
+						<p class="m-t-0 m-b-0" v-if="provider.pivot.created_at">
 							 el {{ date(provider.pivot.created_at) }} hace {{ since(provider.pivot.created_at) }}
-							<span class="float-right">
+							<span class="float-right" v-if="provider.pivot.price">
 							 	precio: ${{ provider.pivot.price }}
 							</span>
 						</p>

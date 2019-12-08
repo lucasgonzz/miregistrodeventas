@@ -84,18 +84,6 @@
 				                        </label>
 				                    </div>
 								</div>
-								<!--<div class="form-group">
-				                    <div class="custom-control custom-checkbox my-1 mr-sm-2">
-				                        <input class="custom-control-input c-p" 
-				                            v-model="actual_prices" 
-				                            type="checkbox" 
-				                            id="actual_prices_principal">
-				                        <label class="custom-control-label c-p" 
-				                            for="actual_prices_principal">
-				                            Mostrar precios actuales
-				                        </label>
-				                    </div>
-								</div> -->
 								<div class="form-group">
 									<div class="btn-group" role="group" aria-label="Basic example">
 										<button type="button" class="btn btn-warning">
@@ -108,6 +96,18 @@
 											Total: {{ price(total) }}
 										</button>
 									</div>
+								</div>
+								<div class="form-group">
+									<label for="orden-ventas">Ordenar</label>
+									<select v-model="order_sales" 
+											class="form-control"
+											@change="orderSales"
+											id="orden-ventas">
+											<option value="latest">Mas recientes</option>
+											<option value="first">Primeras</option>
+											<option value="caras">Mas caras</option>
+											<option value="baratas">Mas baratas</option>
+									</select>
 								</div>
 							</div>
 						</div>
@@ -257,6 +257,7 @@ export default {
 			show_costs: true,
 			actual_prices: false,
 			selected_sales: [],
+			order_sales: 'latest',
 			sales: [],
 			sale: {},
 			total: 0,
@@ -305,25 +306,7 @@ export default {
 		},
 		price(p) {
 			return numeral(p).format('$0,0.00')
-			// price = price.replace(',', '.')
 		},
-		// price(p, punto=true) {
-		// 	var centavos = p.split('.')[1]
-		// 	var price = p.split('.')[0]
-		// 	var formated_price
-		// 	if (punto) {
-		// 		formated_price = numeral(price).format('0,0').split(',').join('.')
-		// 		if (centavos != '00') {
-		// 			formated_price = formated_price + ',' + centavos
-		// 		}
-		// 	} else {
-		// 		formated_price = price
-		// 		if (centavos != '00') {
-		// 			formated_price = formated_price + '.' + centavos
-		// 		}
-		// 	}
-		// 	return formated_price
-		// },
 		cantidad_articulos(sale) {
 			return sale.articles.length
 		},
@@ -356,6 +339,19 @@ export default {
 			})
 			return numeral(price).format('$0,0.00')
 		},
+		orderSales() {
+			if (this.order_sales == 'latest') {
+				this.sales.reverse()
+			} else if (this.order_sales == 'first') {
+				this.sales.reverse()
+			} else if (this.order_sales == 'caros') {
+				var sales = []
+				this.sales.forEach(sale => {
+					sales.push(this.getPrice(sale))
+				})
+				
+			}
+		},	
 
 		// Metodos del header
 		previusDay() {

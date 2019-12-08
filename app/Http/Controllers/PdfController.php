@@ -54,7 +54,7 @@ class PdfController extends Controller
 
 	        // Se obtienen los largos del nombre, del precio, del preci de oferta
 	        // y del nombre de la compania
-	        $widths['name'] = strlen($name)*2;
+	        $widths['name'] = strlen($name)*2.5;
 	        $widths['price'] = (strlen($this->price_ticket($price))+1)*5;
 	        if (!is_null($offer_price)) {
 	        	$offer_price_width = (strlen($this->price_ticket($offer_price))+1)*5;

@@ -189,6 +189,7 @@ export default {
 				this.articles.forEach(article => {
 					if (article.name == this.article.name) {
 						repetido = true
+						toastr.warning(article.name+' ya esta ingresado en esta venta, se le sumo una unidad')
 						article.amount++
 						this.addTotal(article, true)
 						this.possible_articles = []
@@ -201,6 +202,7 @@ export default {
 				this.articles.forEach(article => {
 					if (article.bar_code == this.article.bar_code) {
 						repetido = true
+						toastr.warning(article.name+' ya esta ingresado en esta venta, se le sumo una unidad')
 						article.amount++
 						this.addTotal(article, true)
 						this.article.bar_code = ''

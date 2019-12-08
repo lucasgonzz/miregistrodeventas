@@ -67,23 +67,24 @@ class ProvidersTableSeeder extends Seeder
                     }
                     $providers[] = $provider_id;
     			}
-    			$article->providers()->attach([
-                    $providers[0] => [
-                        'amount' => $amounts[0], 
-                        'cost' => $costs[0], 
-                        'price' => $prices[0], 
-                    ],
-                    $providers[1] => [
-                        'amount' => $amounts[1], 
-                        'cost' => $costs[1], 
-                        'price' => $prices[1], 
-                    ],
-                    $providers[2] => [
-                        'amount' => $amounts[2], 
-                        'cost' => $costs[2], 
-                        'price' => $prices[2], 
-                    ],
-                ]);
+                $article->providers()->attach([$providers[0],$providers[1],$providers[2]]);
+    			// $article->providers()->attach([
+       //              $providers[0] => [
+       //                  'amount' => $amounts[0], 
+       //                  'cost' => $costs[0], 
+       //                  'price' => $prices[0], 
+       //              ],
+       //              $providers[1] => [
+       //                  'amount' => $amounts[1], 
+       //                  'cost' => $costs[1], 
+       //                  'price' => $prices[1], 
+       //              ],
+       //              $providers[2] => [
+       //                  'amount' => $amounts[2], 
+       //                  'cost' => $costs[2], 
+       //                  'price' => $prices[2], 
+       //              ],
+       //          ]);
     		}
     	}
     }

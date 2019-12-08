@@ -20,6 +20,7 @@
 									<label for="cost">Nombre del nuevo proveedor</label>
 									<input class="form-control"
 											type="text" name="cost" 
+											@keyup.enter="saveProvider"
 											placeholder="Nombre del nuevo proveedor" 
 											v-model="provider.name">
 								</div>
@@ -76,7 +77,11 @@ export default {
 			this.$emit('deleteProvider', provider)
 		},
 		saveProvider() {
-			this.$emit('saveProvider', this.provider)
+			if (this.provider.name != '') {
+				this.$emit('saveProvider', this.provider)
+			} else {
+				toastr.error('Ingrese un nombre para el proveedor')
+			}
 		}
 	}
 }

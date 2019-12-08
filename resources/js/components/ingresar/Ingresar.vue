@@ -570,6 +570,10 @@ export default {
 			})
 			.then( res => {
 				this.getProviders()
+				console.log(res.data.id)
+				setTimeout(() => {
+					this.article.provider = res.data.id
+				}, 1000)
 				$('#providers').modal('hide')
 				toastr.success('El proveedor ' + provider.name + ' se guardo correctamente')
 			})

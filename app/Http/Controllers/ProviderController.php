@@ -12,10 +12,11 @@ class ProviderController extends Controller
     }
 
     function store(Request $request) {
-    	Provider::create([
-    		'name' => ucwords($request->provider['name']),
-    		'user_id' => Auth()->user()->id
-    	]);
+        $provider = new Provider;
+        $provider->name = ucwords($request->provider['name']);
+        $provider->user_id = Auth()->user()->id;
+        $provider->save();
+        return $provider;
     }
 
     function delete($id) {

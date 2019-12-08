@@ -19,11 +19,11 @@ class PermissionsTableSeeder extends Seeder
         	'slug' => 'sale.create',
         	'description' => 'Podra vender cualquier artículo registrado en el sistema'
         ]);
-        Permission::create([
-        	'name' => 'Eliminar ventas',
-        	'slug' => 'sale.destroy',
-        	'description' => 'Podra eliminar cualquier venta que este regitrada en el sistema'
-        ]);
+        // Permission::create([
+        // 	'name' => 'Eliminar ventas',
+        // 	'slug' => 'sale.destroy',
+        // 	'description' => 'Podra eliminar cualquier venta que este regitrada en el sistema'
+        // ]);
         Permission::create([
         	'name' => 'Ver las ventas',
         	'slug' => 'sale.index',
@@ -36,16 +36,16 @@ class PermissionsTableSeeder extends Seeder
         	'slug' => 'article.create',
         	'description' => 'Podra registrar cualquier cantidad de artículos'
         ]);
-        Permission::create([
-        	'name' => 'Editar artículos',
-        	'slug' => 'article.edit',
-        	'description' => 'Podra editar cualquier artículo'
-        ]);
-        Permission::create([
-        	'name' => 'Eliminar artículos',
-        	'slug' => 'article.destroy',
-        	'description' => 'Podra eliminar cualquier cantidad de artículos'
-        ]);
+        // Permission::create([
+        // 	'name' => 'Editar artículos',
+        // 	'slug' => 'article.edit',
+        // 	'description' => 'Podra editar cualquier artículo'
+        // ]);
+        // Permission::create([
+        // 	'name' => 'Eliminar artículos',
+        // 	'slug' => 'article.destroy',
+        // 	'description' => 'Podra eliminar cualquier cantidad de artículos'
+        // ]);
         Permission::create([
         	'name' => 'Ver los artículos',
         	'slug' => 'article.index',

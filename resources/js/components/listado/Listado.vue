@@ -33,7 +33,7 @@
 						<div class="row">
 							<div class="col-10 col-lg-3 p-r-0">
 								<div class="buscador">
-									<input type="text" class="form-control input-search" 
+									<input type="search" class="form-control input-search" 
 											placeholder="Buscar por codigo o nombre"
 											v-model="search_query" @keyup="preSearch" @keyup.enter="search">
 									<div class="resultados">
@@ -779,6 +779,7 @@ export default {
 		-------------------------------------------------------------------------- */
 		filter(filtro) {
 			this.isLoading = true
+			$('#listado-filtrar').modal('hide')
 			axios.post('articles/filter', {
 				mostrar: filtro.mostrar,
 				ordenar: filtro.ordenar,
@@ -792,7 +793,6 @@ export default {
 				this.articles = res.data
 				this.setArticlesId()
 				this.filterProviders()
-				$('#listado-filtrar').modal('hide')
 			})
 			.catch( err => {
 				console.log(err)

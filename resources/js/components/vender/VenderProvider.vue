@@ -230,6 +230,7 @@ export default {
 			if (this.article.name != '' && this.article.bar_code == '') {
 				this.articles.forEach(article => {
 					if (article.name == this.article.name) {
+						toastr.warning(article.name+' ya esta ingresado en esta venta, se le sumo una unidad')
 						article.amount += Number(this.article.amount)
 						this.addTotal(article, true)
 						this.resetInputs()
@@ -239,6 +240,7 @@ export default {
 			} else if (this.article.bar_code != '' && this.article.name == '') {
 				this.articles.forEach(article => {
 					if (article.bar_code == this.article.bar_code) {
+						toastr.warning(article.name+' ya esta ingresado en esta venta, se le sumo una unidad')
 						article.amount += Number(this.article.amount)
 						this.addTotal(article, true)
 						this.resetInputs()

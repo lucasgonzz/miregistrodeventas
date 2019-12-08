@@ -11,6 +11,18 @@
 |
 */
 
+Route::get('e', function() {
+	$articles = Article::all();
+	foreach ($articles as $article) {
+		$providers=[];
+		foreach ($article->providers as $provider) {
+			$providers[]=[$provider->id => ['cost'=>$article->cost, 'price'=>$article->price] ];
+		}
+		$article->providers->sync($providers);
+	}
+	return $articles;
+});
+
 Route::get('/', 'MainController@index');
 
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('show-login-form')->middleware('guest');
