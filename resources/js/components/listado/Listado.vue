@@ -51,34 +51,39 @@
 							  	</button>						
 							</div>
 							<div class="col-12 col-lg-8 m-t-10 m-lg-t-0 col-btn">
-								<strong class="p-r-5 p-t-5"
-										v-show="selected_articles.selected_articles.length">
-									{{ selected_articles.selected_articles.length }} arículos seleccionados
-								</strong>
-								<a href="#" @click.prevent="showCreateOffer"
-									:class="selected_articles.selected_articles.length ? '' : 'disabled'"
-									class="btn btn-danger m-l-5">
-									<i class="icon-sale-ticket"></i>
-									Oferta
-								</a>
-								<a href="#" @click.prevent="showUpdateByPorcentage"
-									:class="selected_articles.selected_articles.length ? '' : 'disabled'"
-									class="btn btn-primary m-l-5">
-									<i class="icon-plus"></i>
-									%
-								</a>
-								<a href="#" @click.prevent="showPrintTickets"
-									:class="selected_articles.selected_articles.length ? '' : 'disabled'"
-									class="btn btn-success m-l-5">
-									<span class="icon-tag"></span>
-									Tickets	
-								</a>
-								<a href="#" @click.prevent="showDeleteArticles"
-									:class="selected_articles.selected_articles.length ? '' : 'disabled'"
-									class="btn btn-danger m-l-5">
-									<i class="icon-trash-3"></i>
-									Eliminar
-								</a>
+								<div class="dropdown" 
+									v-show="selected_articles.selected_articles.length">
+									<button class="btn btn-secondary dropdown-toggle" 
+											type="button" 
+											id="selected_articles_buttons" 
+											data-toggle="dropdown" 
+											aria-haspopup="true" 
+											aria-expanded="false">
+										{{ selected_articles.selected_articles.length }} arículos seleccionados
+									</button>
+									<div class="dropdown-menu" aria-labelledby="selected_articles_buttons">
+										<a href="#" @click.prevent="showCreateOffer"
+											class="dropdown-item c-p">
+											<i class="icon-sale-ticket"></i>
+											Oferta
+										</a>
+										<a href="#" @click.prevent="showUpdateByPorcentage"
+											class="dropdown-item c-p">
+											<i class="icon-plus"></i>
+											%
+										</a>
+										<a href="#" @click.prevent="showPrintTickets"
+											class="dropdown-item c-p">
+											<span class="icon-tag"></span>
+											Tickets	
+										</a>
+										<a href="#" @click.prevent="showDeleteArticles"
+											class="dropdown-item c-p">
+											<i class="icon-trash-3"></i>
+											Eliminar
+										</a>
+									</div>
+								</div>
 								<!-- <button class="btn btn-warning m-l-5" @click="showImportar">
 									<i class="icon-upload"></i>
 									Importar Exel
@@ -191,7 +196,7 @@
 													:class="selected_articles.selected_articles.includes(article.id) ? 'bg-warning' : ''">
 													<td class="td-checkbox">
 										                <div class="custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2">
-										                  	<input class="custom-control-input" 
+										                  	<input class="custom-control-input c-p" 
 										                  			v-model="selected_articles.selected_articles" 
 										                  			:value="article.id"
 										                  			type="checkbox" 
@@ -213,11 +218,21 @@
 													<td v-if="article.offer_price"
 														class="td-price">
 														<i class="icon-sale-ticket ticket-price"></i>
-														{{ price(article.offer_price) }}
+														<span v-show="article.uncontable == 0">
+															{{ price(article.offer_price) }}
+														</span>
+														<span v-show="article.uncontable == 1">
+															{{ price(article.offer_price) }} x {{ article.amount_measurement }} {{ article.measurement_es }}
+														</span>
 													</td>
 													<td v-else
 														class="td-price">
-														{{ price(article.price) }}
+														<span v-show="article.uncontable == 0">
+															{{ price(article.price) }}
+														</span>
+														<span v-show="article.uncontable == 1">
+															{{ price(article.price) }} x {{ article.amount_measurement }} {{ article.measurement_es }}
+														</span>
 													</td>
 													<td v-if="article.stock" class="td-stock">
 														{{ article.stock }}
@@ -249,14 +264,21 @@
 															<i class="icon-edit"></i>
 														</button>
 														<button @click="deleteArticle(article)" class="btn btn-listado btn-listado-delete">
-															<i class="icon-trash-2"></i>
+															<i class="icon-trash-3"></i>
+														</button>
+														<button @click="createMarker(article)" class="btn btn-listado btn-listado-edit">
+															<i v-show="article.marker == 1"
+																:id="'marker-1-'+article.id"
+																class="icon-star-1"></i>
+															<i v-show="article.marker == 0"
+																:id="'marker-2-'+article.id"
+																class="icon-star-2"></i>
 														</button>
 														<button @click="deleteOffer(article)"
 																v-show="article.offer_price"
 																class="btn btn-danger btn-sm">
 															<i class="icon-sale-ticket"></i>
 															<i class="icon-cancel"></i>
-															<!-- Terminar Oferta -->
 														</button>
 													</td>
 												</tr>
@@ -266,7 +288,7 @@
 													:class="selected_articles.selected_articles.includes(article.id) ? 'bg-warning' : ''">
 													<td class="td-checkbox">
 										                <div class="custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2">
-										                  	<input class="custom-control-input" 
+										                  	<input class="custom-control-input c-p" 
 										                  			v-model="selected_articles.selected_articles"
 										                  			:value="article.id" 
 										                  			type="checkbox" 
@@ -306,7 +328,15 @@
 															<i class="icon-edit"></i>
 														</button>
 														<button @click="deleteArticle(article)" class="btn btn-listado btn-listado-delete">
-															<i class="icon-trash-2"></i>
+															<i class="icon-trash-3"></i>
+														</button>
+														<button @click="createMarker(article)" class="btn btn-listado btn-listado-edit">
+															<i v-show="article.marker == 1"
+																:id="'marker-1-'+article.id"
+																class="icon-star-1"></i>
+															<i  v-show="article.marker == 0"
+																:id="'marker-2-'+article.id"
+																class="icon-star-2"></i>
 														</button>
 														<button @click="deleteOffer(article)"
 																v-show="article.offer_price"
@@ -542,11 +572,13 @@ export default {
 			.then( res => {
 				this.isLoading = false
 				this.articles = res.data.articles.data;
-				// console.log(res.data.articles.data)
+				console.log(res.data.articles.data)
 				this.pagination = res.data.pagination;
 				this.setArticlesId()
 				this.setIsAllSelected()
 				this.filterProviders()
+				// Se pasa el nombre de la medida a español
+				this.parseMeasurementEs()
 			})
 			.catch( err => {
 				console.log(err)
@@ -600,6 +632,29 @@ export default {
 		deleteArticle(article) {
 			this.setArticle(article)
 			$('#listado-delete-article').modal('show')
+		},
+		createMarker(article) {
+			if (article.marker) {
+				axios.get(`articles/delete-marker/${article.id}`)
+				.then(res => {
+					$(`#marker-1-${article.id}`).removeClass('icon-star-1')
+					$(`#marker-1-${article.id}`).addClass('icon-star-2')
+					toastr.success('Marcador eliminado correctamente')
+				})
+				.catch(err => {
+					console.log(err)
+				})
+			} else {
+				axios.get(`articles/create-marker/${article.id}`)
+				.then(res => {
+					$(`#marker-2-${article.id}`).removeClass('icon-star-2')
+					$(`#marker-2-${article.id}`).addClass('icon-star-1')
+					toastr.success('Marcador añadido correctamente')
+				})
+				.catch(err => {
+					console.log(err)
+				})
+			}
 		},
 		deleteOffer(article) {
 			axios.delete('articles/delete-offer/'+article.id)
@@ -832,6 +887,25 @@ export default {
 		providersHistory(article) {
 			this.article = article
 			$('#providers-history').modal('show')
+		},
+		parseMeasurementEs() {
+			this.articles.forEach(article => {
+				if (article.uncontable == 1) {
+					if (article.measurement == 'kilograms') {
+						if (article.amount_measurement == 1) {
+							article.measurement_es = 'kilo'
+						} else {
+							article.measurement_es = 'kilos'
+						}
+					} else if (article.measurement == 'grams') {
+						if (article.amount_measurement == 1) {
+							article.measurement_es = 'gramo'
+						} else {
+							article.measurement_es = 'gramos'
+						}
+					}
+				}
+			})
 		},
 	},
 	created() {

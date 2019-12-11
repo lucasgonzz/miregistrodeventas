@@ -4,6 +4,7 @@
 	<clients @getClients="getClients" 
 				@setClient="setClient"
 				:clients="clients"></clients>
+	<article-not-register @updateArticles="updateArticlesList"></article-not-register>
 	<div class="row justify-content-center">	
 		<div class="col-lg-9">	
 			<div class="card">
@@ -63,49 +64,77 @@
 					</div>
 				</div>
 				<div class="card-body">
-					<h5 class="card-title">Total: ${{ getTotal() }}</h5>
-					<p class="card-text">
-						{{ articles.length }} artículos, {{ cantidadArticulos() }} unidades
-					</p>
-					<table class="table text-center table-striped">
-						<thead>
-							<tr>
-								<th scope="col">Nombre</th>
-								<th scope="col">Precio Unitario</th>
-								<th scope="col">Cantidad</th>
-								<th scope="col">Subtotal</th>
-								<th scope="col">Eliminar</th>
-							</tr>
-						</thead>
-						<tbody class="vender-table">
-							<tr v-for="article in articles">
-								<td>{{ article.name }}</td>
-								<th scope="row">{{ price(article.price) }}</th>
-								<td>
-									<input type="text"
-											class="form-control input-amount"
-											v-model="article.amount">
-									<button @click="up(article)"
-											class="btn btn-primary btn-sm">
-										<i class="icon-plus"></i>
+					<div class="row m-b-10" v-show="markers.length">
+						<div class="col">
+							<div class="card">
+								<div class="card-header">
+									<button class="btn btn-success" @click="showMarkers">
+										<i class="icon-star-1" v-show="!show_markers"></i>
+										<i class="icon-cancel" v-show="show_markers"></i>
+										Marcadores
 									</button>
-									<button @click="down(article)"
-											class="btn btn-primary btn-sm">
-										<i class="icon-minus"></i>
+								</div>
+								<div class="card-body" v-show="show_markers">
+									<button v-for="marker in markers"
+											@click="addMarker(marker)"
+											class="btn btn-primary m-5">
+										{{ marker.name }}
 									</button>
-								</td>
-								<td>
-									{{ price(parseFloat(article.price) * article.amount) }}
-								</td>
-								<td>
-									<button @click="removeArticle(article)"
-											class="btn btn-danger">
-										<i class="icon-cancel"></i>
-									</button>
-								</td>
-							</tr>
-						</tbody>
-					</table>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<h5 class="card-title">Total: {{ getTotal() }}</h5>
+							<p class="card-text">
+								{{ articles.length }} artículos, {{ cantidadArticulos() }} unidades
+							</p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<table class="table text-center table-striped">
+								<thead>
+									<tr>
+										<th scope="col">Nombre</th>
+										<th scope="col">Precio Unitario</th>
+										<th scope="col">Cantidad</th>
+										<th scope="col">Subtotal</th>
+										<th scope="col">Eliminar</th>
+									</tr>
+								</thead>
+								<tbody class="vender-table">
+									<tr v-for="article in articles">
+										<td>{{ article.name }}</td>
+										<th scope="row">{{ price(article.price) }}</th>
+										<td>
+											<input type="text"
+													class="form-control input-amount"
+													v-model="article.amount">
+											<button @click="up(article)"
+													class="btn btn-primary btn-sm">
+												<i class="icon-plus"></i>
+											</button>
+											<button @click="down(article)"
+													class="btn btn-primary btn-sm">
+												<i class="icon-minus"></i>
+											</button>
+										</td>
+										<td>
+											{{ price(parseFloat(article.price) * article.amount) }}
+										</td>
+										<td>
+											<button @click="removeArticle(article)"
+													class="btn btn-danger">
+												<i class="icon-cancel"></i>
+											</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
 				</div>
 				<div class="card-footer">
 					<div class="row">
@@ -123,7 +152,7 @@
 								</select>
 								<button class="btn btn-secondary btn-sm"
 										@click.prevent="showClients">
-									Agregar un cliente
+									Agregar, eliminar clientes
 								</button>
 							</form>
 						</div>
@@ -149,9 +178,11 @@
 <script>
 import Clients from './modals/Clients.vue'
 import SuccessfulSale from './modals/SuccessfulSale.vue'
+import ArticleNotRegister from './modals/ArticleNotRegister.vue'
 export default {
 	components: {
 		Clients,
+		ArticleNotRegister,
 		SuccessfulSale,
 	},
 	data() {
@@ -163,6 +194,7 @@ export default {
 			},
 			possible_articles: [],
 			names: [],
+			markers: [],
 
 			clients: [],
 			articles: [],
@@ -173,11 +205,19 @@ export default {
 			total: 0,
 			cantidad_articulos: 0,
 			cantidad_unidades: 0,
+			show_markers: true,
 		}
 	},
 	methods: {
 		price(p) {
 			return numeral(p).format('$0,0.00')
+		},
+		showMarkers() {
+			if (this.show_markers) {
+				this.show_markers = false
+			} else {
+				this.show_markers = true
+			}
 		},
 		/* 
 		________________________________________________________________
@@ -191,15 +231,17 @@ export default {
 			if (this.names.includes(this.article.name.replace(/\b\w/g, l => l.toUpperCase()))) {
 				$('#cantidad').focus()
 			} else {
-				toastr.error('No hay ningun artículo registrado con este nombre')
+				$('#article-not-register').modal('show')
 				this.article.name = ''
 			}		
 		},
 		changeToCantidadFromBarCode() {
-			if (this.bar_codes.includes(this.article.bar_code)) {
+			if (this.bar_codes.includes(this.article.bar_code.toUpperCase())) {
+				$('#cantidad').focus()
+			} else if (this.bar_codes.includes(this.article.bar_code.toLowerCase())) {
 				$('#cantidad').focus()
 			} else {
-				toastr.error('Este codigo no pertenece a ningun artículo registrado')
+				$('#article-not-register').modal('show')
 				this.article.bar_code = ''
 			}
 		},
@@ -223,6 +265,10 @@ export default {
 
 
 		// Articulos
+		addMarker(article) {
+			this.article.name = article.name
+			$('#cantidad').focus()
+		},
 		addArticle() {
 			var repetido = false
 
@@ -338,33 +384,6 @@ export default {
 			return cantidad_articulos
 		},
 
-
-		// Precios
-		isFloat(n){
-			return Number(n) === n && n % 1 !== 0;
-		},
-		// price(p, punto=true) {
-		// 	if (typeof(p) === 'number') {
-		// 		console.log(p)
-		// 		p = p.toString()+'.00'
-		// 	}
-		// 	var centavos = p.split('.')[1]
-		// 	var price = p.split('.')[0]
-		// 	var formated_price
-		// 	if (punto) {
-		// 		formated_price = numeral(price).format('0,0').split(',').join('.')
-		// 		if (centavos != '00') {
-		// 			formated_price = formated_price + ',' + centavos
-		// 		}
-		// 	} else {
-		// 		formated_price = price
-		// 		if (centavos != '00') {
-		// 			formated_price = formated_price + '.' + centavos
-		// 		}
-		// 	}
-		// 	return formated_price
-		// },
-
 		// Varios
 		resetInputs() {
 			this.article.bar_code = ''
@@ -433,11 +452,26 @@ export default {
 				console.log(err)
 			})
 		},
+		getMarkers() {
+			axios.get('articles/get-markers')
+			.then(res => {
+				this.markers = res.data
+			})
+			.catch(err => {
+				console.log(err)
+			})
+		},
+		updateArticlesList() {
+			this.getBarCodes()
+			this.getNames()
+			$('#article-not-register').modal('hide')
+		},
 	},
 	created() {
 		this.getClients()
 		this.getBarCodes()
 		this.getNames()
+		this.getMarkers()
 	}
 }
 </script>

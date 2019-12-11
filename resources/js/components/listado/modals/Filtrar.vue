@@ -17,6 +17,7 @@
             <select name="" v-model="filtro.mostrar" id="articulos-a-mostrar" class="form-control">
               <option value="todos">Todos mis artículos</option>
               <option value="oferta">Los que esten en oferta</option>
+              <option value="marker">Los marcadores</option>
               <option value="desactualizados">Los desactualizados</option>
               <option value="no-vendidos">Los que nunca se hayan vendido</option>
               <option value="no-stock">Los que no tengan stock</option>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
@@ -40,6 +41,36 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
+    public function showRegisterForm() {
+        return view('auth.register');
+    }
+
+    public function register(Request $request) {
+
+        $rules = [
+            'name' => ['required', 'string', 'max:255'],
+            'company_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ];
+        $message = [
+            'password.min' => 'La contraseña debe ser de al menos 8 letras',
+            'password.confirmed' => 'Las contraseñas no coinciden',
+        ];
+        $validator = Validator::make($request->all(), $rules, $message);
+
+        if ($validator->fails()) {
+            return Redirect::to('register')->withErrors($validator);
+        } else {
+            User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'company_name' => $request->company_name,
+                'password' => Hash::make($request->password),
+            ]);
+        }
+    }
+
     /**
      * Get a validator for an incoming registration request.
      *
@@ -50,6 +81,7 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
+            'company_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);

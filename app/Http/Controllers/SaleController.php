@@ -21,11 +21,13 @@ class SaleController extends Controller
                             ->where('created_at', '>=', Carbon::today())
                             ->with('client')
                             ->with('articles')
+                            ->orderBy('created_at', 'DESC')
                             ->get();
         } else {
             $sales = Sale::where('user_id', $user->id)
                             ->where('created_at', '>=', Carbon::today())
                             ->with('articles')
+                            ->orderBy('created_at', 'DESC')
                             ->get();
         }
         return $sales;
@@ -45,19 +47,17 @@ class SaleController extends Controller
                                 ->orderBy('id', 'DESC')
                                 ->with('client')
                                 ->with('articles')
+                                ->orderBy('created_at', 'DESC')
                                 ->get();
         } else {
             $sales = Sale::where('user_id', Auth()->user()->id)
                                 ->whereDate('created_at', $date)
                                 ->orderBy('id', 'DESC')
                                 ->with('articles')
+                                ->orderBy('created_at', 'DESC')
                                 ->get();
         }
-        if (count($sales) >= 1) {
-            return $sales;
-        } else {
-            return false;
-        }
+        return $sales;
     }
 
     function onlyOneDate($date) {
@@ -67,11 +67,13 @@ class SaleController extends Controller
                     ->whereDate('created_at', $date)
                     ->with('articles')
                     ->with('client')
+                    ->orderBy('created_at', 'DESC')
                     ->get();
         } else {
             $sales = Sale::where('user_id', $user->id)
                     ->whereDate('created_at', $date)
                     ->with('articles')
+                    ->orderBy('created_at', 'DESC')
                     ->get();            
         }
         return $sales;
@@ -89,11 +91,13 @@ class SaleController extends Controller
                     ->whereBetween('created_at', [$from, $to])
                     ->with('articles')
                     ->with('client')
+                    ->orderBy('created_at', 'DESC')
                     ->get();
         } else {
             $sales = Sale::where('user_id', $user->id)
                     ->whereBetween('created_at', [$from, $to])
                     ->with('articles')
+                    ->orderBy('created_at', 'DESC')
                     ->get();            
         }
         return $sales;

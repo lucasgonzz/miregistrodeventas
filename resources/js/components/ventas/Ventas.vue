@@ -24,7 +24,7 @@
 							<strong v-show="is_from_only_one_date">
 								Ventas del {{ date(only_one_date) }}
 							</strong>
-							<strong v-show="previus_next != 0"
+							<strong v-show="previus_next != 0 && !is_from_only_one_date && !is_from_date"
 									class="p-l-5">
 								<span v-show="previus_next == 1 && !is_from_only_one_date">
 									Hace 1 día
@@ -86,18 +86,18 @@
 								</div>
 								<div class="form-group">
 									<div class="btn-group" role="group" aria-label="Basic example">
-										<button type="button" class="btn btn-warning">
+										<button type="button" class="btn btn-secondary">
 											{{ sales.length }} Ventas
 										</button>
-										<button type="button" class="btn btn-warning">
+										<button type="button" class="btn btn-secondary">
 											{{ total_articles }} artículos
 										</button>
-										<button type="button" class="btn btn-warning">
+										<button type="button" class="btn btn-secondary">
 											Total: {{ price(total) }}
 										</button>
 									</div>
 								</div>
-								<div class="form-group">
+								<!-- <div class="form-group">
 									<label for="orden-ventas">Ordenar</label>
 									<select v-model="order_sales" 
 											class="form-control"
@@ -108,7 +108,7 @@
 											<option value="caras">Mas caras</option>
 											<option value="baratas">Mas baratas</option>
 									</select>
-								</div>
+								</div> -->
 							</div>
 						</div>
 					</div>
@@ -167,6 +167,7 @@
 											Fecha
 										</th>
 										<th scope="col">Hora</th>
+										<th scope="col" v-show="rol == 'provider'">Cliente</th>
 										<th scope="col">Cant. Artículos</th>
 										<th scope="col">Cant. Unidades</th>
 										<th v-show="show_costs" scope="col">Costo</th>
@@ -201,6 +202,14 @@
 										<td>
 											<i class="icon-clock-1"></i>
 											{{ hour(sale.created_at) }}
+										</td>
+										<td v-if="rol == 'provider'">
+											<span v-if="sale.client">
+												{{ sale.client.name }}
+											</span>
+											<span v-else>
+												Sin datos
+											</span>
 										</td>
 										<td>{{ cantidad_articulos(sale) }}</td>
 										<td>{{ cantidad_unidades(sale) }}</td>
@@ -246,6 +255,7 @@ export default {
 		GeneratePdf,
 		Summary,
 	},
+	props: ['rol'],
 	data() {
 		return {
 			is_loading: false,
@@ -369,15 +379,23 @@ export default {
 		},
 		previusNext() {
 			if (this.only_one_date == '') {
+				this.is_loading = true
 				axios.get('sales/previus-next/'+this.previus_next)
 				.then( res => {
-					// console.log(res.data)
-					this.sales = res.data
+					var sales = res.data
+					if (sales.length) {
+						this.sales = sales
+					} else {
+						toastr.error("No hay ventas mas atras")
+						this.previus_next--
+						this.previusNext()
+					}
 					if (this.selected_sales.selected_pages.includes(this.previus_next)) {
 						this.selected_sales.is_all_selected = true
 					} else {
 						this.selected_sales.is_all_selected = false
 					}
+					this.is_loading = false
 				})
 				.catch( err => {
 					console.log(err)

@@ -8,6 +8,12 @@
 			<div class="col-12 col-lg-3" v-show="filtro.mostrar != 'todos'">
 				<ul class="list-group">
 					<li class="list-group-item active">Mostrando solo artículos que</li>
+					<li v-show="filtro.mostrar == 'oferta'" class="list-group-item">
+						Esten en oferta
+					</li>
+					<li v-show="filtro.mostrar == 'marker'" class="list-group-item">
+						Esten en marcadores
+					</li>
 					<li v-show="filtro.mostrar == 'desactualizados'" class="list-group-item">
 						Esten desactualizados
 					</li>

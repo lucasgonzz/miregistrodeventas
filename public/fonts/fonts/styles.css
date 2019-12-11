@@ -77,6 +77,12 @@
 .icon-edit:before {
   content: "\68";
 }
+.icon-trash-1:before {
+  content: "\6b";
+}
+.icon-trash-2:before {
+  content: "\6f";
+}
 .icon-trash-3:before {
   content: "\70";
 }
@@ -91,6 +97,15 @@
 }
 .icon-search:before {
   content: "\74";
+}
+.icon-search-1:before {
+  content: "\75";
+}
+.icon-search-2:before {
+  content: "\76";
+}
+.icon-search-3:before {
+  content: "\77";
 }
 .icon-filter:before {
   content: "\79";
@@ -158,9 +173,9 @@
 .icon-sale-ticket:before {
   content: "\53";
 }
-.icon-star-1:before {
-  content: "\55";
+.icon-star-o:before {
+  content: "\54";
 }
-.icon-star-2:before {
-  content: "\56";
+.icon-star:before {
+  content: "\55";
 }

@@ -26,6 +26,8 @@ Route::get('e', function() {
 Route::get('/', 'MainController@index');
 
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('show-login-form')->middleware('guest');
+Route::get('register', 'Auth\RegisterController@showRegisterForm')->name('show-register-form')->middleware('guest');
+Route::post('register', 'Auth\RegisterController@register')->name('register');
 Route::post('login', 'Auth\LoginController@login')->name('login');
 Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('user/password', 'UserController@password')->name('change-password');
@@ -70,6 +72,8 @@ Route::group(['middleware' => ['has.role:provider']], function () {
 	Route::post('/mayoristas/articles/update-by-porcentage', 'ArticleController@updateByPorcentage');
 	Route::post('/mayoristas/articles/create-offer', 'ArticleController@createOffer');
 	Route::get('/mayoristas/articles/get-by-ids/{articles_id}', 'ArticleController@getByIds');
+	Route::get('/mayoristas/articles/create-marker/{id}', 'ArticleController@createMarker');
+	Route::get('/mayoristas/articles/delete-marker/{id}', 'ArticleController@deleteMarker');
 	Route::delete('/mayoristas/articles/delete-offer/{id}', 'ArticleController@deleteOffer');
 
 	// Listado exportar
@@ -81,6 +85,10 @@ Route::group(['middleware' => ['has.role:provider']], function () {
 	Route::get('/mayoristas/articles/get-by-name/{name}', 'ArticleController@getByName');
 	Route::get('/mayoristas/sales/cliente/{company_name}/{borders}/{sale_id}', 'PdfController@sale_client');
 	Route::get('/mayoristas/sales/comercio/{company_name}/{borders}/{sale_id}', 'PdfController@sale_commerce');
+	Route::get('/mayoristas/articles/get-markers', 'ArticleController@getMarkers');
+	Route::get('/mayoristas/articles/availables', 'ArticleController@getAvailables');
+
+	
 	// Vender - Clientes
 	Route::get('mayoristas/clients', 'ClientController@index');
 	Route::post('mayoristas/clients', 'ClientController@store');
@@ -150,10 +158,14 @@ Route::group(['middleware' => ['has.role:commerce']], function () {
 	Route::post('/comercios/articles/create-offer', 'ArticleController@createOffer');
 	Route::get('/comercios/articles/get-by-ids/{articles_id}', 'ArticleController@getByIds');
 	Route::delete('/comercios/articles/delete-offer/{id}', 'ArticleController@deleteOffer');
+	Route::get('/comercios/articles/create-marker/{id}', 'ArticleController@createMarker');
+	Route::get('/comercios/articles/delete-marker/{id}', 'ArticleController@deleteMarker');
 	
 	// Vender
 	Route::post('/comercios/sales', 'SaleController@store');
 	Route::get('/comercios/articles/get-by-name/{name}', 'ArticleController@getByName');
+	Route::get('/comercios/articles/get-markers', 'ArticleController@getMarkers');
+	Route::get('/comercios/articles/availables', 'ArticleController@getAvailables');
 
 	// Listado exportar
 	Route::get('/comercios/configuracion', 'MainController@commerce_config')->name('commerce.config');

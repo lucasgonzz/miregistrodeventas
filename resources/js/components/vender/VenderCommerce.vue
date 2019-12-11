@@ -12,6 +12,7 @@
 							<input type="text" 
 									v-model="article.bar_code"
 									id="bar-code"
+									autofocus 
 									@keyup.enter="addArticle"
 									class="form-control" 
 									placeholder="Ingrese el codigo de barras">
@@ -51,56 +52,122 @@
 				</div>
 			</div>
 			<div class="card-body">
-				<h5 class="card-title">Total: ${{ total }}</h5>
-				<p class="card-text">
-					{{ cantidad_articulos }} artículos, {{ cantidad_unidades }} unidades
-				</p>
-				<table class="table text-center table-striped">
-					<thead>
-						<tr>
-							<th scope="col">Precio</th>
-							<th scope="col">Nombre</th>
-							<th scope="col">Quedarian</th>
-							<th scope="col">Cantidad</th>
-							<th scope="col">Opciones</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr v-for="article in articles">
-							<td v-if="article.offer_price"
-								class="td-price text-danger">
-								<i class="icon-sale-ticket ticket-price"></i>
-								${{ article.offer_price }}
-							</td>
-							<td class="td-price" v-else>
-								${{ article.price }}
-							</td>
-							<td>{{ article.name }}</td>
-							<td>{{ article.stock }}</td>
-							<td>
-								<input type="text" 
-										min="1"
-										class="form-control input-amount"
-										v-model="article.amount">
-							</td>
-							<td>
-								<button @click="up(article)"
-										class="btn btn-primary btn-sm">
-									<i class="icon-plus"></i>
+				<div class="row m-b-10" v-show="markers.length">
+					<div class="col">
+						<div class="card">
+							<div class="card-header">
+								<button class="btn btn-success" @click="showMarkers">
+									<i class="icon-star-1" v-show="!show_markers"></i>
+									<i class="icon-cancel" v-show="show_markers"></i>
+									Marcadores
 								</button>
-								<button @click="down(article)"
-										class="btn btn-primary btn-sm">
-									<i class="icon-minus"></i>
+							</div>
+							<div class="card-body" v-show="show_markers">
+								<button v-for="marker in markers"
+										@click="addMarker(marker)"
+										class="btn btn-primary m-5">
+									{{ marker.name }}
 								</button>
-								<button @click="removeArticle(article)"
-										class="btn btn-danger btn-sm">
-									<i class="icon-cancel"></i>
-								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<h5 class="card-title">Total: {{ total }}</h5>
+						<p class="card-text">
+							{{ cantidad_articulos }} artículos, {{ cantidad_unidades }} unidades
+						</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<table class="table text-center table-striped">
+							<thead>
+								<tr>
+									<th scope="col">Precio</th>
+									<th scope="col">Nombre</th>
+									<th scope="col">Quedarian</th>
+									<th scope="col">Cantidad</th>
+									<th scope="col">Opciones</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr v-for="article in articles">
+									<td v-if="article.uncontable == 1"
+										class="td-price">
+										<template v-if="article.offer_price"
+												class="text-danger">
+											<i class="icon-sale-ticket ticket-price"></i>
+											<span v-show="article.amount_measurement == 1">
+												{{ price(article.offer_price) }} el {{ article.measurement_es }}
+											</span>
+											<span v-show="article.amount_measurement > 1">
+												{{ price(article.offer_price) }} los {{ article.measurement_es }}s
+											</span>
+										</template>
+										<template v-else>
+											<span v-show="article.amount_measurement == 1">
+												{{ price(article.price) }} el {{ article.measurement_es }}
+											</span>
+											<span v-show="article.amount_measurement > 1">
+												{{ price(article.price) }} los {{ article.amount_measurement }} {{ article.measurement_es }}s
+											</span>
+										</template>
+									</td>
+									<td v-else
+										class="td-price">
+										<template v-if="article.offer_price"
+												class="text-danger">
+											<i class="icon-sale-ticket ticket-price"></i>
+											{{ price(article.offer_price) }}
+										</template>
+										<template v-else>
+											{{ price(article.price) }}
+										</template>
+									</td>
+									<td>{{ article.name }}</td>
+									<td>{{ article.stock }}</td>
+									<td v-if="article.uncontable == 0">
+										<input type="text" 
+												min="1"
+												class="form-control input-amount"
+												v-model="article.amount">
+									</td>
+									<td v-else>
+										<input type="number" 
+												:id="'amount-measurement-'+article.id"
+												min="1"
+												class="form-control input-amount-measurement"
+												@keyup.enter="addTotal(article)"
+												v-model="article.amount">
+										<select id="select-measurement" 
+												v-model="article.measurement"
+												class="form-control select-measurement">
+											<option value="kilograms">Kilo(s)</option>	
+											<option value="grams">Gramo(s)</option>		
+										</select>
+									</td>
+									<td>
+										<button @click="up(article)"
+												class="btn btn-primary btn-sm">
+											<i class="icon-plus"></i>
+										</button>
+										<button @click="down(article)"
+												class="btn btn-primary btn-sm">
+											<i class="icon-minus"></i>
+										</button>
+										<button @click="removeArticle(article)"
+												class="btn btn-danger btn-sm">
+											<i class="icon-cancel"></i>
+										</button>
 
-							</td>
-						</tr>
-					</tbody>
-				</table>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -121,26 +188,93 @@ export default {
 			cantidad_articulos: 0,
 			cantidad_unidades: 0,
 			possible_articles: [],
-			// possible_articles: [
-			// 	{name: 'Camion'},
-			// 	{name: 'Casita'},
-			// 	{name: 'Anteojos'},
-			// 	{name: 'Reja'},
-			// ],
+			available_articles: [],
 			names: [],
+			bar_codes: [],
+			markers: [],
+			show_markers: true,
 		}
 	},
 	created() {
-		$('#bar-code').focus()
 		this.getNames()
+		this.getBarCodes()
+		this.getMarkers()
+		this.getAvailableArticles()
+		$('#bar-code').focus()
 	},
 	methods: {
-		addTotal(article, repeated = false) {	
-			if (article.offer_price) {
-				this.total += parseFloat(article.offer_price)
-			} else {
-				this.total += parseFloat(article.price)
+		price(p) {
+			return numeral(p).format('$0,0.00')
+		},
+		addArticle() {
+
+			var disponible = false
+			this.available_articles.forEach(article => {
+				if (article.bar_code == this.article.bar_code || article.name == this.article.name) {
+					disponible = true
+					axios.get('articles/get-by-name/'+article.name)
+					.then(res => {
+						var article = res.data
+						article.amount = 1
+						this.possible_articles = []
+						this.articles.push(article)
+						if (article.uncontable == 1) {
+							// console.log(article)
+							article.measurement_original = article.measurement
+							if (article.measurement == 'kilograms') {
+								article.measurement_es = 'kilo'
+							} else if (article.measurement == 'grams') {
+								article.measurement_es = 'gramo'
+							} else if (article.measurement == 'liters') {
+								article.measurement_es = 'litro'
+							}
+							setTimeout(() => {
+								$(`#amount-measurement-${article.id}`).focus()
+							}, 500)
+						} else {
+							this.addTotal(article)
+						}
+					})
+					.catch(err => {
+						console.log(err)
+					})
+				} 
+			})
+			if (!disponible) {
+				toastr.error('No registrado')
 			}
+		},
+		addTotal(article, repeated = false) {	
+			// console.log(article)
+			if (article.uncontable == 0) {
+				if (article.offer_price) {
+					this.total += parseFloat(article.offer_price)
+				} else {
+					this.total += parseFloat(article.price)
+				}
+			} else {
+				var cantidad_a_vender = 0
+				if (article.measurement_original == article.measurement) {
+					cantidad_a_vender = parseFloat(article.amount) * (parseFloat(article.price) / article.amount_measurement)
+				} else {
+					if (article.measurement_original == 'kilograms') {
+						if (article.offer_price) {
+							cantidad_a_vender = (parseFloat(article.amount) / 1000) * (parseFloat(article.offer_price) / article.amount_measurement)
+						} else {
+							cantidad_a_vender = (parseFloat(article.amount) / 1000) * (parseFloat(article.price) / article.amount_measurement)
+						}
+					} else {
+						if (article.offer_price) {
+							cantidad_a_vender = (parseFloat(article.amount) * 1000) * parseFloat(article.offer_price)
+						} else {
+							cantidad_a_vender = (parseFloat(article.amount) * 1000) * (parseFloat(article.price) / article.amount_measurement)
+						}
+					}
+				}
+				article.stock -=
+			} 
+			this.total = this.price(this.total)
+
 			this.cantidad_unidades++
 			if (article.stock != 'No tiene datos' && article.stock) {
 				article.stock--
@@ -150,12 +284,53 @@ export default {
 			if (!repeated) {
 				this.cantidad_articulos++
 			}
+			if (this.article.bar_code != '') {
+				this.article.bar_code = ''
+				$('#bar_code').focus()
+			} else {
+				this.article.name = ''
+				$('#name').focus()
+			}
+		},
+		showMarkers() {
+			if (this.show_markers) {
+				this.show_markers = false
+			} else {
+				this.show_markers = true
+			}
 		},
 		getNames() {
 			axios.get('articles/names')
 			.then(res => {
-				console.log(res.data)
+				// console.log(res.data)
 				this.names = res.data
+			})
+			.catch(err => {
+				console.log(err)
+			})
+		},
+		getBarCodes() {
+			axios.get('articles/bar-codes')
+			.then(res => {
+				this.bar_codes = res.data
+			})
+			.catch(err => {
+				console.log(err)
+			})
+		},
+		getAvailableArticles() {
+			axios.get('articles/availables')
+			.then(res => {
+				this.available_articles = res.data
+			})
+			.catch(err => {
+				console.log(err)
+			})
+		},
+		getMarkers() {
+			axios.get('articles/get-markers')
+			.then(res => {
+				this.markers = res.data
 			})
 			.catch(err => {
 				console.log(err)
@@ -163,7 +338,7 @@ export default {
 		},
 		setPossibleArticles() {
 			// console.log('entro')
-			if (this.article.bar_code.length == 0 && this.article.name.length >= 2) {
+			if (this.article.bar_code.length == 0 && this.article.name.length >= 1) {
 				this.possible_articles = []
 				this.names.forEach(name => {
 					if (name.toLowerCase().includes(this.article.name)) {
@@ -178,70 +353,82 @@ export default {
 			this.article.name = article_name
 			this.addArticle()
 		},
+		isRegister() {
+			if (this.bar_codes.includes(this.article.bar_code.toUpperCase())) {
+				return true
+			} else if (this.bar_codes.includes(this.article.bar_code.toLowerCase())) {
+				return true
+			} else {
+				toastr.error('No hay ningun artículo registrado con ese codigo')
+				this.article.bar_code = ''
+				return false
+			}
+		},
 
 		/*
 			* Agregar artículos a la lista de articulos por ser vendidos
 		*/
-		addArticle() {
+		addMarker(marker) {
 			var repetido = false
-			// Si se ingresa por nombre revisa que no este repetido
+			this.articles.forEach(article => {
+				if (article.name == marker.name) {
+					repetido = true
+					toastr.warning(article.name+' ya esta ingresado en esta venta, se le sumo una unidad')
+					article.amount++
+					this.addTotal(article, true)
+					this.article.bar_code = ''
+					$('#bar-code').focus()
+				}
+			})
+
+			if (!repetido) {
+				marker.amount = 1
+				this.articles.push(marker)
+				this.addTotal(marker)
+				$('#bar-code').focus()
+			}
+		},
+		getByBarCode(bar_code) {
+			axios.get('articles/get-by-bar-code/'+bar_code)
+			.then(res => {
+				var article = res.data
+				article.amount = 1
+				this.articles.push(article)
+				this.addTotal(article)
+				this.article.bar_code = ''
+				$('#bar-code').focus()
+			})
+			.catch(err => {
+				console.log(err)
+			})
+		},
+		isRepeated() {
 			if (this.possible_articles.length) {
 				this.articles.forEach(article => {
 					if (article.name == this.article.name) {
-						repetido = true
+						// repetido = true
 						toastr.warning(article.name+' ya esta ingresado en esta venta, se le sumo una unidad')
 						article.amount++
 						this.addTotal(article, true)
 						this.possible_articles = []
 						this.article.name = ''
 						$('#name').focus()
+						return true
 					}
 				})
 			} else {
 				// Si se ingresa por codigo revisa que no este repetido
 				this.articles.forEach(article => {
 					if (article.bar_code == this.article.bar_code) {
-						repetido = true
+						// repetido = true
 						toastr.warning(article.name+' ya esta ingresado en esta venta, se le sumo una unidad')
 						article.amount++
 						this.addTotal(article, true)
 						this.article.bar_code = ''
 						$('#bar-code').focus()
+						return true
 					}
 				})
-			}
-
-			// Si no esta repetido se piden los datos
-			if (!repetido) {
-				if (this.possible_articles.length) {
-					axios.get('articles/get-by-name/'+this.article.name)
-					.then(res => {
-						// console.log(res.data)
-						var article = res.data
-						article.amount = 1
-						this.articles.push(article)
-						this.addTotal(article)
-						this.possible_articles = []
-						this.article.name = ''
-						$('#name').focus()
-					})
-					.catch(err => {
-						console.log(err)
-					})
-				} else {
-					axios.get('articles/get-by-bar-code/'+this.article.bar_code)
-					.then(res => {
-						var article = res.data
-						article.amount = 1
-						this.articles.push(article)
-						this.addTotal(article)
-						this.article.bar_code = ''
-						$('#bar-code').focus()
-					})
-					.catch(err => {
-						console.log(err)
-					})
-				}
 			}
 		},
 		removeArticle(article) {
@@ -294,7 +481,7 @@ export default {
 	}	
 }
 </script>
-<style>
+<style scoped>
 .input-amount{
 	display: inline-block;
 	width: 50px;
@@ -317,5 +504,17 @@ export default {
 	color: #E23535;
 	top: -5px;
 	left: 0px;
+}
+
+.measurement {
+	display: inline-block;
+}
+.select-measurement {
+	display: inline-block;
+	width: 100px;
+}
+.input-amount-measurement {
+	width: 70px;
+	display: inline-block;
 }
 </style>

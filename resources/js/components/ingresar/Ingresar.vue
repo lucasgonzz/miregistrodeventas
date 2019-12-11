@@ -39,7 +39,22 @@
 						<h6 class="h6">
 							<strong>Complete con los datos del artículo que quiera ingresar</strong>
 						</h6>
-							
+						
+						
+						<div class="custom-control custom-checkbox my-1 mr-sm-2 m-b-10">
+							<input v-model="article.is_uncontable" 
+									type="checkbox" 
+									class="custom-control-input" 
+									id="uncontable">
+							<label class="custom-control-label c-p" 
+									for="uncontable">
+								Incontable
+							</label>
+							<small class="form-text text-muted">
+								¿Este artículo no puede ser contado o enumerado? Ej: Queso, luquido, etc.
+							</small>
+						</div>
+
 						<div class="form-group">
 							<label for="bar_code">Codigo de Barras</label>
 							<input 
@@ -79,7 +94,7 @@
 							</div>
 						</div>
 						<div class="row m-b-5">
-							<div class="col">
+							<div :class="article.is_uncontable ? 'col-4' : 'col'">
 								<label for="cost">Costo</label>
 								<input type="number" 
 										class="form-control focus-red" 
@@ -93,15 +108,36 @@
 									Coloque un . (punto) para agregar centavos
 								</small>
 							</div>
-							<div class="col">
+							<div :class="article.is_uncontable ? 'col-8' : 'col'">
 								<label for="price">Precio</label>
+								<br>
 								<input type="number" 
 										class="form-control focus-red" 
+										:class="article.is_uncontable ? 'input-uncontable-price' : ''"
 										placeholder="Ingrese el precio"
 										required 
 										id="price"
 										@keyup.enter="changeToDate"
 										v-model="article.price">
+								<span v-show="article.is_uncontable"> 
+									<span class="p-l-5"> pesos </span>
+									<span class="p-r-5" v-show="article.amount_measurement == 1"> por </span>
+									<span class="p-r-5" v-show="article.amount_measurement > 1"> los </span>
+								</span>
+								<input v-show="article.is_uncontable"
+										v-model="article.amount_measurement"
+										type="number"
+										min="1" 
+										class="form-control input-uncontable-amount">
+								<select v-show="article.is_uncontable"
+										id="measurement" 
+										v-model="article.measurement"
+										class="form-control select-uncontable">
+									<option value="kilograms" selected>Kg</option>
+									<option value="grams">Gramos</option>
+									<option value="liters">Litros</option>
+									<option value="meters">Metros</option>
+								</select>
 								<small class="form-text text-muted">
 									Coloque un . (punto) para agregar centavos
 								</small>
@@ -175,12 +211,15 @@
 							</div>
 							<div class="col">
 								<label for="stock">Cantidad</label>
+								<br>
 								<input type="number" 
 										class="form-control focus-red" 
+										:class="article.is_uncontable ? 'input-uncontable-stock' : ''"
 										id="stock"
 										@keyup.enter="saveArticle"
 										placeholder="Ingrese la cantidad"
 										v-model="article.stock">
+								<span v-show="article.is_uncontable">{{ measurement_es() }}</span>
 								<small class="form-text text-muted">
 									Si deja este campo vacio no se tendra en cuenta el stock al 
 									momento de hacer una venta
@@ -241,10 +280,13 @@ export default {
 	data() {
 		return {
 			article: {
+				is_uncontable: false,
 				bar_code: '',
 				name: '',
 				cost: '',
 				price: '',
+				measurement: 'kilograms',
+				amount_measurement: 1,
 				new_stock: 0,
 				stock: '',
 				provider: 0,
@@ -274,6 +316,13 @@ export default {
 		this.getGeneratedBarCodes()
 	},
 	methods: {
+		measurement_es() {
+			if (this.article.measurement == 'kilograms') {
+				return 'kilos'
+			} else if (this.article.measurement == 'grams') {
+				return 'gramos'
+			}
+		},
 		// Cambiar
 		changeToCost() {
 			$('#cost').focus()
@@ -432,6 +481,13 @@ export default {
 				toastr.error('El campo precio es obligatorio')
 				$('#price').focus()
 			}
+			// if (this.article.bar_code == '') {
+				if (this.names.includes(this.article.name)) {
+					ok = false
+					toastr.error('Ya hay un artículo con este nombre')
+					$('#name').focus()
+				}
+			// }
 			return ok
 		},
 
@@ -584,8 +640,22 @@ export default {
 	}
 }
 </script>
-<style>
-.results {
-
+<style scoped>
+.input-uncontable-price {
+	width: 40%;
+	display: inline-block;
+}
+.input-uncontable-amount {
+	margin: 0px;
+	width: 18%;
+	display: inline-block;
+}
+.select-uncontable {
+	width: 18%;
+	display: inline-block;
+}
+.input-uncontable-stock {
+	width: 60%;
+	display: inline-block;
 }
 </style>

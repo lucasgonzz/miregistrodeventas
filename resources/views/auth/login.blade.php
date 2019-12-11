@@ -40,6 +40,7 @@
                         </div>
                         <button class="btn btn-primary btn-lg btn-block">Ingresar</button>
                     </form>
+                    <a href="{{ route('show-register-form') }}" class="btn btn-link">Registrarme</a>
                 </div>
             </div>
         </div>

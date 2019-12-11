@@ -6,7 +6,7 @@ use App\Article;
 use App\Sale;
 use App\Client;
 
-require(__DIR__.'\..\fpdf\fpdf.php');
+require(__DIR__.'/../fpdf/fpdf.php');
 use fpdf;
 
 class PdfPrintSale extends fpdf {

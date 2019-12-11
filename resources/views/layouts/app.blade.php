@@ -8,7 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="user" content="{{ Auth()->user() }}">
     <meta name="asset" content="{{ asset('') }}">
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>MiRegistroDeVentas</title>
 
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
@@ -17,7 +17,6 @@
 
     <!-- Icons -->
     <link href="{{ asset('styles.css') }}" rel="stylesheet">
-    <!-- sad -->
 </head>
 <body>
     <!-- <div id="app"> -->

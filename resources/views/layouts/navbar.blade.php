@@ -62,42 +62,54 @@
                     @endif
                 @endif
                 @if (Auth()->user()->hasRole('commerce'))
+                    @if (Auth()->user()->hasPermissionTo('sale.create'))
                     <li class="nav-item">
                         <a class="nav-link {{ active('comercios/vender') }}" href="{{ route('vender.commerce') }}">
                             <!-- <i class="icon-tag"></i> -->
                             Vender
                         </a>
                     </li>
+                    @endif
+                    @if (Auth()->user()->hasPermissionTo('article.create'))
                     <li class="nav-item">
                         <a class="nav-link {{ active('comercios/ingresar') }}" href="{{ route('ingresar.commerce') }}">
                             <!-- <i class="icon-plus"></i> -->
                             Ingresar
                         </a>
                     </li>
+                    @endif
+                    @if (Auth()->user()->hasPermissionTo('article.index'))
                     <li class="nav-item">
                         <a class="nav-link {{ active('comercios/listado') }}" href="{{ route('listado.commerce') }}">
                             <!-- <i class="icon-list-ol"></i> -->
                             Listado
                         </a>
                     </li>
+                    @endif
+                    @if (Auth()->user()->hasPermissionTo('sale.index'))
                     <li class="nav-item">
                         <a class="nav-link {{ active('comercios/ventas') }}" href="{{ route('ventas.commerce') }}">
                             <!-- <i class="icon-list-ol"></i> -->
                             Ventas
                         </a>
                     </li>
+                    @endif
+                    @if (Auth()->user()->hasPermissionTo('bar_code.create'))
                     <li class="nav-item">
                         <a class="nav-link {{ active('comercios/codigos-de-barra') }}" href="{{ route('bar-codes.commerce') }}">
                             <!-- <i class="icon-list-ol"></i> -->
                             Codigos de barra
                         </a>
                     </li>
+                    @endif
+                    @if (Auth()->user()->hasRole('admin'))
                     <li class="nav-item">
                         <a class="nav-link {{ active('comercios/empleados') }}" href="{{ route('empleados.commerce') }}">
                             <!-- <i class="icon-list-ol"></i> -->
                             Empleados
                         </a>
                     </li>
+                    @endif
                 @endif
             </ul>
 

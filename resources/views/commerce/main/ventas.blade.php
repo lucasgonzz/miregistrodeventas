@@ -1,5 +1,5 @@
 @extends('layouts.app')
 
 @section('content')
-<ventas></ventas>
+<ventas rol="commerce"></ventas>
 @endsection

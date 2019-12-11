@@ -40,6 +40,30 @@ class ArticleController extends Controller
             ];
     }
 
+    function createMarker($id) {
+        $article = Article::find($id);
+        $article->marker = 1;
+        $article->save();
+    }
+
+    function deleteMarker($id) {
+        $article = Article::find($id);
+        $article->marker = 0;
+        $article->save();
+    }
+
+    function getAvailables() {
+        return Article::where('user_id', Auth()->user()->id)
+                        ->select('bar_code', 'name', 'uncontable')
+                        ->get();
+    }
+
+    function getMarkers() {
+        return Article::where('user_id', Auth()->user()->id)
+                        ->where('marker', 1)
+                        ->get();
+    }
+
     function getByBarCode($bar_code) {
         $user = Auth()->user();
         if ($user->hasRole('commerce')) {
@@ -213,6 +237,11 @@ class ArticleController extends Controller
         $errores = false;
         $user = Auth()->user();
         $article = new Article();
+        if ($request->article['is_uncontable']) {
+            $article->uncontable = 1;
+            $article->measurement = $request->article['measurement'];
+            $article->amount_measurement = $request->article['amount_measurement'];
+        }
         $article->bar_code = $request->article['bar_code'];
         $article->name = ucwords($request->article['name']);
         $article->cost = $request->article['cost'];
@@ -286,15 +315,20 @@ class ArticleController extends Controller
         if ($mostrar == 'oferta') {
             $articles = $articles->whereNotNull('offer_price');
         }
-        if ($mostrar == 'desactualizados') {
+        else if ($mostrar == 'marker') {
+                $fecha_actual = date('d-m-Y');
+                $hace_6_meses = date('d-m-Y', strtotime($fecha_actual."- 6 month"));
+                $articles = $articles->where('marker', 1);
+        }
+        else if ($mostrar == 'desactualizados') {
                 $fecha_actual = date('d-m-Y');
                 $hace_6_meses = date('d-m-Y', strtotime($fecha_actual."- 6 month"));
                 $articles = $articles->whereDate('updated_at', '<=', $hace_6_meses);
         }
-        if ($mostrar == 'no-vendidos') {
+        else if ($mostrar == 'no-vendidos') {
             $articles = $articles->doesntHave('sales');
         }
-        if ($mostrar == 'no-stock') {
+        else if ($mostrar == 'no-stock') {
             $articles = $articles->where('stock', 0);
         }
 
