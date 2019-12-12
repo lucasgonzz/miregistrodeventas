@@ -72869,7 +72869,7 @@ var render = function() {
                   attrs: { type: "submit" },
                   on: { click: _vm.vender }
                 },
-                [_vm._v("Vender")]
+                [_vm._v("Venders")]
               )
             ])
           ])

@@ -47,7 +47,7 @@
 						<button type="submit"
 								@click="vender"
 								:class="articles.length ? '' : 'disabled'" 
-								class="btn btn-primary btn-block mb-2">Vender</button>
+								class="btn btn-primary btn-block mb-2">Venders</button>
 					</div>
 				</div>
 			</div>
