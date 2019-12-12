@@ -116,6 +116,7 @@ class SaleController extends Controller
     }
 
     function store(Request $request) {
+        // return $request;
         $user = Auth()->user();
         $last_sale = Sale::where('user_id', $user->id)
                             ->orderby('created_at','DESC')
@@ -155,12 +156,24 @@ class SaleController extends Controller
     	foreach ($request->articles as $article) {
     		$sale->articles()->attach($article['id'], [
                                                         'amount' => $article['amount'],
+                                                        'measurement' => 
+                                                                        $article['measurement'] 
+                                                                        ? $article['measurement'] 
+                                                                        : null,
                                                         'cost' => $article['cost'],
                                                         'price' => $article['price'],
                                                     ]);
     		$article_ = Article::find($article['id']);
     		if (!is_null($article_->stock)) {
-	    		$article_->stock -= $article['amount'];
+                if ($article_->uncontable == 1) {
+                    if ($article->measurement != $article->measurement_original) {
+                        $article_->stock -= ((float)$article['amount'] / 1000);
+                    } else {
+                        $article_->stock -= $article['amount'];
+                    }
+                } else {
+                    $article_->stock -= $article['amount'];
+                }
 	    		$article_->save();
     		}
     	}

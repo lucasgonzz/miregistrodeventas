@@ -21,11 +21,11 @@ class CreateArticlesTable extends Migration
             $table->decimal('price', 8, 2);
             $table->decimal('previus_price', 8, 2)->nullable();
             $table->decimal('offer_price', 8, 2)->nullable();
-            $table->integer('stock')->nullable();
+            $table->decimal('stock')->nullable();
             $table->boolean('marker')->default(0);
             $table->boolean('uncontable')->default(0);
-            $table->enum('measurement', ['meters', 'liters', 'grams', 'kilograms'])->nullable();
-            $table->integer('amount_measurement')->nullable();
+            $table->enum('measurement', ['gramo', 'kilo'])->nullable();
+            // $table->integer('amount_measurement')->nullable();
             $table->integer('user_id')->unsigned();
             $table->integer('sub_user_id')->nullable()->unsigned();
             $table->integer('updated_by')->nullable()->unsigned();

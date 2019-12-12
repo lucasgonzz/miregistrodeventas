@@ -222,7 +222,7 @@
 															{{ price(article.offer_price) }}
 														</span>
 														<span v-show="article.uncontable == 1">
-															{{ price(article.offer_price) }} x {{ article.amount_measurement }} {{ article.measurement_es }}
+															{{ price(article.offer_price) }} el  {{ article.measurement }}
 														</span>
 													</td>
 													<td v-else
@@ -231,11 +231,16 @@
 															{{ price(article.price) }}
 														</span>
 														<span v-show="article.uncontable == 1">
-															{{ price(article.price) }} x {{ article.amount_measurement }} {{ article.measurement_es }}
+															{{ price(article.price) }} el  {{ article.measurement }}
 														</span>
 													</td>
 													<td v-if="article.stock" class="td-stock">
-														{{ article.stock }}
+														<span v-if="article.uncontable == 1">
+															{{ article.stock }} {{ article.measurement }}(s)
+														</span>
+														<span v-else>
+															{{ article.stock }}
+														</span>
 													</td>
 													<td v-else>
 														Sin uso
@@ -317,7 +322,12 @@
 														{{ price(article.price) }}
 													</td>
 													<td v-if="article.stock" class="td-stock">
-														{{ article.stock }}
+														<span v-if="article.uncotable == 1">
+															{{ article.stock }} {{ article.measurement }}(s)
+														</span>
+														<span v-else>
+															{{ article.stock }}
+														</span>
 													</td>
 													<td v-else class="td-stock">
 														Sin uso
@@ -578,7 +588,6 @@ export default {
 				this.setIsAllSelected()
 				this.filterProviders()
 				// Se pasa el nombre de la medida a español
-				this.parseMeasurementEs()
 			})
 			.catch( err => {
 				console.log(err)
@@ -887,25 +896,6 @@ export default {
 		providersHistory(article) {
 			this.article = article
 			$('#providers-history').modal('show')
-		},
-		parseMeasurementEs() {
-			this.articles.forEach(article => {
-				if (article.uncontable == 1) {
-					if (article.measurement == 'kilograms') {
-						if (article.amount_measurement == 1) {
-							article.measurement_es = 'kilo'
-						} else {
-							article.measurement_es = 'kilos'
-						}
-					} else if (article.measurement == 'grams') {
-						if (article.amount_measurement == 1) {
-							article.measurement_es = 'gramo'
-						} else {
-							article.measurement_es = 'gramos'
-						}
-					}
-				}
-			})
 		},
 	},
 	created() {

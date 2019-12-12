@@ -16,6 +16,7 @@ class Article extends Model
     	'price',
     	'last_price',
     	'created_at',
+        'measurement',
     ];
 
     public function user() {

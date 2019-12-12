@@ -74,7 +74,7 @@
 				</div>
 				<div class="row">
 					<div class="col">
-						<h5 class="card-title">Total: {{ total }}</h5>
+						<h5 class="card-title">Total: {{ price(total) }}</h5>
 						<p class="card-text">
 							{{ cantidad_articulos }} artículos, {{ cantidad_unidades }} unidades
 						</p>
@@ -99,20 +99,10 @@
 										<template v-if="article.offer_price"
 												class="text-danger">
 											<i class="icon-sale-ticket ticket-price"></i>
-											<span v-show="article.amount_measurement == 1">
-												{{ price(article.offer_price) }} el {{ article.measurement_es }}
-											</span>
-											<span v-show="article.amount_measurement > 1">
-												{{ price(article.offer_price) }} los {{ article.measurement_es }}s
-											</span>
+											{{ price(article.offer_price) }} el {{ article.measurement }}
 										</template>
 										<template v-else>
-											<span v-show="article.amount_measurement == 1">
-												{{ price(article.price) }} el {{ article.measurement_es }}
-											</span>
-											<span v-show="article.amount_measurement > 1">
-												{{ price(article.price) }} los {{ article.amount_measurement }} {{ article.measurement_es }}s
-											</span>
+												{{ price(article.price) }} el {{ article.measurement_original }}
 										</template>
 									</td>
 									<td v-else
@@ -127,9 +117,19 @@
 										</template>
 									</td>
 									<td>{{ article.name }}</td>
-									<td>{{ article.stock }}</td>
+									<td v-if="article.stock">
+										<span v-if="article.uncontable == 1">
+											{{ article.stock }} {{ article.measurement_original }}s
+										</span>
+										<span v-else>
+											{{ article.stock }} 
+										</span>
+									</td>
+									<td v-else>
+										sin datos
+									</td>
 									<td v-if="article.uncontable == 0">
-										<input type="text" 
+										<input type="number" 
 												min="1"
 												class="form-control input-amount"
 												v-model="article.amount">
@@ -144,8 +144,8 @@
 										<select id="select-measurement" 
 												v-model="article.measurement"
 												class="form-control select-measurement">
-											<option value="kilograms">Kilo(s)</option>	
-											<option value="grams">Gramo(s)</option>		
+											<option value="kilo">Kilo(s)</option>	
+											<option value="gramo">Gramo(s)</option>		
 										</select>
 									</td>
 									<td>
@@ -221,13 +221,6 @@ export default {
 						if (article.uncontable == 1) {
 							// console.log(article)
 							article.measurement_original = article.measurement
-							if (article.measurement == 'kilograms') {
-								article.measurement_es = 'kilo'
-							} else if (article.measurement == 'grams') {
-								article.measurement_es = 'gramo'
-							} else if (article.measurement == 'liters') {
-								article.measurement_es = 'litro'
-							}
 							setTimeout(() => {
 								$(`#amount-measurement-${article.id}`).focus()
 							}, 500)
@@ -253,33 +246,48 @@ export default {
 					this.total += parseFloat(article.price)
 				}
 			} else {
-				var cantidad_a_vender = 0
+				var total_a_pagar_del_incotable = 0
+
+				// Revisa se se estan vendiendo kilos de un articulo que tiene el
+				// precio en kilos o lo mismo pero con gramos
 				if (article.measurement_original == article.measurement) {
-					cantidad_a_vender = parseFloat(article.amount) * (parseFloat(article.price) / article.amount_measurement)
+					console.log('unidades iguales')
+					if (article.offer_price) {
+						total_a_pagar_del_incotable = parseFloat(article.amount) * parseFloat(article.offer_price)
+					} else {
+						total_a_pagar_del_incotable = parseFloat(article.amount) * parseFloat(article.price)
+					}
+					if (article.stock) {
+						article.stock -= article.amount
+					}
 				} else {
-					if (article.measurement_original == 'kilograms') {
+					// Si son diferentes revisa si el peso original era en kilogramos
+					// Si es asi es porque se eligio venderlo en gramos
+					console.log('unidades diferentes')
+					if (article.measurement_original == 'kilo') {
+						total_a_pagar_del_incotable = parseFloat(article.amount) * parseFloat(article.price) / 1000
+						if (article.stock) {
+							article.stock -= article.amount / 1000
+						}
 						if (article.offer_price) {
-							cantidad_a_vender = (parseFloat(article.amount) / 1000) * (parseFloat(article.offer_price) / article.amount_measurement)
+							total_a_pagar_del_incotable = parseFloat(article.amount) * parseFloat(article.offer_price) / 1000
 						} else {
-							cantidad_a_vender = (parseFloat(article.amount) / 1000) * (parseFloat(article.price) / article.amount_measurement)
+							total_a_pagar_del_incotable = parseFloat(article.amount) * parseFloat(article.price) / 1000
 						}
 					} else {
-						if (article.offer_price) {
-							cantidad_a_vender = (parseFloat(article.amount) * 1000) * parseFloat(article.offer_price)
-						} else {
-							cantidad_a_vender = (parseFloat(article.amount) * 1000) * (parseFloat(article.price) / article.amount_measurement)
-						}
+						// Si entra aca es porque el peso del articulo esta en gramos
+						// y se kieren vender kilos
+						// Esto es muy raro que pase asi que no lo voy a programar
 					}
 				}
-				article.stock -=
+				console.log('total: '+total_a_pagar_del_incotable)
+				this.total += total_a_pagar_del_incotable
 			} 
-			this.total = this.price(this.total)
+			// this.total = this.price(this.total)
 
 			this.cantidad_unidades++
-			if (article.stock != 'No tiene datos' && article.stock) {
+			if (article.stock && article.uncontable == 0) {
 				article.stock--
-			} else {
-				article.stock = 'No tiene datos'
 			}
 			if (!repeated) {
 				this.cantidad_articulos++

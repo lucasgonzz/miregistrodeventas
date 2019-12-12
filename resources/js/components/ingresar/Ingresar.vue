@@ -94,7 +94,7 @@
 							</div>
 						</div>
 						<div class="row m-b-5">
-							<div :class="article.is_uncontable ? 'col-4' : 'col'">
+							<div :class="article.is_uncontable ? 'col-5' : 'col'">
 								<label for="cost">Costo</label>
 								<input type="number" 
 										class="form-control focus-red" 
@@ -108,7 +108,7 @@
 									Coloque un . (punto) para agregar centavos
 								</small>
 							</div>
-							<div :class="article.is_uncontable ? 'col-8' : 'col'">
+							<div :class="article.is_uncontable ? 'col-7' : 'col'">
 								<label for="price">Precio</label>
 								<br>
 								<input type="number" 
@@ -119,24 +119,13 @@
 										id="price"
 										@keyup.enter="changeToDate"
 										v-model="article.price">
-								<span v-show="article.is_uncontable"> 
-									<span class="p-l-5"> pesos </span>
-									<span class="p-r-5" v-show="article.amount_measurement == 1"> por </span>
-									<span class="p-r-5" v-show="article.amount_measurement > 1"> los </span>
-								</span>
-								<input v-show="article.is_uncontable"
-										v-model="article.amount_measurement"
-										type="number"
-										min="1" 
-										class="form-control input-uncontable-amount">
+								<span v-show="article.is_uncontable" class="p-l-5 p-r-5">el</span>
 								<select v-show="article.is_uncontable"
 										id="measurement" 
 										v-model="article.measurement"
-										class="form-control select-uncontable">
-									<option value="kilograms" selected>Kg</option>
-									<option value="grams">Gramos</option>
-									<option value="liters">Litros</option>
-									<option value="meters">Metros</option>
+										class="form-control select-measurement">
+									<option value="kilo" selected>Kilo</option>
+									<option value="gramo">Gramo</option>
 								</select>
 								<small class="form-text text-muted">
 									Coloque un . (punto) para agregar centavos
@@ -285,8 +274,7 @@ export default {
 				name: '',
 				cost: '',
 				price: '',
-				measurement: 'kilograms',
-				amount_measurement: 1,
+				measurement: 'kilo',
 				new_stock: 0,
 				stock: '',
 				provider: 0,
@@ -642,16 +630,11 @@ export default {
 </script>
 <style scoped>
 .input-uncontable-price {
-	width: 40%;
+	width: 50%;
 	display: inline-block;
 }
-.input-uncontable-amount {
-	margin: 0px;
-	width: 18%;
-	display: inline-block;
-}
-.select-uncontable {
-	width: 18%;
+.select-measurement {
+	width: 30%;
 	display: inline-block;
 }
 .input-uncontable-stock {

@@ -240,7 +240,6 @@ class ArticleController extends Controller
         if ($request->article['is_uncontable']) {
             $article->uncontable = 1;
             $article->measurement = $request->article['measurement'];
-            $article->amount_measurement = $request->article['amount_measurement'];
         }
         $article->bar_code = $request->article['bar_code'];
         $article->name = ucwords($request->article['name']);

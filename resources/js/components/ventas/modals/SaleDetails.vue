@@ -45,15 +45,25 @@
                     </thead>
                     <tbody>
                         <tr v-for="article in sale.articles">
-                            <!-- <td v-if="article.bar_code">{{ article.bar_code }}</td>
-                            <td v-else>No tiene</td> -->
                             <td>{{ article.name }}</td>
-                            <td>{{ article.pivot.amount }}</td>
+                            <td>
+                                <span v-if="article.uncontable == 1">                                    
+                                    {{ article.pivot.amount }} {{ article.pivot.measurement }}(s)
+                                </span>
+                                <span v-else>
+                                    {{ article.pivot.amount }}
+                                </span>
+                            </td>
                             <td v-show="show_costs">
                                 {{ price(article.pivot.cost) }}
                             </td>
                             <td>
-                                {{ price(article.pivot.price) }}
+                                <span v-if="article.uncontable == 1">
+                                    {{ price(article.pivot.price) }} el {{ article.measurement }}
+                                </span>
+                                <span v-else>
+                                    {{ price(article.pivot.price) }}
+                                </span>
                             </td>
                             <td v-show="show_costs">
                                 {{ getSubTotalCost(article) }}
@@ -86,11 +96,28 @@ export default {
             return numeral(p).format('$0,0.00')
         },
         getSubTotal(article) {
-            var sub_total = parseFloat(article.pivot.price) * article.pivot.amount
-            return this.price(sub_total)
+            if (article.uncontable == 1) {
+                if (article.measurement != article.measurement_original) {
+                    var sub_total_price = parseFloat(article.pivot.price) * article.pivot.amount / 1000
+                } else {
+                    var sub_total_price = parseFloat(article.pivot.price) * article.pivot.amount
+                }
+            } else {
+                var sub_total_price = parseFloat(article.pivot.price) * article.pivot.amount
+            }
+            // var sub_total = parseFloat(article.pivot.price) * article.pivot.amount
+            return this.price(sub_total_price)
         },
         getSubTotalCost(article) {
-            var sub_total_cost = parseFloat(article.pivot.cost) * article.pivot.amount
+            if (article.uncontable == 1) {
+                if (article.measurement != article.measurement_original) {
+                    var sub_total_cost = parseFloat(article.pivot.cost) * article.pivot.amount / 1000
+                } else {
+                    var sub_total_cost = parseFloat(article.pivot.cost) * article.pivot.amount
+                }
+            } else {
+                var sub_total_cost = parseFloat(article.pivot.cost) * article.pivot.amount
+            }
             return this.price(sub_total_cost)
         },
         generatePdf() {

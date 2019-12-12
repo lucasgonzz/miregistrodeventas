@@ -82,7 +82,7 @@
 						Para agregar decimales (centavos) coloque una coma para separar las unidades	
 					</small>
 				</div>
-				<div class="form-group">
+				<div class="form-group" v-show="article.stock">
 					<label for="stock">Cantidad para agregar</label>
 					<input type="number" 
 							min="0"

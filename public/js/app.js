@@ -2696,17 +2696,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -2727,8 +2716,7 @@ __webpack_require__.r(__webpack_exports__);
         name: '',
         cost: '',
         price: '',
-        measurement: 'kilograms',
-        amount_measurement: 1,
+        measurement: 'kilo',
         new_stock: 0,
         stock: '',
         provider: 0,
@@ -3952,6 +3940,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -4187,8 +4185,6 @@ __webpack_require__.r(__webpack_exports__);
 
         _this5.filterProviders(); // Se pasa el nombre de la medida a español
 
-
-        _this5.parseMeasurementEs();
       })["catch"](function (err) {
         console.log(err);
       });
@@ -4507,25 +4503,6 @@ __webpack_require__.r(__webpack_exports__);
     providersHistory: function providersHistory(article) {
       this.article = article;
       $('#providers-history').modal('show');
-    },
-    parseMeasurementEs: function parseMeasurementEs() {
-      this.articles.forEach(function (article) {
-        if (article.uncontable == 1) {
-          if (article.measurement == 'kilograms') {
-            if (article.amount_measurement == 1) {
-              article.measurement_es = 'kilo';
-            } else {
-              article.measurement_es = 'kilos';
-            }
-          } else if (article.measurement == 'grams') {
-            if (article.amount_measurement == 1) {
-              article.measurement_es = 'gramo';
-            } else {
-              article.measurement_es = 'gramos';
-            }
-          }
-        }
-      });
     }
   },
   created: function created() {
@@ -5786,9 +5763,524 @@ __webpack_require__.r(__webpack_exports__);
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/vender/VenderCommerce.vue?vue&type=script&lang=js& ***!
   \********************************************************************************************************************************************************************************/
 /*! exports provided: default */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nSyntaxError: C:\\wamp64\\www\\miregistrodeventas\\resources\\js\\components\\vender\\VenderCommerce.vue: Unexpected token (275:3)\n\n\u001b[0m \u001b[90m 273 | \u001b[39m\t\t\t\t}\u001b[0m\n\u001b[0m \u001b[90m 274 | \u001b[39m\t\t\t\tarticle\u001b[33m.\u001b[39mstock \u001b[33m-=\u001b[39m\u001b[0m\n\u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 275 | \u001b[39m\t\t\t} \u001b[0m\n\u001b[0m \u001b[90m     | \u001b[39m\t\t\t\u001b[31m\u001b[1m^\u001b[22m\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 276 | \u001b[39m\t\t\t\u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mtotal \u001b[33m=\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mprice(\u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mtotal)\u001b[0m\n\u001b[0m \u001b[90m 277 | \u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 278 | \u001b[39m\t\t\t\u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mcantidad_unidades\u001b[33m++\u001b[39m\u001b[0m\n    at Parser.raise (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:6420:17)\n    at Parser.unexpected (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:7773:16)\n    at Parser.parseExprAtom (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:8996:20)\n    at Parser.parseExprSubscripts (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:8556:23)\n    at Parser.parseMaybeUnary (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:8536:21)\n    at Parser.parseExprOps (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:8402:23)\n    at Parser.parseMaybeConditional (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:8375:23)\n    at Parser.parseMaybeAssign (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:8325:21)\n    at Parser.parseMaybeAssign (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:8362:25)\n    at Parser.parseExpression (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:8275:23)\n    at Parser.parseStatementContent (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:10138:23)\n    at Parser.parseStatement (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:10009:17)\n    at Parser.parseBlockOrModuleBlockBody (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:10585:25)\n    at Parser.parseBlockBody (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:10572:10)\n    at Parser.parseBlock (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:10556:10)\n    at Parser.parseStatementContent (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:10085:21)\n    at Parser.parseStatement (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:10009:17)\n    at Parser.parseIfStatement (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:10364:51)\n    at Parser.parseStatementContent (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:10054:21)\n    at Parser.parseStatement (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:10009:17)\n    at Parser.parseBlockOrModuleBlockBody (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:10585:25)\n    at Parser.parseBlockBody (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:10572:10)\n    at Parser.parseBlock (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:10556:10)\n    at Parser.parseFunctionBody (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:9584:24)\n    at Parser.parseFunctionBodyAndFinish (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:9554:10)\n    at Parser.parseMethod (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:9508:10)\n    at Parser.parseObjectMethod (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:9424:19)\n    at Parser.parseObjPropValue (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:9466:23)\n    at Parser.parseObjectMember (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:9390:10)\n    at Parser.parseObj (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:9314:25)\n    at Parser.parseExprAtom (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:8939:28)\n    at Parser.parseExprSubscripts (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:8556:23)\n    at Parser.parseMaybeUnary (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:8536:21)\n    at Parser.parseExprOps (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:8402:23)\n    at Parser.parseMaybeConditional (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:8375:23)\n    at Parser.parseMaybeAssign (C:\\wamp64\\www\\miregistrodeventas\\node_modules\\@babel\\parser\\lib\\index.js:8325:21)");
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      article: {
+        bar_code: '',
+        name: '',
+        enteredByName: false
+      },
+      articles: [],
+      total: 0,
+      cantidad_articulos: 0,
+      cantidad_unidades: 0,
+      possible_articles: [],
+      available_articles: [],
+      names: [],
+      bar_codes: [],
+      markers: [],
+      show_markers: true
+    };
+  },
+  created: function created() {
+    this.getNames();
+    this.getBarCodes();
+    this.getMarkers();
+    this.getAvailableArticles();
+    $('#bar-code').focus();
+  },
+  methods: {
+    price: function price(p) {
+      return numeral(p).format('$0,0.00');
+    },
+    addArticle: function addArticle() {
+      var _this = this;
+
+      var disponible = false;
+      this.available_articles.forEach(function (article) {
+        if (article.bar_code == _this.article.bar_code || article.name == _this.article.name) {
+          disponible = true;
+          axios.get('articles/get-by-name/' + article.name).then(function (res) {
+            var article = res.data;
+            article.amount = 1;
+            _this.possible_articles = [];
+
+            _this.articles.push(article);
+
+            if (article.uncontable == 1) {
+              // console.log(article)
+              article.measurement_original = article.measurement;
+              setTimeout(function () {
+                $("#amount-measurement-".concat(article.id)).focus();
+              }, 500);
+            } else {
+              _this.addTotal(article);
+            }
+          })["catch"](function (err) {
+            console.log(err);
+          });
+        }
+      });
+
+      if (!disponible) {
+        toastr.error('No registrado');
+      }
+    },
+    addTotal: function addTotal(article) {
+      var repeated = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+      // console.log(article)
+      if (article.uncontable == 0) {
+        if (article.offer_price) {
+          this.total += parseFloat(article.offer_price);
+        } else {
+          this.total += parseFloat(article.price);
+        }
+      } else {
+        var total_a_pagar_del_incotable = 0; // Revisa se se estan vendiendo kilos de un articulo que tiene el
+        // precio en kilos o lo mismo pero con gramos
+
+        if (article.measurement_original == article.measurement) {
+          console.log('unidades iguales');
+
+          if (article.offer_price) {
+            total_a_pagar_del_incotable = parseFloat(article.amount) * parseFloat(article.offer_price);
+          } else {
+            total_a_pagar_del_incotable = parseFloat(article.amount) * parseFloat(article.price);
+          }
+
+          if (article.stock) {
+            article.stock -= article.amount;
+          }
+        } else {
+          // Si son diferentes revisa si el peso original era en kilogramos
+          // Si es asi es porque se eligio venderlo en gramos
+          console.log('unidades diferentes');
+
+          if (article.measurement_original == 'kilo') {
+            total_a_pagar_del_incotable = parseFloat(article.amount) * parseFloat(article.price) / 1000;
+
+            if (article.stock) {
+              article.stock -= article.amount / 1000;
+            }
+
+            if (article.offer_price) {
+              total_a_pagar_del_incotable = parseFloat(article.amount) * parseFloat(article.offer_price) / 1000;
+            } else {
+              total_a_pagar_del_incotable = parseFloat(article.amount) * parseFloat(article.price) / 1000;
+            }
+          } else {// Si entra aca es porque el peso del articulo esta en gramos
+            // y se kieren vender kilos
+            // Esto es muy raro que pase asi que no lo voy a programar
+          }
+        }
+
+        console.log('total: ' + total_a_pagar_del_incotable);
+        this.total += total_a_pagar_del_incotable;
+      } // this.total = this.price(this.total)
+
+
+      this.cantidad_unidades++;
+
+      if (article.stock && article.uncontable == 0) {
+        article.stock--;
+      }
+
+      if (!repeated) {
+        this.cantidad_articulos++;
+      }
+
+      if (this.article.bar_code != '') {
+        this.article.bar_code = '';
+        $('#bar_code').focus();
+      } else {
+        this.article.name = '';
+        $('#name').focus();
+      }
+    },
+    showMarkers: function showMarkers() {
+      if (this.show_markers) {
+        this.show_markers = false;
+      } else {
+        this.show_markers = true;
+      }
+    },
+    getNames: function getNames() {
+      var _this2 = this;
+
+      axios.get('articles/names').then(function (res) {
+        // console.log(res.data)
+        _this2.names = res.data;
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    },
+    getBarCodes: function getBarCodes() {
+      var _this3 = this;
+
+      axios.get('articles/bar-codes').then(function (res) {
+        _this3.bar_codes = res.data;
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    },
+    getAvailableArticles: function getAvailableArticles() {
+      var _this4 = this;
+
+      axios.get('articles/availables').then(function (res) {
+        _this4.available_articles = res.data;
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    },
+    getMarkers: function getMarkers() {
+      var _this5 = this;
+
+      axios.get('articles/get-markers').then(function (res) {
+        _this5.markers = res.data;
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    },
+    setPossibleArticles: function setPossibleArticles() {
+      var _this6 = this;
+
+      // console.log('entro')
+      if (this.article.bar_code.length == 0 && this.article.name.length >= 1) {
+        this.possible_articles = [];
+        this.names.forEach(function (name) {
+          if (name.toLowerCase().includes(_this6.article.name)) {
+            _this6.possible_articles.push(name);
+          }
+        });
+      } else {
+        this.possible_articles = [];
+      }
+    },
+    selectPossibleArticle: function selectPossibleArticle(article_name) {
+      this.article.name = article_name;
+      this.addArticle();
+    },
+    isRegister: function isRegister() {
+      if (this.bar_codes.includes(this.article.bar_code.toUpperCase())) {
+        return true;
+      } else if (this.bar_codes.includes(this.article.bar_code.toLowerCase())) {
+        return true;
+      } else {
+        toastr.error('No hay ningun artículo registrado con ese codigo');
+        this.article.bar_code = '';
+        return false;
+      }
+    },
+
+    /*
+    	* Agregar artículos a la lista de articulos por ser vendidos
+    */
+    addMarker: function addMarker(marker) {
+      var _this7 = this;
+
+      var repetido = false;
+      this.articles.forEach(function (article) {
+        if (article.name == marker.name) {
+          repetido = true;
+          toastr.warning(article.name + ' ya esta ingresado en esta venta, se le sumo una unidad');
+          article.amount++;
+
+          _this7.addTotal(article, true);
+
+          _this7.article.bar_code = '';
+          $('#bar-code').focus();
+        }
+      });
+
+      if (!repetido) {
+        marker.amount = 1;
+        this.articles.push(marker);
+        this.addTotal(marker);
+        $('#bar-code').focus();
+      }
+    },
+    getByBarCode: function getByBarCode(bar_code) {
+      var _this8 = this;
+
+      axios.get('articles/get-by-bar-code/' + bar_code).then(function (res) {
+        var article = res.data;
+        article.amount = 1;
+
+        _this8.articles.push(article);
+
+        _this8.addTotal(article);
+
+        _this8.article.bar_code = '';
+        $('#bar-code').focus();
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    },
+    isRepeated: function isRepeated() {
+      var _this9 = this;
+
+      if (this.possible_articles.length) {
+        this.articles.forEach(function (article) {
+          if (article.name == _this9.article.name) {
+            // repetido = true
+            toastr.warning(article.name + ' ya esta ingresado en esta venta, se le sumo una unidad');
+            article.amount++;
+
+            _this9.addTotal(article, true);
+
+            _this9.possible_articles = [];
+            _this9.article.name = '';
+            $('#name').focus();
+            return true;
+          }
+        });
+      } else {
+        // Si se ingresa por codigo revisa que no este repetido
+        this.articles.forEach(function (article) {
+          if (article.bar_code == _this9.article.bar_code) {
+            // repetido = true
+            toastr.warning(article.name + ' ya esta ingresado en esta venta, se le sumo una unidad');
+            article.amount++;
+
+            _this9.addTotal(article, true);
+
+            _this9.article.bar_code = '';
+            $('#bar-code').focus();
+            return true;
+          }
+        });
+      }
+    },
+    removeArticle: function removeArticle(article) {
+      this.total -= Number(article.price) * article.amount;
+      this.cantidad_articulos--;
+      this.cantidad_unidades -= article.amount;
+      var i = this.articles.indexOf(article);
+      this.articles.splice(i, 1);
+    },
+    up: function up(article) {
+      article.amount++;
+      this.addTotal(article, true);
+    },
+    down: function down(article) {
+      if (article.amount > 1) {
+        article.amount--;
+
+        if (article.stock != 'No tiene datos') {
+          article.stock++;
+        }
+
+        this.total -= Number(article.price);
+        this.cantidad_unidades--;
+      } else {
+        toastr.error('No se pueden restar mas unidades');
+      }
+    },
+    vender: function vender() {
+      var _this10 = this;
+
+      if (this.articles.length > 0) {
+        axios.post('sales', {
+          articles: this.articles
+        }).then(function (res) {
+          console.log(res.data);
+          _this10.articles = [];
+          _this10.total = 0;
+          _this10.cantidad_articulos = 0;
+          _this10.cantidad_unidades = 0;
+          toastr.success('Venta realizada correctamente');
+        })["catch"](function (err) {
+          console.log(err);
+        });
+      } else {
+        toastr.error('Debe ingresar al menos un artículo para realizar una venta');
+        this.bar_code = '';
+        $('#bar_code').focus();
+      }
+    }
+  }
+});
 
 /***/ }),
 
@@ -7604,6 +8096,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['sale'],
   data: function data() {
@@ -7617,11 +8119,30 @@ __webpack_require__.r(__webpack_exports__);
       return numeral(p).format('$0,0.00');
     },
     getSubTotal: function getSubTotal(article) {
-      var sub_total = parseFloat(article.pivot.price) * article.pivot.amount;
-      return this.price(sub_total);
+      if (article.uncontable == 1) {
+        if (article.measurement != article.measurement_original) {
+          var sub_total_price = parseFloat(article.pivot.price) * article.pivot.amount / 1000;
+        } else {
+          var sub_total_price = parseFloat(article.pivot.price) * article.pivot.amount;
+        }
+      } else {
+        var sub_total_price = parseFloat(article.pivot.price) * article.pivot.amount;
+      } // var sub_total = parseFloat(article.pivot.price) * article.pivot.amount
+
+
+      return this.price(sub_total_price);
     },
     getSubTotalCost: function getSubTotalCost(article) {
-      var sub_total_cost = parseFloat(article.pivot.cost) * article.pivot.amount;
+      if (article.uncontable == 1) {
+        if (article.measurement != article.measurement_original) {
+          var sub_total_cost = parseFloat(article.pivot.cost) * article.pivot.amount / 1000;
+        } else {
+          var sub_total_cost = parseFloat(article.pivot.cost) * article.pivot.amount;
+        }
+      } else {
+        var sub_total_cost = parseFloat(article.pivot.cost) * article.pivot.amount;
+      }
+
       return this.price(sub_total_cost);
     },
     generatePdf: function generatePdf() {
@@ -12170,7 +12691,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.input-uncontable-price[data-v-29ccd018] {\r\n\twidth: 40%;\r\n\tdisplay: inline-block;\n}\n.input-uncontable-amount[data-v-29ccd018] {\r\n\tmargin: 0px;\r\n\twidth: 18%;\r\n\tdisplay: inline-block;\n}\n.select-uncontable[data-v-29ccd018] {\r\n\twidth: 18%;\r\n\tdisplay: inline-block;\n}\n.input-uncontable-stock[data-v-29ccd018] {\r\n\twidth: 60%;\r\n\tdisplay: inline-block;\n}\r\n", ""]);
+exports.push([module.i, "\n.input-uncontable-price[data-v-29ccd018] {\r\n\twidth: 50%;\r\n\tdisplay: inline-block;\n}\n.select-measurement[data-v-29ccd018] {\r\n\twidth: 30%;\r\n\tdisplay: inline-block;\n}\n.input-uncontable-stock[data-v-29ccd018] {\r\n\twidth: 60%;\r\n\tdisplay: inline-block;\n}\r\n", ""]);
 
 // exports
 
@@ -64707,7 +65228,7 @@ var render = function() {
                 _c("div", { staticClass: "row m-b-5" }, [
                   _c(
                     "div",
-                    { class: _vm.article.is_uncontable ? "col-4" : "col" },
+                    { class: _vm.article.is_uncontable ? "col-5" : "col" },
                     [
                       _c("label", { attrs: { for: "cost" } }, [
                         _vm._v("Costo")
@@ -64768,7 +65289,7 @@ var render = function() {
                   _vm._v(" "),
                   _c(
                     "div",
-                    { class: _vm.article.is_uncontable ? "col-8" : "col" },
+                    { class: _vm.article.is_uncontable ? "col-7" : "col" },
                     [
                       _c("label", { attrs: { for: "price" } }, [
                         _vm._v("Precio")
@@ -64831,78 +65352,11 @@ var render = function() {
                               value: _vm.article.is_uncontable,
                               expression: "article.is_uncontable"
                             }
-                          ]
+                          ],
+                          staticClass: "p-l-5 p-r-5"
                         },
-                        [
-                          _c("span", { staticClass: "p-l-5" }, [
-                            _vm._v(" pesos ")
-                          ]),
-                          _vm._v(" "),
-                          _c(
-                            "span",
-                            {
-                              directives: [
-                                {
-                                  name: "show",
-                                  rawName: "v-show",
-                                  value: _vm.article.amount_measurement == 1,
-                                  expression: "article.amount_measurement == 1"
-                                }
-                              ],
-                              staticClass: "p-r-5"
-                            },
-                            [_vm._v(" por ")]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "span",
-                            {
-                              directives: [
-                                {
-                                  name: "show",
-                                  rawName: "v-show",
-                                  value: _vm.article.amount_measurement > 1,
-                                  expression: "article.amount_measurement > 1"
-                                }
-                              ],
-                              staticClass: "p-r-5"
-                            },
-                            [_vm._v(" los ")]
-                          )
-                        ]
+                        [_vm._v("el")]
                       ),
-                      _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "show",
-                            rawName: "v-show",
-                            value: _vm.article.is_uncontable,
-                            expression: "article.is_uncontable"
-                          },
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.article.amount_measurement,
-                            expression: "article.amount_measurement"
-                          }
-                        ],
-                        staticClass: "form-control input-uncontable-amount",
-                        attrs: { type: "number", min: "1" },
-                        domProps: { value: _vm.article.amount_measurement },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(
-                              _vm.article,
-                              "amount_measurement",
-                              $event.target.value
-                            )
-                          }
-                        }
-                      }),
                       _vm._v(" "),
                       _c(
                         "select",
@@ -64921,7 +65375,7 @@ var render = function() {
                               expression: "article.measurement"
                             }
                           ],
-                          staticClass: "form-control select-uncontable",
+                          staticClass: "form-control select-measurement",
                           attrs: { id: "measurement" },
                           on: {
                             change: function($event) {
@@ -64946,20 +65400,12 @@ var render = function() {
                         [
                           _c(
                             "option",
-                            { attrs: { value: "kilograms", selected: "" } },
-                            [_vm._v("Kg")]
+                            { attrs: { value: "kilo", selected: "" } },
+                            [_vm._v("Kilo")]
                           ),
                           _vm._v(" "),
-                          _c("option", { attrs: { value: "grams" } }, [
-                            _vm._v("Gramos")
-                          ]),
-                          _vm._v(" "),
-                          _c("option", { attrs: { value: "liters" } }, [
-                            _vm._v("Litros")
-                          ]),
-                          _vm._v(" "),
-                          _c("option", { attrs: { value: "meters" } }, [
-                            _vm._v("Metros")
+                          _c("option", { attrs: { value: "gramo" } }, [
+                            _vm._v("Gramo")
                           ])
                         ]
                       ),
@@ -65897,41 +66343,55 @@ var render = function() {
               ]
             ),
             _vm._v(" "),
-            _c("div", { staticClass: "form-group" }, [
-              _c("label", { attrs: { for: "stock" } }, [
-                _vm._v("Cantidad para agregar")
-              ]),
-              _vm._v(" "),
-              _c("input", {
+            _c(
+              "div",
+              {
                 directives: [
                   {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.article.new_stock,
-                    expression: "article.new_stock"
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.article.stock,
+                    expression: "article.stock"
                   }
                 ],
-                staticClass: "form-control focus-red",
-                attrs: { type: "number", min: "0" },
-                domProps: { value: _vm.article.new_stock },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
+                staticClass: "form-group"
+              },
+              [
+                _c("label", { attrs: { for: "stock" } }, [
+                  _vm._v("Cantidad para agregar")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.article.new_stock,
+                      expression: "article.new_stock"
                     }
-                    _vm.$set(_vm.article, "new_stock", $event.target.value)
+                  ],
+                  staticClass: "form-control focus-red",
+                  attrs: { type: "number", min: "0" },
+                  domProps: { value: _vm.article.new_stock },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.article, "new_stock", $event.target.value)
+                    }
                   }
-                }
-              }),
-              _vm._v(" "),
-              _c("small", [
-                _vm._v(
-                  "\r\n\t\t\t\t\t\tActualmente hay " +
-                    _vm._s(_vm.article.stock) +
-                    "\r\n\t\t\t\t\t"
-                )
-              ])
-            ]),
+                }),
+                _vm._v(" "),
+                _c("small", [
+                  _vm._v(
+                    "\r\n\t\t\t\t\t\tActualmente hay " +
+                      _vm._s(_vm.article.stock) +
+                      "\r\n\t\t\t\t\t"
+                  )
+                ])
+              ]
+            ),
             _vm._v(" "),
             _c(
               "div",
@@ -67704,13 +68164,9 @@ var render = function() {
                                                             article.offer_price
                                                           )
                                                         ) +
-                                                        " x " +
+                                                        " el  " +
                                                         _vm._s(
-                                                          article.amount_measurement
-                                                        ) +
-                                                        " " +
-                                                        _vm._s(
-                                                          article.measurement_es
+                                                          article.measurement
                                                         ) +
                                                         "\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t"
                                                     )
@@ -67773,13 +68229,9 @@ var render = function() {
                                                             article.price
                                                           )
                                                         ) +
-                                                        " x " +
+                                                        " el  " +
                                                         _vm._s(
-                                                          article.amount_measurement
-                                                        ) +
-                                                        " " +
-                                                        _vm._s(
-                                                          article.measurement_es
+                                                          article.measurement
                                                         ) +
                                                         "\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t"
                                                     )
@@ -67793,11 +68245,29 @@ var render = function() {
                                               "td",
                                               { staticClass: "td-stock" },
                                               [
-                                                _vm._v(
-                                                  "\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t" +
-                                                    _vm._s(article.stock) +
-                                                    "\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t"
-                                                )
+                                                article.uncontable == 1
+                                                  ? _c("span", [
+                                                      _vm._v(
+                                                        "\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t" +
+                                                          _vm._s(
+                                                            article.stock
+                                                          ) +
+                                                          " " +
+                                                          _vm._s(
+                                                            article.measurement
+                                                          ) +
+                                                          "(s)\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t"
+                                                      )
+                                                    ])
+                                                  : _c("span", [
+                                                      _vm._v(
+                                                        "\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t" +
+                                                          _vm._s(
+                                                            article.stock
+                                                          ) +
+                                                          "\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t"
+                                                      )
+                                                    ])
                                               ]
                                             )
                                           : _c("td", [
@@ -68202,11 +68672,29 @@ var render = function() {
                                               "td",
                                               { staticClass: "td-stock" },
                                               [
-                                                _vm._v(
-                                                  "\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t" +
-                                                    _vm._s(article.stock) +
-                                                    "\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t"
-                                                )
+                                                article.uncotable == 1
+                                                  ? _c("span", [
+                                                      _vm._v(
+                                                        "\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t" +
+                                                          _vm._s(
+                                                            article.stock
+                                                          ) +
+                                                          " " +
+                                                          _vm._s(
+                                                            article.measurement
+                                                          ) +
+                                                          "(s)\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t"
+                                                      )
+                                                    ])
+                                                  : _c("span", [
+                                                      _vm._v(
+                                                        "\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t" +
+                                                          _vm._s(
+                                                            article.stock
+                                                          ) +
+                                                          "\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t"
+                                                      )
+                                                    ])
                                               ]
                                             )
                                           : _c(
@@ -72485,7 +72973,7 @@ var render = function() {
           _c("div", { staticClass: "row" }, [
             _c("div", { staticClass: "col" }, [
               _c("h5", { staticClass: "card-title" }, [
-                _vm._v("Total: " + _vm._s(_vm.total))
+                _vm._v("Total: " + _vm._s(_vm.price(_vm.total)))
               ]),
               _vm._v(" "),
               _c("p", { staticClass: "card-text" }, [
@@ -72520,112 +73008,21 @@ var render = function() {
                                       staticClass:
                                         "icon-sale-ticket ticket-price"
                                     }),
-                                    _vm._v(" "),
-                                    _c(
-                                      "span",
-                                      {
-                                        directives: [
-                                          {
-                                            name: "show",
-                                            rawName: "v-show",
-                                            value:
-                                              article.amount_measurement == 1,
-                                            expression:
-                                              "article.amount_measurement == 1"
-                                          }
-                                        ]
-                                      },
-                                      [
-                                        _vm._v(
-                                          "\r\n\t\t\t\t\t\t\t\t\t\t\t\t" +
-                                            _vm._s(
-                                              _vm.price(article.offer_price)
-                                            ) +
-                                            " el " +
-                                            _vm._s(article.measurement_es) +
-                                            "\r\n\t\t\t\t\t\t\t\t\t\t\t"
-                                        )
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "span",
-                                      {
-                                        directives: [
-                                          {
-                                            name: "show",
-                                            rawName: "v-show",
-                                            value:
-                                              article.amount_measurement > 1,
-                                            expression:
-                                              "article.amount_measurement > 1"
-                                          }
-                                        ]
-                                      },
-                                      [
-                                        _vm._v(
-                                          "\r\n\t\t\t\t\t\t\t\t\t\t\t\t" +
-                                            _vm._s(
-                                              _vm.price(article.offer_price)
-                                            ) +
-                                            " los " +
-                                            _vm._s(article.measurement_es) +
-                                            "s\r\n\t\t\t\t\t\t\t\t\t\t\t"
-                                        )
-                                      ]
+                                    _vm._v(
+                                      "\r\n\t\t\t\t\t\t\t\t\t\t\t" +
+                                        _vm._s(_vm.price(article.offer_price)) +
+                                        " el " +
+                                        _vm._s(article.measurement) +
+                                        "\r\n\t\t\t\t\t\t\t\t\t\t"
                                     )
                                   ]
                                 : [
-                                    _c(
-                                      "span",
-                                      {
-                                        directives: [
-                                          {
-                                            name: "show",
-                                            rawName: "v-show",
-                                            value:
-                                              article.amount_measurement == 1,
-                                            expression:
-                                              "article.amount_measurement == 1"
-                                          }
-                                        ]
-                                      },
-                                      [
-                                        _vm._v(
-                                          "\r\n\t\t\t\t\t\t\t\t\t\t\t\t" +
-                                            _vm._s(_vm.price(article.price)) +
-                                            " el " +
-                                            _vm._s(article.measurement_es) +
-                                            "\r\n\t\t\t\t\t\t\t\t\t\t\t"
-                                        )
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "span",
-                                      {
-                                        directives: [
-                                          {
-                                            name: "show",
-                                            rawName: "v-show",
-                                            value:
-                                              article.amount_measurement > 1,
-                                            expression:
-                                              "article.amount_measurement > 1"
-                                          }
-                                        ]
-                                      },
-                                      [
-                                        _vm._v(
-                                          "\r\n\t\t\t\t\t\t\t\t\t\t\t\t" +
-                                            _vm._s(_vm.price(article.price)) +
-                                            " los " +
-                                            _vm._s(article.amount_measurement) +
-                                            " " +
-                                            _vm._s(article.measurement_es) +
-                                            "s\r\n\t\t\t\t\t\t\t\t\t\t\t"
-                                        )
-                                      ]
+                                    _vm._v(
+                                      "\r\n\t\t\t\t\t\t\t\t\t\t\t\t" +
+                                        _vm._s(_vm.price(article.price)) +
+                                        " el " +
+                                        _vm._s(article.measurement_original) +
+                                        "\r\n\t\t\t\t\t\t\t\t\t\t"
                                     )
                                   ]
                             ],
@@ -72660,7 +73057,31 @@ var render = function() {
                       _vm._v(" "),
                       _c("td", [_vm._v(_vm._s(article.name))]),
                       _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(article.stock))]),
+                      article.stock
+                        ? _c("td", [
+                            article.uncontable == 1
+                              ? _c("span", [
+                                  _vm._v(
+                                    "\r\n\t\t\t\t\t\t\t\t\t\t\t" +
+                                      _vm._s(article.stock) +
+                                      " " +
+                                      _vm._s(article.measurement_original) +
+                                      "s\r\n\t\t\t\t\t\t\t\t\t\t"
+                                  )
+                                ])
+                              : _c("span", [
+                                  _vm._v(
+                                    "\r\n\t\t\t\t\t\t\t\t\t\t\t" +
+                                      _vm._s(article.stock) +
+                                      " \r\n\t\t\t\t\t\t\t\t\t\t"
+                                  )
+                                ])
+                          ])
+                        : _c("td", [
+                            _vm._v(
+                              "\r\n\t\t\t\t\t\t\t\t\t\tsin datos\r\n\t\t\t\t\t\t\t\t\t"
+                            )
+                          ]),
                       _vm._v(" "),
                       article.uncontable == 0
                         ? _c("td", [
@@ -72674,7 +73095,7 @@ var render = function() {
                                 }
                               ],
                               staticClass: "form-control input-amount",
-                              attrs: { type: "text", min: "1" },
+                              attrs: { type: "number", min: "1" },
                               domProps: { value: article.amount },
                               on: {
                                 input: function($event) {
@@ -72772,13 +73193,11 @@ var render = function() {
                                 }
                               },
                               [
-                                _c(
-                                  "option",
-                                  { attrs: { value: "kilograms" } },
-                                  [_vm._v("Kilo(s)")]
-                                ),
+                                _c("option", { attrs: { value: "kilo" } }, [
+                                  _vm._v("Kilo(s)")
+                                ]),
                                 _vm._v(" "),
-                                _c("option", { attrs: { value: "grams" } }, [
+                                _c("option", { attrs: { value: "gramo" } }, [
                                   _vm._v("Gramo(s)")
                                 ])
                               ]
@@ -76316,7 +76735,25 @@ var render = function() {
                     return _c("tr", [
                       _c("td", [_vm._v(_vm._s(article.name))]),
                       _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(article.pivot.amount))]),
+                      _c("td", [
+                        article.uncontable == 1
+                          ? _c("span", [
+                              _vm._v(
+                                "                                    \r\n                                    " +
+                                  _vm._s(article.pivot.amount) +
+                                  " " +
+                                  _vm._s(article.pivot.measurement) +
+                                  "(s)\r\n                                "
+                              )
+                            ])
+                          : _c("span", [
+                              _vm._v(
+                                "\r\n                                    " +
+                                  _vm._s(article.pivot.amount) +
+                                  "\r\n                                "
+                              )
+                            ])
+                      ]),
                       _vm._v(" "),
                       _c(
                         "td",
@@ -76340,11 +76777,23 @@ var render = function() {
                       ),
                       _vm._v(" "),
                       _c("td", [
-                        _vm._v(
-                          "\r\n                                " +
-                            _vm._s(_vm.price(article.pivot.price)) +
-                            "\r\n                            "
-                        )
+                        article.uncontable == 1
+                          ? _c("span", [
+                              _vm._v(
+                                "\r\n                                    " +
+                                  _vm._s(_vm.price(article.pivot.price)) +
+                                  " el " +
+                                  _vm._s(article.measurement) +
+                                  "\r\n                                "
+                              )
+                            ])
+                          : _c("span", [
+                              _vm._v(
+                                "\r\n                                    " +
+                                  _vm._s(_vm.price(article.pivot.price)) +
+                                  "\r\n                                "
+                              )
+                            ])
                       ]),
                       _vm._v(" "),
                       _c(
