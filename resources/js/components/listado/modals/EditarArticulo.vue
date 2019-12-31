@@ -64,18 +64,22 @@
 						Para agregar decimales (centavos) coloque una coma para separar las unidades	
 					</small>
 				</div>
-				<div class="form-group" v-show="article.previus_price != 0">
+				<div class="form-group" v-show="article.previus_price">
 					<label for="cost">Precio Anterior</label>
 					<input type="number" name="cost" v-model="article.previus_price" class="form-control" disabled>
 				</div>
 				<div class="form-group">
-					<label for="stock">Cantidad para agregar</label>
+					<label for="stock">
+						Cantidad para agregar
+						<span v-show="article.uncontable == 1"> en {{ article.measurement }}(s)</span>
+					</label>
 					<input type="number" 
 							min="0"
 							v-model="article.new_stock" 
 							class="form-control focus-red">
 					<small>
-						Actualmente hay {{ article.stock }}
+						Actualmente hay {{ article.stock }} 
+						<span v-show="article.uncontable == 1"> {{ article.measurement }}(s)</span>
 					</small>
 				</div>
 				<div class="form-group" v-show="rol == 'commerce' && article.new_stock > 0">
@@ -104,14 +108,19 @@
 								<p class="m-t-0 m-b-0">
 									<strong>
 										{{ provider.name }}
-									</strong> se le compraron {{ provider.pivot.amount }}
-									<span class="float-right">
+									</strong> 
+									<span v-show="provider.pivot.amount">
+										se le compraron {{ provider.pivot.amount }}
+									</span>
+									<span class="float-right" v-show="provider.pivot.cost">
 										costo: ${{ provider.pivot.cost }}
 									</span>
 								</p>
 								<p class="m-t-0 m-b-0">
-									 el {{ date(provider.pivot.created_at) }} hace {{ since(provider.pivot.created_at) }}
-									<span class="float-right">
+									<span v-show="provider.pivot.created_at">
+										el {{ date(provider.pivot.created_at) }} hace {{ since(provider.pivot.created_at) }}
+									</span>
+									<span class="float-right" v-show="provider.pivot.price">
 									 	precio: ${{ provider.pivot.price }}
 									</span>
 								</p>

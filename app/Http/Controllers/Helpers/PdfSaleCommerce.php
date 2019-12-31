@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Helpers;
 use App\Article;
 use App\Sale;
 use App\Client;
+use App\Http\Controllers\Helpers\PdfArticleHelper;
 
-require(__DIR__.'\..\fpdf\fpdf.php');
+require(__DIR__.'/../fpdf/fpdf.php');
 use fpdf;
 
 class PdfSaleCommerce extends fpdf {
@@ -82,8 +83,8 @@ class PdfSaleCommerce extends fpdf {
         
         $this->Ln();
         $this->SetX(5);
-        $this->Cell(100,7,'Suma de todos los costos de esta venta: $'.$this->price($suma_costos_venta),1,0,'C');
-        $this->Cell(100,7,'Suma de todos los precios de esta venta: $'.$this->price($suma_precios_venta),1,0,'C');
+        $this->Cell(100,7,'Costos de esta venta: $'.$this->price($suma_costos_venta),0,0,'L');
+        $this->Cell(100,7,'Precios de esta venta: $'.$this->price($suma_precios_venta),0,0,'L');
         $this->Ln();
         $this->SetX(5);
         $this->Output();
@@ -93,19 +94,19 @@ class PdfSaleCommerce extends fpdf {
 	function printInfo() {
 		$this->num_page++;
     	$this->SetXY(5, -50);
-			$this->Cell(100,7,'Página '.$this->num_page.' de '.$this->total_pages,1,0,'C');
-		$this->Cell(100,7,$this->articulos_en_esta_pagina.' arículos en esta página',1,0,'C');
+			$this->Cell(100,7,'Página '.$this->num_page.' de '.$this->total_pages,0,0,'L');
+		$this->Cell(100,7,$this->articulos_en_esta_pagina.' arículos en esta página',0,0,'L');
 		$this->Ln();
 		$this->SetX(5);
-		$this->Cell(100,7,'Suma de los costos de esta página: $'.$this->price($this->suma_costos_pagina),1,0,'C');
-		$this->Cell(100,7,'Suma de los precios de esta página: $'.$this->price($this->suma_precios_pagina),1,0,'C');
+		$this->Cell(100,7,'Costos de esta página: $'.$this->price($this->suma_costos_pagina),0,0,'L');
+		$this->Cell(100,7,'Precios de esta página: $'.$this->price($this->suma_precios_pagina),0,0,'L');
 	}
 
 	function printArticle($article) {
 		$this->SetX(5);
 		$this->SetDrawColor(51,51,51);
 		$this->SetLineWidth(.4);
-		$this->SetFont('Arial', '', 12);
+		$this->SetFont('Arial', '', 11);
 		
 		$this->Cell(45,10,$article->bar_code,$this->borders,0,'L');
     	$name = $article->name;
@@ -115,9 +116,10 @@ class PdfSaleCommerce extends fpdf {
     	$this->Cell(45,10,$name,$this->borders,0,'L');
     	$this->Cell(20,10,'$'.$this->price($article->cost),$this->borders,0,'L');
     	$this->Cell(20,10,'$'.$this->price($article->price),$this->borders,0,'L');
-    	$this->Cell(20,10,$article->pivot->amount,$this->borders,0,'L');
-    	$this->Cell(25,10,'$'.$this->price($article->cost * $article->pivot->amount),$this->borders,0,'L');
-    	$this->Cell(25,10,'$'.$this->price($article->price * $article->pivot->amount),$this->borders,0,'L');
+    	// $this->Cell(20,10,$article->pivot->amount,$this->borders,0,'L');
+    	$this->Cell(20,10,PdfArticleHelper::amount($article),$this->borders,0,'L');
+    	$this->Cell(25,10,'$'.$this->price(PdfArticleHelper::getSubTotalCost($article)),$this->borders,0,'L');
+    	$this->Cell(25,10,'$'.$this->price(PdfArticleHelper::getSubTotalPrice($article)),$this->borders,0,'L');
     	$this->Ln();
 	}
 	
@@ -181,8 +183,8 @@ class PdfSaleCommerce extends fpdf {
 		$this->Cell(20, 5, 'Costo', 0, 0, 'L');
 		$this->Cell(20, 5, 'Precio', 0, 0, 'L');
 		$this->Cell(20, 5, 'Cant.', 0, 0, 'L');
-		$this->Cell(25, 5, 'Sub Co', 0, 0, 'L');
-		$this->Cell(25, 5, 'Sub Pr', 0, 0, 'L');
+		$this->Cell(25, 5, 'Sub Cos', 0, 0, 'L');
+		$this->Cell(25, 5, 'Sub Pre', 0, 0, 'L');
 		$this->SetLineWidth(.8);
 		// $this->SetDrawColor(100, 174, 238);
 		$this->Line(5, 42, 205, 42);

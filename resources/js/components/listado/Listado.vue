@@ -6,6 +6,12 @@
 						:providers="providers" 
 						@updateArticle="updateArticle"
 						@clearArticle="clearArticle"></editar-articulo>
+		<add-marker @deleteMarkerGroup="deleteMarkerGroup"
+					@addMarkerToGroup="addMarkerToGroup"
+					:marker_groups="marker_groups"
+					:article="article"></add-marker>
+		<is-marker :article="article"
+					@deleteMarker="deleteMarker"></is-marker>
 		<update-by-porcentage @updateByPorcentage="updateByPorcentage"
 						:selected_articles="selected_articles"></update-by-porcentage>
 		<confirmar-eliminacion :article="article" 
@@ -104,10 +110,9 @@
 						</div>
 					</div>
 					<div class="card-body">
-						<div class="row m-b-10 justify-content-center">
-							<div class="col-3">
-								<pagination v-show="!is_filter && !searching"
-											@changePage="changePage" 
+						<div class="row m-b-10" v-show="!is_filter && !searching">
+							<div class="col">
+								<pagination @changePage="changePage" 
 											:is_filter="is_filter"
 											:pagination="pagination"
 											:pages-number="pagesNumber"></pagination>
@@ -236,10 +241,10 @@
 													</td>
 													<td v-if="article.stock" class="td-stock">
 														<span v-if="article.uncontable == 1">
-															{{ article.stock }} {{ article.measurement }}(s)
+															{{ stock(article.stock) }} {{ article.measurement }}(s)
 														</span>
 														<span v-else>
-															{{ article.stock }}
+															{{ stock(article.stock) }}
 														</span>
 													</td>
 													<td v-else>
@@ -270,16 +275,13 @@
 														</button>
 														<button @click="deleteArticle(article)" class="btn btn-listado btn-listado-delete">
 															<i class="icon-trash-3"></i>
+														</button>									
+														<button class="btn"
+																:class="article.marker ? 'btn-warning' : 'btn-primary'"
+																@click="showAddMarker(article)">
+															<i class="icon-star-1"></i>
 														</button>
-														<button @click="createMarker(article)" class="btn btn-listado btn-listado-edit">
-															<i v-show="article.marker == 1"
-																:id="'marker-1-'+article.id"
-																class="icon-star-1"></i>
-															<i v-show="article.marker == 0"
-																:id="'marker-2-'+article.id"
-																class="icon-star-2"></i>
-														</button>
-														<button @click="deleteOffer(article)"
+ 														<button @click="deleteOffer(article)"
 																v-show="article.offer_price"
 																class="btn btn-danger btn-sm">
 															<i class="icon-sale-ticket"></i>
@@ -315,21 +317,31 @@
 													<td v-if="article.offer_price"
 														class="td-price">
 														<i class="icon-sale-ticket ticket-price"></i>
-														{{ price(article.offer_price) }}
+														<span v-show="article.uncontable == 0">
+															{{ price(article.offer_price) }}
+														</span>
+														<span v-show="article.uncontable == 1">
+															{{ price(article.offer_price) }} el  {{ article.measurement }}
+														</span>
 													</td>
 													<td v-else
 														class="td-price">
-														{{ price(article.price) }}
+														<span v-show="article.uncontable == 0">
+															{{ price(article.price) }}
+														</span>
+														<span v-show="article.uncontable == 1">
+															{{ price(article.price) }} el  {{ article.measurement }}
+														</span>
 													</td>
 													<td v-if="article.stock" class="td-stock">
-														<span v-if="article.uncotable == 1">
-															{{ article.stock }} {{ article.measurement }}(s)
+														<span v-if="article.uncontable == 1">
+															{{ stock(article.stock) }} {{ article.measurement }}(s)
 														</span>
 														<span v-else>
-															{{ article.stock }}
+															{{ stock(article.stock) }}
 														</span>
 													</td>
-													<td v-else class="td-stock">
+													<td v-else>
 														Sin uso
 													</td>
 													<td>{{ date(article.updated_at) }}</td>
@@ -339,15 +351,20 @@
 														</button>
 														<button @click="deleteArticle(article)" class="btn btn-listado btn-listado-delete">
 															<i class="icon-trash-3"></i>
+														</button>								
+														<button class="btn"
+																:class="article.marker ? 'btn-warning' : 'btn-primary'"
+																@click="showAddMarker(article)">
+															<i class="icon-star-1"></i>
 														</button>
-														<button @click="createMarker(article)" class="btn btn-listado btn-listado-edit">
+														<!-- <button @click="createMarker(article)" class="btn btn-listado btn-listado-edit">
 															<i v-show="article.marker == 1"
 																:id="'marker-1-'+article.id"
 																class="icon-star-1"></i>
 															<i  v-show="article.marker == 0"
 																:id="'marker-2-'+article.id"
 																class="icon-star-2"></i>
-														</button>
+														</button> -->
 														<button @click="deleteOffer(article)"
 																v-show="article.offer_price"
 																class="btn btn-danger btn-sm">
@@ -378,6 +395,8 @@ import Filtrar from './modals/Filtrar.vue'
 import EditarArticulo from './modals/EditarArticulo.vue'
 import UpdateByPorcentage from './modals/UpdateByPorcentage.vue'
 import CreateOffer from './modals/CreateOffer.vue'
+import AddMarker from './modals/AddMarker.vue'
+import IsMarker from './modals/IsMarker.vue'
 import PrintTickets from './modals/PrintTickets.vue'
 import DeleteArticles from './modals/DeleteArticles.vue'
 import ProvidersHistory from './modals/ProvidersHistory.vue'
@@ -390,6 +409,8 @@ export default {
 		Importar,
 		Filtrar,
 		EditarArticulo,
+		IsMarker,
+		AddMarker,
 		CreateOffer,
 		UpdateByPorcentage,
 		DeleteArticles,
@@ -407,6 +428,9 @@ export default {
 			article: {'id': 0, 'bar_code': '','name': '', 'cost': 0, 'price': 0, 'stock': 0, 'new_stock': 0, 'providers': [], 'created_at': '', 'updated_at': '', 'creado': '', 'actualizado': '', 'act_fecha': true},
 			isLoading: false,
 			all_selected_articles: false,
+
+			// Marcadores
+			marker_groups: [],
 
 			// Buscar
 			search_query: '',
@@ -464,6 +488,18 @@ export default {
 		},
 		since(date) {
 			return moment(date).fromNow()
+		},
+		stock(s) {
+			return s.replace('.00', '')
+		},
+
+		showAddMarker(article) {
+			this.setArticle(article)
+			if (article.marker) {
+				$('#is-marker').modal('show')
+			} else {
+				$('#add-marker').modal('show')
+			}
 		},
 
 
@@ -541,8 +577,6 @@ export default {
 		selectPreSearch(query) {
 			this.search_query = query
 			this.search()
-			$('.resultados').hide()
-			$('.input-search').removeClass('input-search-resultados')
 		},
 		/* -----------------------------------------------------------------------------------
 			* Hace una llamada al metodo search del controlador de articulos
@@ -557,9 +591,12 @@ export default {
 				if (articles.length > 0) {
 					this.articles = res.data
 					this.filterProviders()
+					this.setArticlesId()
 				} else {
 					toastr.error('No se encontraron artículos con ese criterio')
 				}
+				$('.resultados').hide()
+				$('.input-search').removeClass('input-search-resultados')
 			})
 			.catch( err => {
 				console.log(err)
@@ -625,14 +662,19 @@ export default {
 				console.log(err)
 			})
 		},
-		updateArticlesList() {
-			if (this.searching) {
-				this.search()
-			} else if (this.is_filter) {
-				this.filter(this.filtro)
-			} else {
+		updateArticlesList(after_delete_articles = false) {
+			if (after_delete_articles) {
 				this.getArticles(this.pagination.current_page)
+			} else {
+				if (this.searching) {
+					this.search()
+				} else if (this.is_filter) {
+					this.filter(this.filtro)
+				} else {
+					this.getArticles(this.pagination.current_page)
+				}
 			}
+			this.selected_articles.is_all_selected = false
 		},
 		/* -----------------------------------------------------------------------------------
 			* Setea el objeto de articulo
@@ -642,28 +684,70 @@ export default {
 			this.setArticle(article)
 			$('#listado-delete-article').modal('show')
 		},
-		createMarker(article) {
-			if (article.marker) {
-				axios.get(`articles/delete-marker/${article.id}`)
-				.then(res => {
-					$(`#marker-1-${article.id}`).removeClass('icon-star-1')
-					$(`#marker-1-${article.id}`).addClass('icon-star-2')
-					toastr.success('Marcador eliminado correctamente')
-				})
-				.catch(err => {
-					console.log(err)
-				})
-			} else {
-				axios.get(`articles/create-marker/${article.id}`)
-				.then(res => {
-					$(`#marker-2-${article.id}`).removeClass('icon-star-2')
-					$(`#marker-2-${article.id}`).addClass('icon-star-1')
-					toastr.success('Marcador añadido correctamente')
-				})
-				.catch(err => {
-					console.log(err)
-				})
-			}
+
+
+		// Marcadores
+		// createMarker(article) {
+		// 	if (article.marker) {
+		// 		axios.get(`articles/delete-marker/${article.id}`)
+		// 		.then(res => {
+		// 			$(`#marker-1-${article.id}`).removeClass('icon-star-1')
+		// 			$(`#marker-1-${article.id}`).addClass('icon-star-2')
+		// 			toastr.success('Marcador eliminado correctamente')
+		// 		})
+		// 		.catch(err => {
+		// 			console.log(err)
+		// 		})
+		// 	} else {
+		// 		axios.get(`articles/create-marker/${article.id}`)
+		// 		.then(res => {
+		// 			$(`#marker-2-${article.id}`).removeClass('icon-star-2')
+		// 			$(`#marker-2-${article.id}`).addClass('icon-star-1')
+		// 			toastr.success('Marcador añadido correctamente')
+		// 		})
+		// 		.catch(err => {
+		// 			console.log(err)
+		// 		})
+		// 	}
+		// },
+		deleteMarker(marker_id) {
+			axios.delete('markers/'+marker_id)
+			.then(res => {
+				this.updateArticlesList()
+				$('#is-marker').modal('hide')
+				toastr.success('Marcador eliminado correctamente')
+			})
+			.catch(err => {
+				console.log(err)
+			})
+		},
+		addMarkerToGroup(marker_group_id, article_id) {
+			axios.get('marker-groups/add-marker-to-group/'+marker_group_id+'/'+article_id)
+			.then(res => {
+				this.updateArticlesList()
+				$('#add-marker').modal('hide')
+				toastr.success('Marcador agregado correctamente')
+				this.getMarkerGroups()
+			})
+		},
+
+		getMarkerGroups() {
+			axios.get('marker-groups')
+			.then(res => {
+				this.marker_groups = res.data
+			})
+			.catch(err => {
+				console.log(err)
+			})
+		},
+
+		deleteMarkerGroup(marker_group_id) {
+			axios.delete('marker-groups/'+marker_group_id)
+			.then(res => {
+				this.getMarkerGroups()
+				this.updateArticlesList()
+				toastr.success('Grupo de marcadores eliminado correctamente')
+			})
 		},
 		deleteOffer(article) {
 			axios.delete('articles/delete-offer/'+article.id)
@@ -678,6 +762,8 @@ export default {
 		setArticle(article) {
 			// this.article = article
 			this.article.id = article.id
+			this.article.uncontable = article.uncontable
+			this.article.measurement = article.measurement
 			this.article.bar_code = article.bar_code
 			this.article.name = article.name
 			this.article.cost = article.cost
@@ -685,6 +771,7 @@ export default {
 			if (article.offer_price != null) {
 				this.article.offer_price = article.offer_price
 			}
+			this.article.marker = article.marker
 			this.article.previus_price = article.previus_price
 			this.article.stock = article.stock
 			if (this.rol == 'commerce') {
@@ -813,7 +900,7 @@ export default {
 			axios.delete('articles/delete-articles/'+this.selected_articles.selected_articles.join('-'))
 			.then(res => {
 				this.selected_articles.selected_articles = []
-				this.updateArticlesList()
+				this.updateArticlesList(true)
 				toastr.success('Artículos eliminados correctamente')
 				$('#delete-articles').modal('hide')
 			})
@@ -903,6 +990,7 @@ export default {
 		if (this.rol == 'commerce') {
 			this.getProviders()
 		}
+		this.getMarkerGroups()
 	},
 	computed: {
 		isActived: function(){
@@ -936,6 +1024,9 @@ export default {
 }
 </script>
 <style scoped>
+td {
+	vertical-align: middle;	
+}
 .col-btn {
 	display: flex;
 	flex-direction: row;

@@ -208,7 +208,8 @@
 										@keyup.enter="saveArticle"
 										placeholder="Ingrese la cantidad"
 										v-model="article.stock">
-								<span v-show="article.is_uncontable">{{ measurement_es() }}</span>
+								<span v-show="article.is_uncontable">{{ article.measurement }}(s)
+								</span>
 								<small class="form-text text-muted">
 									Si deja este campo vacio no se tendra en cuenta el stock al 
 									momento de hacer una venta
@@ -217,12 +218,16 @@
 						</div>
 						<div class="form-group" v-else>
 							<label for="stock">Cantidad</label>
+							<br>
 							<input type="number" 
 									class="form-control focus-red"
+										:class="article.is_uncontable ? 'input-uncontable-stock' : ''"
 									@keyup.enter="saveArticle" 
 									id="stock"
 									placeholder="Ingrese la cantidad"
 									v-model="article.stock">
+							<span v-show="article.is_uncontable">{{ article.measurement }}(s)
+							</span>
 							<small class="form-text text-muted">
 								Si deja este campo vacio no se tendra en cuenta el stock al 
 								momento de hacer una venta
@@ -304,13 +309,13 @@ export default {
 		this.getGeneratedBarCodes()
 	},
 	methods: {
-		measurement_es() {
-			if (this.article.measurement == 'kilograms') {
-				return 'kilos'
-			} else if (this.article.measurement == 'grams') {
-				return 'gramos'
-			}
-		},
+		// article.measurement {
+		// 	if (this.article.measurement == 'kilograms') {
+		// 		return 'kilos'
+		// 	} else if (this.article.measurement == 'grams') {
+		// 		return 'gramos'
+		// 	}
+		// },
 		// Cambiar
 		changeToCost() {
 			$('#cost').focus()
@@ -335,6 +340,14 @@ export default {
 				$('#stock').focus()
 			}
 		},
+		// Cambiar(palbra_que_escribio) {
+		// 	if (palbra_que_escribio < 8) {
+		// 		console.log('Tiene que ser mayor a 8')
+		// 	} else {
+		// 		console.log('Esta bien escrita')
+		// 	}
+		// 	palbra_que_escribio.toUpperCase()
+		// }
 		changeToStock() {
 			$('#stock').focus()
 		},
@@ -609,12 +622,13 @@ export default {
 			})
 		},
 		saveProvider(provider) {
-			axios.post('providers', {
-				provider
-			})
+			console.log('provider: ')
+			console.log(provider)
+			axios.get('providers/'+provider.name)
 			.then( res => {
 				this.getProviders()
-				console.log(res.data.id)
+			    console.log('provider terminado: ')
+				console.log(res.data)
 				setTimeout(() => {
 					this.article.provider = res.data.id
 				}, 1000)

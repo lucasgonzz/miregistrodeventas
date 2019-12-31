@@ -76,6 +76,16 @@ Route::group(['middleware' => ['has.role:provider']], function () {
 	Route::get('/mayoristas/articles/delete-marker/{id}', 'ArticleController@deleteMarker');
 	Route::delete('/mayoristas/articles/delete-offer/{id}', 'ArticleController@deleteOffer');
 
+	// Marcadores
+	// Route::get('/mayoristas/articles/create-marker/{id}', 'ArticleController@createMarker');
+	// Route::get('/mayoristas/articles/delete-marker/{id}', 'ArticleController@deleteMarker');
+	Route::post('/mayoristas/markers', 'MarkerController@store');
+	Route::delete('/mayoristas/markers/{id}', 'MarkerController@delete');
+	Route::get('/mayoristas/marker-groups', 'MarkerGroupController@index');
+	Route::post('/mayoristas/marker-groups', 'MarkerGroupController@store');
+	Route::delete('/mayoristas/marker-groups/{id}', 'MarkerGroupController@delete');
+	Route::get('/mayoristas/articles/with-marker/{id}', 'ArticleController@withMarker');
+	Route::get('/mayoristas/marker-groups/add-marker-to-group/{marker_group_id}/{article_id}', 'MarkerGroupController@addMarkerToGroup');
 	// Listado exportar
 	Route::get('/mayoristas/pdf/{columns}/{articles_ids}/{orientation}/{header?}', 'PdfController@articles');
 	Route::get('/mayoristas/articles/exel', 'ArticleController@export')->name('provider.exel');
@@ -85,7 +95,8 @@ Route::group(['middleware' => ['has.role:provider']], function () {
 	Route::get('/mayoristas/articles/get-by-name/{name}', 'ArticleController@getByName');
 	Route::get('/mayoristas/sales/cliente/{company_name}/{borders}/{sale_id}', 'PdfController@sale_client');
 	Route::get('/mayoristas/sales/comercio/{company_name}/{borders}/{sale_id}', 'PdfController@sale_commerce');
-	Route::get('/mayoristas/articles/get-markers', 'ArticleController@getMarkers');
+	Route::get('/mayoristas/articles/markers', 'MarkerController@index');
+	Route::get('/mayoristas/articles/marker-groups', 'MarkerGroupController@index');
 	Route::get('/mayoristas/articles/availables', 'ArticleController@getAvailables');
 
 	
@@ -132,7 +143,7 @@ Route::group(['middleware' => ['has.role:commerce']], function () {
 	Route::get('/comercios/articles', 'ArticleController@index');
 	Route::post('/comercios/articles', 'ArticleController@store');
 	Route::get('/comercios/providers', 'ProviderController@index');
-	Route::post('/comercios/providers', 'ProviderController@store');
+	Route::get('/comercios/providers/{provider_name}', 'ProviderController@store');
 	Route::delete('/comercios/providers/{id}', 'ProviderController@delete');
 	Route::get('/comercios/imprimir-precios/{articles_id}/{company_name}', 'PdfController@printTicket');
 	/*
@@ -158,19 +169,28 @@ Route::group(['middleware' => ['has.role:commerce']], function () {
 	Route::post('/comercios/articles/create-offer', 'ArticleController@createOffer');
 	Route::get('/comercios/articles/get-by-ids/{articles_id}', 'ArticleController@getByIds');
 	Route::delete('/comercios/articles/delete-offer/{id}', 'ArticleController@deleteOffer');
-	Route::get('/comercios/articles/create-marker/{id}', 'ArticleController@createMarker');
-	Route::get('/comercios/articles/delete-marker/{id}', 'ArticleController@deleteMarker');
-	
-	// Vender
-	Route::post('/comercios/sales', 'SaleController@store');
-	Route::get('/comercios/articles/get-by-name/{name}', 'ArticleController@getByName');
-	Route::get('/comercios/articles/get-markers', 'ArticleController@getMarkers');
-	Route::get('/comercios/articles/availables', 'ArticleController@getAvailables');
-
+	// Marcadores
+	// Route::get('/comercios/articles/create-marker/{id}', 'ArticleController@createMarker');
+	// Route::get('/comercios/articles/delete-marker/{id}', 'ArticleController@deleteMarker');
+	Route::post('/comercios/markers', 'MarkerController@store');
+	Route::delete('/comercios/markers/{id}', 'MarkerController@delete');
+	Route::get('/comercios/marker-groups', 'MarkerGroupController@index');
+	Route::post('/comercios/marker-groups', 'MarkerGroupController@store');
+	Route::delete('/comercios/marker-groups/{id}', 'MarkerGroupController@delete');
+	Route::get('/comercios/articles/with-marker/{id}', 'ArticleController@withMarker');
+	Route::get('/comercios/marker-groups/add-marker-to-group/{marker_group_id}/{article_id}', 'MarkerGroupController@addMarkerToGroup');
 	// Listado exportar
 	Route::get('/comercios/configuracion', 'MainController@commerce_config')->name('commerce.config');
 	Route::get('/comercios/pdf/{orientation}/{header}/{columns}/{articles_ids}', 'PdfController@articles');
 	Route::get('/comercios/articles/exel', 'ArticleController@export')->name('commerce.exel');
+	
+	// Vender
+	Route::post('/comercios/sales', 'SaleController@store');
+	Route::get('/comercios/articles/get-by-name/{name}', 'ArticleController@getByName');
+	Route::get('/comercios/articles/markers', 'MarkerController@index');
+	Route::get('/comercios/articles/marker-groups', 'MarkerGroupController@index');
+	Route::get('/comercios/articles/availables', 'ArticleController@getAvailables');
+
 	
 	// Ventas
 	Route::get('/comercios/sales', 'SaleController@index');

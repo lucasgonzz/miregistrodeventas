@@ -1,3 +1,13 @@
+<html>
+	<head>
+		<title>Hola</title>
+	</head>
+	<body>
+		<nav></nav>
+	</body>
+</html>
+
+
 <template>
 <div id="ventas">	
 	<summary :sales="sales"></summary>
@@ -15,7 +25,7 @@
 					<div class="row justify-content-between align-items-center">
 						<div class="col-5">
 							<strong v-show="!is_from_date && !is_from_only_one_date && previus_next == 0">
-								Ventas de hoy
+								Ventas de hoy 
 							</strong>
 							<strong v-show="is_from_date">
 								Ventas desde {{ date(from) }} hasta {{ date(to) }} 
@@ -291,11 +301,19 @@ export default {
 			this.total_articles = 0
 			this.sales.forEach(sale => {
 				sale.articles.forEach(article => {
-					if (this.actual_prices) {
-						this.total += parseFloat(article.price) * article.pivot.amount
+					if (article.uncontable == 1) {
+						if (article.pivot.measurement == article.measurement) {
+							this.total += parseFloat(article.pivot.price) * article.pivot.amount
+						} else {
+							this.total += parseFloat(article.pivot.price) * article.pivot.amount / 1000
+						}
 					} else {
 						this.total += parseFloat(article.pivot.price) * article.pivot.amount
 					}
+					// if (this.actual_prices) {
+					// } else {
+					// 	this.total += parseFloat(article.pivot.price) * article.pivot.amount
+					// }
 					this.total_articles++
 				})
 			})
@@ -323,29 +341,51 @@ export default {
 		cantidad_unidades(sale) {
 			var cantidad_unidades = 0
 			sale.articles.forEach(article => {
-				cantidad_unidades += article.pivot.amount
+				if (article.uncontable == 0) {
+					cantidad_unidades += article.pivot.amount
+				} else {
+					cantidad_unidades ++
+				}
 			})
 			return cantidad_unidades
 		},
 		getCost(sale) {
 			var cost = 0
 			sale.articles.forEach(article => {
-				if (this.actual_prices) {
+				if (article.uncontable == 0) {
 					cost += parseFloat(article.cost) * article.pivot.amount
 				} else {
-					cost += parseFloat(article.pivot.cost) * article.pivot.amount
+					if (article.pivot.measurement == article.measurement) {
+						cost += parseFloat(article.cost) * article.pivot.amount
+					} else {
+						cost += parseFloat(article.cost) * article.pivot.amount / 1000
+					}				
 				}
+				// if (this.actual_prices) {
+				// 	cost += parseFloat(article.cost) * article.pivot.amount
+				// } else {
+				// 	cost += parseFloat(article.pivot.cost) * article.pivot.amount
+				// }
 			})
 			return numeral(cost).format('$0,0.00')
 		},
 		getPrice(sale) {
 			var price = 0
 			sale.articles.forEach(article => {
-				if (this.actual_prices) {
+				if (article.uncontable == 0) {
 					price += parseFloat(article.price) * article.pivot.amount
 				} else {
-					price += parseFloat(article.pivot.price) * article.pivot.amount
+					if (article.pivot.measurement == article.measurement) {
+						price += parseFloat(article.price) * article.pivot.amount
+					} else {
+						price += parseFloat(article.price) * article.pivot.amount / 1000
+					}				
 				}
+				// if (this.actual_prices) {
+				// 	price += parseFloat(article.price) * article.pivot.amount
+				// } else {
+				// 	price += parseFloat(article.pivot.price) * article.pivot.amount
+				// }
 			})
 			return numeral(price).format('$0,0.00')
 		},
@@ -579,5 +619,8 @@ export default {
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-end;
+}
+td {
+	vertical-align: middle !important;	
 }
 </style>

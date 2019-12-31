@@ -18,6 +18,7 @@ class ArticleController extends Controller
         if ($user->hasRole('commerce')) {
         	$articles = Article::where('user_id',$user->id)
                                 ->orderBy('id', 'DESC')
+                                ->with('marker')
                                 ->with(array('providers' => function($q) {
                                     $q->orderBy('created_at', 'DESC');
                                 }))
@@ -25,6 +26,7 @@ class ArticleController extends Controller
         } else {
             $articles = Article::where('user_id',$user->id)
                                 ->orderBy('id', 'DESC')
+                                ->with('marker')
                                 ->paginate(10);
         }
     	return [
@@ -40,17 +42,23 @@ class ArticleController extends Controller
             ];
     }
 
-    function createMarker($id) {
-        $article = Article::find($id);
-        $article->marker = 1;
-        $article->save();
+    function withMarker($id) {
+        return Article::where('id', $id)
+                        ->with('marker')
+                        ->first();
     }
 
-    function deleteMarker($id) {
-        $article = Article::find($id);
-        $article->marker = 0;
-        $article->save();
-    }
+    // function createMarker($id) {
+    //     $article = Article::find($id);
+    //     $article->marker = 1;
+    //     $article->save();
+    // }
+
+    // function deleteMarker($id) {
+    //     $article = Article::find($id);
+    //     $article->marker = 0;
+    //     $article->save();
+    // }
 
     function getAvailables() {
         return Article::where('user_id', Auth()->user()->id)

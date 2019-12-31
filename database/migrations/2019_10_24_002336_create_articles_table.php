@@ -22,7 +22,7 @@ class CreateArticlesTable extends Migration
             $table->decimal('previus_price', 8, 2)->nullable();
             $table->decimal('offer_price', 8, 2)->nullable();
             $table->decimal('stock')->nullable();
-            $table->boolean('marker')->default(0);
+            // $table->boolean('marker')->default(0);
             $table->boolean('uncontable')->default(0);
             $table->enum('measurement', ['gramo', 'kilo'])->nullable();
             // $table->integer('amount_measurement')->nullable();

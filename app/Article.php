@@ -23,6 +23,10 @@ class Article extends Model
         return $this->belongsTo('App\User');
     }
 
+    public function marker() {
+        return $this->hasOne('App\Marker');
+    }
+
     public function sub_user() {
         return $this->belongsTo('App\User', 'sub_user_id');
     }

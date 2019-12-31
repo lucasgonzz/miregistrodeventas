@@ -13,7 +13,10 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col">
-                        Regitra <button class="btn btn-link" @click.prevent="openRegisterArticle">aca</button> tu artículo para poder ingresarlo en esta venta
+                        Regitra <button class="btn btn-primary btn-sm" @click.prevent="openRegisterArticle">
+                                <i class="icon-level-down"></i>
+                                aca
+                            </button> tu artículo para poder ingresarlo en esta venta
                     </div>
                 </div>
             </div>

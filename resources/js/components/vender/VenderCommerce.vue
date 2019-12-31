@@ -47,26 +47,63 @@
 						<button type="submit"
 								@click="vender"
 								:class="articles.length ? '' : 'disabled'" 
-								class="btn btn-primary btn-block mb-2">Venders</button>
+								class="btn btn-primary btn-block mb-2">Vender</button>
 					</div>
 				</div>
 			</div>
 			<div class="card-body">
-				<div class="row m-b-10" v-show="markers.length">
+				<div class="row m-b-10" v-show="markers.length || marker_groups.length">
 					<div class="col">
-						<div class="card">
+		                <div class="custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2 c-p">
+		                  	<input class="custom-control-input c-p" 
+		                  			v-model="show_markers" 
+		                  			type="checkbox" 
+		                  			id="show-markers">
+		                  	<label class="custom-control-label c-p" 
+		                  			for="show-markers">
+		                  			<strong>Mostrar marcadores</strong>
+		                  	</label>
+		                </div>
+						<div class="card" v-show="show_markers">
 							<div class="card-header">
-								<button class="btn btn-success" @click="showMarkers">
-									<i class="icon-star-1" v-show="!show_markers"></i>
-									<i class="icon-cancel" v-show="show_markers"></i>
-									Marcadores
-								</button>
+								<i class="icon-star-1"></i>
+								Marcadores
 							</div>
 							<div class="card-body" v-show="show_markers">
+				                <div class="custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2 c-p">
+				                  	<input class="custom-control-input c-p" 
+				                  			v-model="show_markers_prices" 
+				                  			type="checkbox" 
+				                  			id="show_markers_prices">
+				                  	<label class="custom-control-label c-p" 
+				                  			for="show_markers_prices">
+				                  			<strong>Mostrar precios</strong>
+				                  	</label>
+				                </div>
+				                <br>
+								<div class="dropdown m-r-5" v-for="marker_group in marker_groups">
+									<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										{{ marker_group.name }}
+									</button>
+									<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+										<a v-for="marker in marker_group.markers"
+											@click.prevent="addMarker(marker)"
+											class="dropdown-item" 
+											href="#">
+											{{ marker.article.name }}
+											<span v-show="show_markers_prices">
+												(${{ marker.article.price }})
+											</span>
+										</a>
+									</div>
+								</div>
 								<button v-for="marker in markers"
 										@click="addMarker(marker)"
-										class="btn btn-primary m-5">
-									{{ marker.name }}
+										class="btn btn-primary m-l-5 m-r-5">
+									{{ marker.article.name }}
+									<span v-show="show_markers_prices">
+										(${{ marker.article.price }})
+									</span>
 								</button>
 							</div>
 						</div>
@@ -118,12 +155,17 @@
 									</td>
 									<td>{{ article.name }}</td>
 									<td v-if="article.stock">
-										<span v-if="article.uncontable == 1">
-											{{ article.stock }} {{ article.measurement_original }}s
-										</span>
-										<span v-else>
-											{{ article.stock }} 
-										</span>
+										<template v-if="article.stock">
+											Sin datos											
+										</template>
+										<template v-else>
+											<span v-if="article.uncontable == 1">
+												{{ article.stock }} {{ article.measurement_original }}s
+											</span>
+											<span v-else>
+												{{ article.stock }} 
+											</span>
+										</template>
 									</td>
 									<td v-else>
 										sin datos
@@ -139,21 +181,27 @@
 												:id="'amount-measurement-'+article.id"
 												min="1"
 												class="form-control input-amount-measurement"
-												@keyup.enter="addTotal(article)"
+												@keyup.enter="calculateTotal"
 												v-model="article.amount">
 										<select id="select-measurement" 
 												v-model="article.measurement"
 												class="form-control select-measurement">
+											<option value="gramo">Gramo(s)</option>
 											<option value="kilo">Kilo(s)</option>	
-											<option value="gramo">Gramo(s)</option>		
 										</select>
+										<button @click="calculateTotal"
+												class="btn btn-primary btn-sm">
+											<i class="icon-check"></i>
+										</button>
 									</td>
 									<td>
 										<button @click="up(article)"
+												v-show="article.uncontable == 0"
 												class="btn btn-primary btn-sm">
 											<i class="icon-plus"></i>
 										</button>
 										<button @click="down(article)"
+												v-show="article.uncontable == 0"
 												class="btn btn-primary btn-sm">
 											<i class="icon-minus"></i>
 										</button>
@@ -191,14 +239,19 @@ export default {
 			available_articles: [],
 			names: [],
 			bar_codes: [],
+
+			// Marcadores
 			markers: [],
+			marker_groups: [],
 			show_markers: true,
+			show_markers_prices: true,
 		}
 	},
 	created() {
 		this.getNames()
 		this.getBarCodes()
 		this.getMarkers()
+		this.getMarkerGroups()
 		this.getAvailableArticles()
 		$('#bar-code').focus()
 	},
@@ -206,107 +259,110 @@ export default {
 		price(p) {
 			return numeral(p).format('$0,0.00')
 		},
-		addArticle() {
-
-			var disponible = false
-			this.available_articles.forEach(article => {
+		isRepeated() {
+			var repetido = false
+			this.articles.forEach(article => {
 				if (article.bar_code == this.article.bar_code || article.name == this.article.name) {
-					disponible = true
-					axios.get('articles/get-by-name/'+article.name)
-					.then(res => {
-						var article = res.data
-						article.amount = 1
-						this.possible_articles = []
-						this.articles.push(article)
-						if (article.uncontable == 1) {
-							// console.log(article)
-							article.measurement_original = article.measurement
-							setTimeout(() => {
-								$(`#amount-measurement-${article.id}`).focus()
-							}, 500)
-						} else {
-							this.addTotal(article)
-						}
-					})
-					.catch(err => {
-						console.log(err)
-					})
-				} 
+					if (article.uncontable == 0) {
+						article.amount++
+						toastr.warning('El artículo ya esta en la venta, se aumento una unidad')
+						this.resetInputs()
+						this.calculateTotal()
+						repetido = true
+					}
+				}
 			})
-			if (!disponible) {
-				toastr.error('No registrado')
-			}
+			return repetido
 		},
-		addTotal(article, repeated = false) {	
-			// console.log(article)
-			if (article.uncontable == 0) {
-				if (article.offer_price) {
-					this.total += parseFloat(article.offer_price)
-				} else {
-					this.total += parseFloat(article.price)
-				}
-			} else {
-				var total_a_pagar_del_incotable = 0
-
-				// Revisa se se estan vendiendo kilos de un articulo que tiene el
-				// precio en kilos o lo mismo pero con gramos
-				if (article.measurement_original == article.measurement) {
-					console.log('unidades iguales')
-					if (article.offer_price) {
-						total_a_pagar_del_incotable = parseFloat(article.amount) * parseFloat(article.offer_price)
-					} else {
-						total_a_pagar_del_incotable = parseFloat(article.amount) * parseFloat(article.price)
-					}
-					if (article.stock) {
-						article.stock -= article.amount
-					}
-				} else {
-					// Si son diferentes revisa si el peso original era en kilogramos
-					// Si es asi es porque se eligio venderlo en gramos
-					console.log('unidades diferentes')
-					if (article.measurement_original == 'kilo') {
-						total_a_pagar_del_incotable = parseFloat(article.amount) * parseFloat(article.price) / 1000
-						if (article.stock) {
-							article.stock -= article.amount / 1000
-						}
-						if (article.offer_price) {
-							total_a_pagar_del_incotable = parseFloat(article.amount) * parseFloat(article.offer_price) / 1000
-						} else {
-							total_a_pagar_del_incotable = parseFloat(article.amount) * parseFloat(article.price) / 1000
-						}
-					} else {
-						// Si entra aca es porque el peso del articulo esta en gramos
-						// y se kieren vender kilos
-						// Esto es muy raro que pase asi que no lo voy a programar
-					}
-				}
-				console.log('total: '+total_a_pagar_del_incotable)
-				this.total += total_a_pagar_del_incotable
-			} 
-			// this.total = this.price(this.total)
-
-			this.cantidad_unidades++
-			if (article.stock && article.uncontable == 0) {
-				article.stock--
+		addArticle() {
+			var disponible = false
+			var repetido = this.isRepeated()
+			console.log('Repetido: '+repetido)
+			if (!repetido) {
+				this.available_articles.forEach(article => {
+					if (article.bar_code == this.article.bar_code || article.name == this.article.name) {
+						disponible = true
+						axios.get('articles/get-by-name/'+article.name)
+						.then(res => {
+							var article = res.data
+							article.amount = 1
+							this.possible_articles = []
+							this.articles.push(article)
+							if (article.uncontable == 1) {
+								article.measurement_original = article.measurement
+								setTimeout(() => {
+									$(`#amount-measurement-${article.id}`).focus()
+								}, 500)
+							} else {
+								this.calculateTotal()
+							}
+						})
+						.catch(err => {
+							console.log(err)
+						})
+					} 
+				})
 			}
-			if (!repeated) {
+			// if (!disponible) {
+			// 	toastr.error('No registrado')
+			// }
+		},
+		addMarker(marker) {
+			this.article.name = marker.article.name
+			this.addArticle()
+		},
+		calculateTotal() {
+			this.total = 0
+			this.cantidad_articulos = 0
+			this.cantidad_unidades = 0
+			this.articles.forEach(article => {
 				this.cantidad_articulos++
-			}
-			if (this.article.bar_code != '') {
-				this.article.bar_code = ''
-				$('#bar_code').focus()
-			} else {
+				var price = 0
+				if (article.offer_price) {
+					price = parseFloat(article.offer_price)
+				} else {
+					price = parseFloat(article.price)
+				}
+
+				if (article.uncontable == 0) {
+					article.stock -= article.amount
+					this.total += price * article.amount
+					this.cantidad_unidades += article.amount
+				} else {
+					this.cantidad_unidades++
+					if (article.measurement == article.measurement_original) {
+						article.stock -= article.amount
+						this.total += price * parseFloat(article.amount)
+					} else {
+						article.stock -= article.amount / 1000
+						this.total += price * parseFloat(article.amount) / 1000
+					}
+				}
+			})
+
+			this.resetInputs()
+		},
+		resetInputs() {
+			if (this.article.name != '') {
 				this.article.name = ''
 				$('#name').focus()
-			}
-		},
-		showMarkers() {
-			if (this.show_markers) {
-				this.show_markers = false
 			} else {
-				this.show_markers = true
+				this.article.bar_code = ''
+				$('#bar_code').focus()
 			}
 		},
+
+	    /*
+		|----------------------------------------------------------------
+		| Obtiene lo datos para comenzar
+		|----------------------------------------------------------------
+		|	* Codigos de barra
+		|	* Nombres disponibles
+		|	* Articulos disponibles
+		|	* Marcadores
+		|	* Grupo de marcadores
+		|
+		*/
 		getNames() {
 			axios.get('articles/names')
 			.then(res => {
@@ -336,9 +392,22 @@ export default {
 			})
 		},
 		getMarkers() {
-			axios.get('articles/get-markers')
+			axios.get('articles/markers')
 			.then(res => {
+				console.log('marcadores: ')
+				console.log(res.data)
 				this.markers = res.data
+			})
+			.catch(err => {
+				console.log(err)
+			})
+		},
+		getMarkerGroups() {
+			axios.get('articles/marker-groups')
+			.then(res => {
+				console.log('grupo de marcadores: ')
+				console.log(res.data)
+				this.marker_groups = res.data
 			})
 			.catch(err => {
 				console.log(err)
@@ -373,72 +442,6 @@ export default {
 			}
 		},
 
-		/*
-			* Agregar artículos a la lista de articulos por ser vendidos
-		*/
-		addMarker(marker) {
-			var repetido = false
-			this.articles.forEach(article => {
-				if (article.name == marker.name) {
-					repetido = true
-					toastr.warning(article.name+' ya esta ingresado en esta venta, se le sumo una unidad')
-					article.amount++
-					this.addTotal(article, true)
-					this.article.bar_code = ''
-					$('#bar-code').focus()
-				}
-			})
-
-			if (!repetido) {
-				marker.amount = 1
-				this.articles.push(marker)
-				this.addTotal(marker)
-				$('#bar-code').focus()
-			}
-		},
-		getByBarCode(bar_code) {
-			axios.get('articles/get-by-bar-code/'+bar_code)
-			.then(res => {
-				var article = res.data
-				article.amount = 1
-				this.articles.push(article)
-				this.addTotal(article)
-				this.article.bar_code = ''
-				$('#bar-code').focus()
-			})
-			.catch(err => {
-				console.log(err)
-			})
-		},
-		isRepeated() {
-			if (this.possible_articles.length) {
-				this.articles.forEach(article => {
-					if (article.name == this.article.name) {
-						// repetido = true
-						toastr.warning(article.name+' ya esta ingresado en esta venta, se le sumo una unidad')
-						article.amount++
-						this.addTotal(article, true)
-						this.possible_articles = []
-						this.article.name = ''
-						$('#name').focus()
-						return true
-					}
-				})
-			} else {
-				// Si se ingresa por codigo revisa que no este repetido
-				this.articles.forEach(article => {
-					if (article.bar_code == this.article.bar_code) {
-						// repetido = true
-						toastr.warning(article.name+' ya esta ingresado en esta venta, se le sumo una unidad')
-						article.amount++
-						this.addTotal(article, true)
-						this.article.bar_code = ''
-						$('#bar-code').focus()
-						return true
-					}
-				})
-			}
-		},
 		removeArticle(article) {
 			this.total -= Number(article.price) * article.amount
 			this.cantidad_articulos--
@@ -448,17 +451,13 @@ export default {
 		},
 		up(article) {
 			article.amount++
-			this.addTotal(article, true)
+			this.calculateTotal()
+			// this.addTotal(article, true)
 		},
 		down(article) {
 			if (article.amount > 1) {
 				article.amount--
-				if (article.stock != 'No tiene datos') {
-					article.stock++
-				}
-				this.total -= Number(article.price)
-				this.cantidad_unidades--
-
+				this.calculateTotal()
 			} else {
 				toastr.error('No se pueden restar mas unidades')
 			}
@@ -470,12 +469,14 @@ export default {
 					articles: this.articles,
 				})
 				.then(res => {
-					console.log(res.data)
+					// console.log('aca esta: ')
+					// console.log(res.data)
 					this.articles = []	
 					this.total = 0
 					this.cantidad_articulos = 0
 					this.cantidad_unidades = 0
 					toastr.success('Venta realizada correctamente')
+					$('#bar-code').focus()
 				})
 				.catch(err => {
 					console.log(err)
@@ -492,7 +493,7 @@ export default {
 <style scoped>
 .input-amount{
 	display: inline-block;
-	width: 50px;
+	width: 70px;
 	margin: 0px;
 }
 
@@ -523,6 +524,9 @@ export default {
 }
 .input-amount-measurement {
 	width: 70px;
+	display: inline-block;
+}
+.dropdown {
 	display: inline-block;
 }
 </style>

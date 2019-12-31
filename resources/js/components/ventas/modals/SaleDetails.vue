@@ -21,21 +21,8 @@
                         </label>
                     </div>
                 </div>
-                <!-- <div class="form-group">
-                    <div class="custom-control custom-checkbox my-1 mr-sm-2">
-                        <input class="custom-control-input" 
-                            v-model="actual_prices" 
-                            type="checkbox" 
-                            id="actual_prices">
-                        <label class="custom-control-label" 
-                            for="actual_prices">
-                            Mostrar precios actuales
-                        </label>
-                    </div>
-                </div> -->
                 <table class="table table-striped">
                     <thead class="thead-dark">
-                        <!-- <th scope="col">Codigo</th>     -->
                         <th scope="col">Nombre</th>    
                         <th scope="col">Cantidad</th>      
                         <th v-show="show_costs" scope="col">Costo</th>      
@@ -97,7 +84,8 @@ export default {
         },
         getSubTotal(article) {
             if (article.uncontable == 1) {
-                if (article.measurement != article.measurement_original) {
+                if (article.pivot.measurement != article.measurement) {
+                    // console.log('diferente: '+article.name)
                     var sub_total_price = parseFloat(article.pivot.price) * article.pivot.amount / 1000
                 } else {
                     var sub_total_price = parseFloat(article.pivot.price) * article.pivot.amount
@@ -110,7 +98,7 @@ export default {
         },
         getSubTotalCost(article) {
             if (article.uncontable == 1) {
-                if (article.measurement != article.measurement_original) {
+                if (article.pivot.measurement != article.measurement) {
                     var sub_total_cost = parseFloat(article.pivot.cost) * article.pivot.amount / 1000
                 } else {
                     var sub_total_cost = parseFloat(article.pivot.cost) * article.pivot.amount

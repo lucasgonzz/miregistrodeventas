@@ -9,6 +9,7 @@ use App\Article;
 use App\Sale;
 use App\Http\Controllers\Helpers\PdfSaleClient;
 use App\Http\Controllers\Helpers\PdfSaleCommerce;
+use App\Http\Controllers\Helpers\PdfPrintArticles;
 
 class PdfController extends Controller
 {
@@ -29,9 +30,7 @@ class PdfController extends Controller
         $x = 10;
         $y = 10;
         $largo_ticket = 0;
-        // $hubo_codigo_de_barras = false;
         $articles_id = explode('-', $articles_id);
-        // $bar_code_printed = false;
         foreach ($articles_id as $article_id) {
         	$article = Article::find($article_id);
 			$bar_code = $article->bar_code;
@@ -217,46 +216,6 @@ class PdfController extends Controller
 	function sale_commerce($company_name, $borders, $sale_id) {
         $pdf = new PdfSaleCommerce($sale_id, (bool)$company_name, (bool)$borders);
         $pdf->printSale();
-        
-  //       $articles = $sale->articles;
-  //       $pdf->addPage();
-  //       $pdf->setFont('Arial', '', 12);
-
-  //       if ($per_page != 0) {
-		// 	$count = 0;
-		// 	$count_total = 0;
-		// 	$cost = 0;
-		// 	$price = 0;
-		// 	foreach ($articles as $article) {
-		// 		$count_total++;
-		// 		if ($count < $per_page && $count_total < count($articles)) {
-		// 			$cost += $article->cost;
-		// 			$price += $article->price;
-		// 			$count++;
-		// 			$pdf->printArticle($pdf, $article, $borders, true);
-		// 		} else {
-		//         	$pdf->SetY(-40);
-	 //        		$pdf->Cell(0,5,$count.' arículos en esta página',0,0,'R');
-	 //        		$pdf->Ln();
-	 //        		$pdf->Cell(0,5,'Suma de los costos de esta página: $'.$pdf->price($cost),0,0,'R');
-	 //        		$pdf->Ln();
-	 //        		$pdf->Cell(0,5,'Suma de los precios de esta página: $'.$pdf->price($price),0,0,'R');
-	 //        		if (count($articles) > $count_total) {
-	 //        			$pdf->addPage();
-	 //        		}
-		// 			$count = 0;
-		// 			$cost = 0;
-		// 			$price = 0;
-		// 		}				
-		// 	}
-		// } else {
-		// 	foreach ($articles as $article) {
-		// 		$pdf->printArticle($pdf, $article, $borders, true);
-		// 	}
-		// }
-
-  //       $pdf->Output();
-  //       exit;
 	}
 
 	/* -------------------------------------------------------------------------------
@@ -276,78 +235,34 @@ class PdfController extends Controller
 
     function articles($columns_string, $articles_ids_string, $orientation, $header = null) {
 
-    	$articles;
+    	/*
+		|-------------------------------------------------------------------
+		|	Se consiguen los articulos para imprimir
+		|-------------------------------------------------------------------
+		|	Si los id == todos se consiguen todos los articulos
+		|	Sino se separan los id y se buscan los articulos 1 x 1
+		|
+    	*/
+    	$user = Auth()->user();
     	if ($articles_ids_string == 'todos') {
-    		$articles = Article::all();
+    		$articles = Article::where('user_id', $user->id)
+    							->orderBy('id', 'DESC')
+    							->get();
     	} else {
     		$articles_ids = explode('-', $articles_ids_string);
 	    	foreach ($articles_ids as $id_article) {
-	    		$articles[] = Article::find($id_article);
+	    		$articles[] = Article::where('user_id', $user->id)
+	    								->where('id', $id_article)
+	    								->first();
 	    	}
     	}
-    	$columns_ = explode('-', $columns_string);
-    	$columns = [];
 
-    	foreach ($columns_ as $column) {
-    		switch ($column) {
-    			case 'bar_code':
-    				$columns['bar_code'] = 35;
-    				break;
-    			case 'name':
-    				$columns['name'] = 50;
-    				break;
-    			case 'cost':
-    				$columns['cost'] = 20;
-    				break;
-    			case 'price':
-    				$columns['price'] = 20;
-    				break;
-    			case 'previus_price':
-    				$columns['previus_price'] = 20;
-    				break;
-    			case 'stock':
-    				$columns['stock'] = 15;
-    				break;
-    			case 'created_at':
-    				$columns['created_at'] = 25;
-    				break;
-    			case 'updated_at':
-    				$columns['updated_at'] = 25;
-    				break;
-    		}
-    	}
+		$pdf = new PdfPrintArticles($orientation, $columns_string, $header);
 
-    	if (!is_null($header)) {
-    		$header = explode('-', $header);
-    	}
-		$pdf = new Pdf($orientation, $columns, $header);
 		$pdf->AliasNbPages();
 		$pdf->addPage();
-		$pdf->setFont('Times', '', 14);
-		foreach ($articles as $article) {
-			foreach ($columns as $column => $w) {
-				if ($column=='created_at' || $column=='updated_at') {
-					$pdf->Cell($w,7,date_format($article->{$column}, 'd/m/y'),'B',0,'C');
-				} else {
-					$align = 'L';
-					if ($column=='name') {
-						if (strlen($article->{$column}) > 19) {
-							$article->{$column} = substr($article->{$column}, 0, 19) . '..';
-						}
-					}
-					if ($column=='price' || $column=='cost' || $column=='previus_price') {
-						$align = 'R';
-						$article->{$column} = $pdf->price($article->{$column});
-					}
-					if ($column=='stock') {
-						$align = 'R';
-					}
-					$pdf->Cell($w,7,$article->{$column},'B',0,$align);
-				}
-			}
-			$pdf->Ln();
-		}
-
+		$pdf->setFont('Arial', '', 14);
+		$pdf->printArticles($articles);
 		$pdf->Output();
 		exit;
     }

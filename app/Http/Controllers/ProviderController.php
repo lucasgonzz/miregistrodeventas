@@ -11,11 +11,17 @@ class ProviderController extends Controller
     	return Provider::where('user_id', Auth()->user()->id)->get();
     }
 
-    function store(Request $request) {
-        $provider = new Provider;
-        $provider->name = ucwords($request->provider['name']);
-        $provider->user_id = Auth()->user()->id;
-        $provider->save();
+    function store($provider_name) {
+        // return Auth()->user()->id;
+        $provider = Provider::create([
+            'name' => ucwords($provider_name),
+            'user_id' => Auth()->user()->id,
+        ]);
+        // return $request->provider['name'];
+        // $provider = new Provider;
+        // $provider->name = ucwords($request->provider['name']);
+        // $provider->user_id = Auth()->user()->id;
+        // $provider->save();
         return $provider;
     }
 

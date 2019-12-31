@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Helpers;
 use App\Article;
 use App\Sale;
 use App\Client;
+use App\Http\Controllers\Helpers\PdfPrintArticles;
 
 require(__DIR__.'/../fpdf/fpdf.php');
 use fpdf;
@@ -103,15 +104,20 @@ class PdfPrintSale extends fpdf {
                     $this->SetY(250);
                     $this->SetX(5);
                     $this->SetFont('Arial', '', 12);
-                    $this->Cell(100,7,'Página '.$num_page.' de '.$total_pages,1,0,'C');
-                    $this->Cell(100,7,$articulos_en_esta_pagina.' arículos en esta página',1,0,'C');
+                    $this->Cell(100,7,'Página '.$num_page.' de '.$total_pages,0,0,'L');
+                    if ($articulos_en_esta_pagina == 1) {
+                    	$oracion = ' arículo en esta página';
+                    } else {
+                    	$oracion = ' arículos en esta página';
+                    }
+                    $this->Cell(100,7,$articulos_en_esta_pagina.$oracion,0,0,'L');
                     $this->Ln();
                     $this->SetX(5);
                     if ($this->articles_total_cost) {
-                        $this->Cell(100,7,'Suma de los costos de esta página: $'.$this->price($suma_costos_pagina),1,0,'C');
+                        $this->Cell(100,7,'Costos de esta página: $'.$this->price($suma_costos_pagina),0,0,'L');
                     }
                     if ($this->articles_total_price) {
-                        $this->Cell(100,7,'Suma de los precios de esta página: $'.$this->price($suma_precios_pagina),1,0,'C');
+                        $this->Cell(100,7,'Precios de esta página: $'.$this->price($suma_precios_pagina),0,0,'L');
                     }
 
                     if ($articulos_en_esta_venta < $cantidad_articulos) {
@@ -137,27 +143,29 @@ class PdfPrintSale extends fpdf {
             $this->SetY(250);
             $this->SetX(5);
             $this->SetFont('Arial', '', 12);
-            $this->Cell(100,7,'Página '.$num_page.' de '.$total_pages,1,0,'C');
-            $this->Cell(100,7,$articulos_en_esta_pagina.' arículos en esta página',1,0,'C');
-            $this->Ln();
-            $this->SetX(5);
-            if ($this->articles_total_cost) {
-                $this->Cell(100,7,'Suma de los costos de esta página: $'.$this->price($suma_costos_pagina),1,0,'C');
-            }
-            if ($this->articles_total_price) {
-                $this->Cell(100,7,'Suma de los precios de esta página: $'.$this->price($suma_precios_pagina),1,0,'C');
-            }
             // Se terminaron los articulos de la venta
             $suma_costos_venta += $suma_costos_pagina;
             $suma_precios_venta += $suma_precios_pagina;
+            $this->Cell(100,7,'Página '.$num_page.' de '.$total_pages,0,0,'L');
+            if ($articulos_en_esta_pagina == 1) {
+            	$oracion = ' arículo en esta página';
+            } else {
+            	$oracion = ' arículos en esta página';
+            }
+            $this->Cell(100,7,$articulos_en_esta_pagina.$oracion,0,0,'L');
             $this->Ln();
             $this->SetX(5);
-
             if ($this->articles_total_cost) {
-            	$this->Cell(100,7,'Suma de todos los costos de esta venta: $'.$this->price($suma_costos_venta),1,0,'C');
+                $this->Cell(100,7,'Costos de esta página: $'.$this->price($suma_costos_pagina),0,0,'L');
+            	$this->Cell(100,7,'Costos de esta venta: $'.$this->price($suma_costos_venta),0,0,'L');
+            	$this->Ln();
             }
+            $this->SetX(5);
+
+            
             if ($this->articles_total_price) {
-            	$this->Cell(100,7,'Suma de todos los precios de esta venta: $'.$this->price($suma_precios_venta),1,0,'C');
+                $this->Cell(100,7,'Precios de esta página: $'.$this->price($suma_precios_pagina),0,0,'L');
+            	$this->Cell(100,7,'Precios de esta venta: $'.$this->price($suma_precios_venta),0,0,'L');
             }
         }
         // dd($a);
@@ -185,11 +193,11 @@ class PdfPrintSale extends fpdf {
         	$this->Cell($this->widths['cost'],10,'$'.$this->price($article->cost),$this->borders,0,'L');
         }
         $this->Cell($this->widths['price'],10,'$'.$this->price($article->price),$this->borders,0,'L');
-        $this->Cell($this->widths['amount'],10,$article->pivot->amount,$this->borders,0,'L');
+        $this->Cell($this->widths['amount'],10,PdfArticleHelper::amount($article),$this->borders,0,'L');
         if ($this->articles_subtotal_cost) {
-            $this->Cell($this->widths['sub_total_cost'],10,'$'.$article->cost * $article->pivot->amount,$this->borders,0,'L');
+            $this->Cell($this->widths['sub_total_cost'],10,'$'.$this->price(PdfArticleHelper::getSubTotalCost($article)),$this->borders,0,'L');
         }
-        $this->Cell($this->widths['sub_total'],10,'$'.$article->price * $article->pivot->amount,$this->borders,0,'L');
+        $this->Cell($this->widths['sub_total'],10,'$'.$this->price(PdfArticleHelper::getSubTotalPrice($article)),$this->borders,0,'L');
         $this->Ln();
     }
 

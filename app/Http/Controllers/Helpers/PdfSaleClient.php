@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Helpers;
 use App\Article;
 use App\Sale;
 use App\Client;
+use App\Http\Controllers\Helpers\PdfArticleHelper;
 
-require(__DIR__.'\..\fpdf\fpdf.php');
+require(__DIR__.'/../fpdf/fpdf.php');
 use fpdf;
 
 class PdfSaleClient extends fpdf {
@@ -90,12 +91,12 @@ class PdfSaleClient extends fpdf {
         $this->SetY(250);
         $this->SetX(5);
         $this->SetFont('Arial', '', 12);
-        $this->Cell(100,7,'Página '.$this->num_page.' de '.$this->total_pages,1,0,'C');
-        $this->Cell(100,7,$this->articulos_en_esta_pagina.' arículos en esta página',1,0,'C');
+        $this->Cell(100,7,'Página '.$this->num_page.' de '.$this->total_pages,0,0,'L');
+        $this->Cell(100,7,$this->articulos_en_esta_pagina.' arículos en esta página',0,0,'L');
         $this->Ln();
         $this->SetX(5);
-        $this->Cell(100,7,'Suma de los precios de esta página: $'.$this->price($this->suma_precios_pagina),1,0,'C');
-        $this->Cell(100,7,'Suma de todos los precios de esta venta: $'.$this->price($this->suma_precios_venta),1,0,'C');
+        $this->Cell(100,7,'Precios de esta página: $'.$this->price($this->suma_precios_pagina),0,0,'L');
+        $this->Cell(100,7,'Precios de esta venta: $'.$this->price($this->suma_precios_venta),0,0,'L');
         $this->Ln();
         $this->SetX(5);
         
@@ -107,7 +108,7 @@ class PdfSaleClient extends fpdf {
 		$this->SetX(5);
 		$this->SetDrawColor(51,51,51);
 		$this->SetLineWidth(.4);
-		$this->SetFont('Arial', '', 12);
+		$this->SetFont('Arial', '', 11);
 		
 		$this->Cell(50,10,$article->bar_code,$this->borders,0,'L');
     	$name = $article->name;
@@ -116,8 +117,9 @@ class PdfSaleClient extends fpdf {
     	}
     	$this->Cell(55,10,$name,$this->borders,0,'L');
     	$this->Cell(30,10,'$'.$this->price($article->price),$this->borders,0,'L');
-    	$this->Cell(30,10,$article->pivot->amount,$this->borders,0,'L');
-    	$this->Cell(35,10,'$'.$this->price($article->price * $article->pivot->amount),$this->borders,0,'L');
+    	// $this->Cell(30,10,$article->pivot->amount,$this->borders,0,'L');
+    	$this->Cell(30,10,PdfArticleHelper::amount($article),$this->borders,0,'L');
+    	$this->Cell(35,10,'$'.$this->price(PdfArticleHelper::getSubTotalPrice($article)),$this->borders,0,'L');
     	$this->Ln();
 	}
 	

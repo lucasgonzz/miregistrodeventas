@@ -22,7 +22,7 @@ class SalesTableSeeder extends Seeder
                     'user_id' => 1,
                     'num_sale' => $num_sale,
                     'client_id' => 1,
-                    'created_at' => $i == 0 ? Carbon::now() : Carbon::now()->subDay($i)
+                    'created_at' => $i == 0 ? Carbon::now()->subDay(6) : Carbon::now()->subDay(6-$i)
                 ]);
                 $articles = Article::where('user_id', 1)
                                         ->inRandomOrder()
@@ -44,8 +44,8 @@ class SalesTableSeeder extends Seeder
                 $sale = Sale::create([
                     'user_id' => 2,
                     'num_sale' => $num_sale,
-                    'created_at' => $i == 0 ? Carbon::now() : Carbon::now()->subDay($i)
-                ]);
+                    'created_at' => $i == 0 ? Carbon::now()->subDay(6) : Carbon::now()->subDay(6-$i)
+                ]); 
                 $articles = Article::where('user_id', 2)
                                         ->inRandomOrder()
                                         ->limit(50)->get();

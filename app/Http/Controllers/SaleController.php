@@ -116,7 +116,7 @@ class SaleController extends Controller
     }
 
     function store(Request $request) {
-        // return $request;
+        // return $request->articles[0]['measurement'];
         $user = Auth()->user();
         $last_sale = Sale::where('user_id', $user->id)
                             ->orderby('created_at','DESC')
@@ -154,22 +154,28 @@ class SaleController extends Controller
         }
 
     	foreach ($request->articles as $article) {
-    		$sale->articles()->attach($article['id'], [
+            $price = 0;
+            if (!is_null($article['offer_price'])) {
+                $price = $article['offer_price'];
+            } else {
+                $price = $article['price'];
+            }
+            $sale->articles()->attach($article['id'], [
                                                         'amount' => $article['amount'],
                                                         'measurement' => 
-                                                                        $article['measurement'] 
+                                                                        isset($article['measurement']) 
                                                                         ? $article['measurement'] 
                                                                         : null,
-                                                        'cost' => $article['cost'],
-                                                        'price' => $article['price'],
+                                                        'cost' => (float)$article['cost'],
+                                                        'price' => (float)$price,
                                                     ]);
-    		$article_ = Article::find($article['id']);
+            $article_ = Article::find($article['id']);
     		if (!is_null($article_->stock)) {
                 if ($article_->uncontable == 1) {
-                    if ($article->measurement != $article->measurement_original) {
+                    if ($article['measurement'] != $article['measurement_original']) {
                         $article_->stock -= ((float)$article['amount'] / 1000);
                     } else {
-                        $article_->stock -= $article['amount'];
+                        $article_->stock -= (float)$article['amount'];
                     }
                 } else {
                     $article_->stock -= $article['amount'];

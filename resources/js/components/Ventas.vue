@@ -5,7 +5,7 @@
 			<div class="card-header">
 				<div class="row justify-content-between align-items-center">
 					<div class="col">
-						<strong>Ventas de hoy</strong>
+						<strong>Ventas de hoy 25 de diciembre</strong>
 					</div>
 					<div class="col">
 						<button class="btn btn-success">

@@ -121,9 +121,9 @@
                     </a>
 
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                        <a href="{{ route('commerce.config') }}" class="dropdown-item">                            
+                        <!-- <a href="{{ route('commerce.config') }}" class="dropdown-item">                            
                            Configuración
-                        </a>
+                        </a> -->
                         <form action="{{ route('logout') }}" method="POST">
                             {{ csrf_field() }}
                             <button class="dropdown-item" type="submit">                            

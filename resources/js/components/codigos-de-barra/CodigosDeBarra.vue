@@ -5,7 +5,7 @@
 							:repeatedBarCode="repeated_bar_code"
 							:barCode="bar_code_details"></bar-code-details>
 		<div class="row justify-content-center">
-			<div class="col-lg-8">	
+			<div class="col-lg-9">	
 				<div class="card">
 					<div class="card-header">
 						Codigos de barra
@@ -95,12 +95,21 @@
 										<div class="list-bar-codes">
 											<li v-for="bar_code_ in bar_codes" 
 												class="list-group-item c-p">
-												{{ bar_code_.name }}
-												<button @click.prevent="showBarCodeDetails(bar_code_)"
-														class="btn btn-primary btn-sm float-right">
-													<i class="icon-eye"></i>
-													Ver
-												</button>
+												<input type="text" 
+														:id="'bar-code-text-'+bar_code_.id"
+														:value="bar_code_.name"
+														class="form-control input-inline disabled">
+												<div class="float-right">
+													<button @click.prevent="copyText(bar_code_)"
+															class="btn btn-success btn-sm">
+														Copiar
+													</button>
+													<button @click.prevent="showBarCodeDetails(bar_code_)"
+															class="btn btn-primary btn-sm">
+														<i class="icon-eye"></i>
+														Ver
+													</button>
+												</div>
 											</li>
 										</div>
 									</ul>
@@ -149,6 +158,21 @@ export default {
 			this.bar_code_details = bar_code
 			console.log(this.bar_code_details)
 			$('#bar-code-details').modal('show')
+		},
+		copyText(bar_code) {
+			// Obtiene el id del input
+			var bar_code_text_id = '#bar-code-text-'+bar_code.id
+
+			// Guarda el input en una varialbe con el nombre del input
+			var input = $(bar_code_text_id)
+
+			// Selecciona el contenido del campo
+			input.select();
+
+			// Copia el texto seleccionado
+			document.execCommand("copy");
+
+			toastr.success('Codigo de barras copiado')
 		},
 		generateCode() {
 			var bar_code = 1
@@ -223,3 +247,8 @@ export default {
 	}
 }
 </script>
+<style>
+.input-inline {
+	display: inline-block;
+}
+</style>
