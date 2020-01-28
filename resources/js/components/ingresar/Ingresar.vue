@@ -27,8 +27,11 @@
 								</h5>
 							</div>
 							<div class="col">
+								<!-- <button class="btn btn-success">
+									Porcentaje Fijo
+								</button> -->
 								<button @click="previus" 
-										class="btn btn-primary m-l-5 float-right">
+										class="btn btn-primary">
 									<i class="icon-undo"></i>
 									Anterior
 								</button>

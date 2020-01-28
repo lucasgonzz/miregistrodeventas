@@ -8,7 +8,7 @@
 							<strong>Empleados</strong>
 						</h5>
 					</div>
-					<form>
+					<!-- <form> -->
 						<div class="card-body">
 							<div class="row">
 								<div class="col-12 col-lg-6">
@@ -119,7 +119,7 @@
 						<div class="card-footer p-0">
 							
 						</div>
-					</form>	
+					<!-- </form>	 -->
 				</div>
 			</div>
 		</div>

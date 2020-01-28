@@ -14,17 +14,26 @@ use App\Http\Controllers\Helpers\PdfPrintArticle;
 class SaleController extends Controller
 {
 
+    function getArticleOwnerId() {
+        $user = Auth()->user();
+        if (is_null($user->belongs_to)) {
+            return $user->id;
+        } else {
+            return $user->belongs_to;
+        }
+    }
+
     function index() {
         $user = Auth()->user();
         if ($user->hasRole('provider')) {
-            $sales = Sale::where('user_id', $user->id)
+            $sales = Sale::where('user_id', $this->getArticleOwnerId())
                             ->where('created_at', '>=', Carbon::today())
                             ->with('client')
                             ->with('articles')
                             ->orderBy('created_at', 'DESC')
                             ->get();
         } else {
-            $sales = Sale::where('user_id', $user->id)
+            $sales = Sale::where('user_id', $this->getArticleOwnerId())
                             ->where('created_at', '>=', Carbon::today())
                             ->with('articles')
                             ->orderBy('created_at', 'DESC')
@@ -42,7 +51,7 @@ class SaleController extends Controller
         }
         $date = $carbon->subDays($index);
         if ($user->hasRole('provider')) {
-            $sales = Sale::where('user_id', Auth()->user()->id)
+            $sales = Sale::where('user_id', $this->getArticleOwnerId())
                                 ->whereDate('created_at', $date)
                                 ->orderBy('id', 'DESC')
                                 ->with('client')
@@ -50,7 +59,7 @@ class SaleController extends Controller
                                 ->orderBy('created_at', 'DESC')
                                 ->get();
         } else {
-            $sales = Sale::where('user_id', Auth()->user()->id)
+            $sales = Sale::where('user_id', $this->getArticleOwnerId())
                                 ->whereDate('created_at', $date)
                                 ->orderBy('id', 'DESC')
                                 ->with('articles')
@@ -63,14 +72,14 @@ class SaleController extends Controller
     function onlyOneDate($date) {
         $user = Auth()->user();
         if ($user->hasRole('provider')) {
-            $sales = Sale::where('user_id', $user->id)
+            $sales = Sale::where('user_id', $this->getArticleOwnerId())
                     ->whereDate('created_at', $date)
                     ->with('articles')
                     ->with('client')
                     ->orderBy('created_at', 'DESC')
                     ->get();
         } else {
-            $sales = Sale::where('user_id', $user->id)
+            $sales = Sale::where('user_id', $this->getArticleOwnerId())
                     ->whereDate('created_at', $date)
                     ->with('articles')
                     ->orderBy('created_at', 'DESC')
@@ -87,14 +96,14 @@ class SaleController extends Controller
             $to->addDay();
         }
         if ($user->hasRole('provider')) {
-            $sales = Sale::where('user_id', $user->id)
+            $sales = Sale::where('user_id', $this->getArticleOwnerId())
                     ->whereBetween('created_at', [$from, $to])
                     ->with('articles')
                     ->with('client')
                     ->orderBy('created_at', 'DESC')
                     ->get();
         } else {
-            $sales = Sale::where('user_id', $user->id)
+            $sales = Sale::where('user_id', $this->getArticleOwnerId())
                     ->whereBetween('created_at', [$from, $to])
                     ->with('articles')
                     ->orderBy('created_at', 'DESC')
@@ -106,31 +115,55 @@ class SaleController extends Controller
     function deleteSales($sales_id) {
         foreach (explode('-', $sales_id) as $sale_id) {
             $sale = Sale::find($sale_id);
+            foreach ($sale->articles as $article) {
+                if ($article->uncontable == 0) {
+                    $article->stock += $article->pivot->amount;
+                } else {
+                    if ($article->measurement != $article->pivot->measurement) {
+                        $article->stock += $article->pivot->amount / 1000;
+                    } else {
+                        $article->stock += $article->pivot->amount;
+                    }
+                }
+                $article->save();
+            }
             $sale->delete();
         }
     }
 
     function delete($id) {
         $sale = Sale::find($id);
+        foreach ($sale->articles as $article) {
+            if ($article->uncontable == 0) {
+                $article->stock += $article->pivot->amount;
+            } else {
+                if ($article->measurement != $article->pivot->measurement) {
+                    $article->stock += $article->pivot->amount / 1000;
+                } else {
+                    $article->stock += $article->pivot->amount;
+                }
+            }
+            $article->save();
+        }
         $sale->delete();
     }
 
     function store(Request $request) {
         // return $request->articles[0]['measurement'];
         $user = Auth()->user();
-        $last_sale = Sale::where('user_id', $user->id)
+        $last_sale = Sale::where('user_id', $this->getArticleOwnerId())
                             ->orderby('created_at','DESC')
                             ->first();
         if ($last_sale === null) {
             if ($user->hasRole('provider')) {
             	$sale = Sale::create([
-            		'user_id' => $user->id,
+            		'user_id' => $this->getArticleOwnerId(),
                     'num_sale' => 1,
             		'client_id' => $request->client_id
             	]);
             } else {
                 $sale = Sale::create([
-                    'user_id' => $user->id,
+                    'user_id' => $this->getArticleOwnerId(),
                     'num_sale' => 1,
                 ]);
             }
@@ -139,7 +172,7 @@ class SaleController extends Controller
                 $num_sale = $last_sale->num_sale;
                 $num_sale++;
                 $sale = Sale::create([
-                    'user_id' => $user->id,
+                    'user_id' => $this->getArticleOwnerId(),
                     'num_sale' => $num_sale,
                     'client_id' => $request->client_id
                 ]);
@@ -147,7 +180,7 @@ class SaleController extends Controller
                 $num_sale = $last_sale->num_sale;
                 $num_sale++;
                 $sale = Sale::create([
-                    'user_id' => $user->id,
+                    'user_id' => $this->getArticleOwnerId(),
                     'num_sale' => $num_sale,
                 ]);
             }
@@ -180,6 +213,7 @@ class SaleController extends Controller
                 } else {
                     $article_->stock -= $article['amount'];
                 }
+                $article_->timestamps = false;
 	    		$article_->save();
     		}
     	}

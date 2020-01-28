@@ -196,6 +196,6 @@ class PdfSaleClient extends fpdf {
 		$this->SetFont('Arial', '', 11);
 		$this->AliasNbPages();
 		$this->SetY(-20);
-		$this->Write(5,'Hoja '.$this->PageNo().'/{nb}');
+		// $this->Write(5,'Hoja '.$this->PageNo().'/{nb}');
 	}
 }

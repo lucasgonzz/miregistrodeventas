@@ -7,20 +7,30 @@ use App\Provider;
 
 class ProviderController extends Controller
 {
+
+    function getArticleOwnerId() {
+        $user = Auth()->user();
+        if (is_null($user->belongs_to)) {
+            return $user->id;
+        } else {
+            return $user->belongs_to;
+        }
+    }
+
     function index() {
-    	return Provider::where('user_id', Auth()->user()->id)->get();
+    	return Provider::where('user_id', $this->getArticleOwnerId())->get();
     }
 
     function store($provider_name) {
-        // return Auth()->user()->id;
+        // return $this->getArticleOwnerId();
         $provider = Provider::create([
             'name' => ucwords($provider_name),
-            'user_id' => Auth()->user()->id,
+            'user_id' => $this->getArticleOwnerId(),
         ]);
         // return $request->provider['name'];
         // $provider = new Provider;
         // $provider->name = ucwords($request->provider['name']);
-        // $provider->user_id = Auth()->user()->id;
+        // $provider->user_id = $this->getArticleOwnerId();
         // $provider->save();
         return $provider;
     }

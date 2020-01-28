@@ -47,9 +47,14 @@ class PermissionsTableSeeder extends Seeder
         // 	'description' => 'Podra eliminar cualquier cantidad de artículos'
         // ]);
         Permission::create([
-        	'name' => 'Ver los artículos',
-        	'slug' => 'article.index',
-        	'description' => 'Podra ver todos los artículos que hayan sido ingresados'
+            'name' => 'Ver los artículos',
+            'slug' => 'article.index',
+            'description' => 'Podra ver todos los artículos que hayan sido ingresados'
+        ]);
+        Permission::create([
+            'name' => 'Ver los costos de los artículos',
+            'slug' => 'article.index.cost',
+            'description' => 'Podra ver todos los costos de todos los artículos que hayan sido ingresados'
         ]);
 
         // Codigos de barra

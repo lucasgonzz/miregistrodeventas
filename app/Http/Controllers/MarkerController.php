@@ -7,9 +7,17 @@ use App\Marker;
 
 class MarkerController extends Controller
 {
+    function getArticleOwnerId() {
+        $user = Auth()->user();
+        if (is_null($user->belongs_to)) {
+            return $user->id;
+        } else {
+            return $user->belongs_to;
+        }
+    }
 
 	function index() {
-		return Marker::where('user_id', Auth()->user()->id)
+		return Marker::where('user_id', $this->getArticleOwnerId())
 						->whereDoesntHave('markerGroup')
 						->with('article')
 						->get();
@@ -17,7 +25,7 @@ class MarkerController extends Controller
 
 	function store(Request $request) {
 		Marker::create([
-			'user_id' => Auth()->user()->id,
+			'user_id' => $this->getArticleOwnerId(),
 			'article_id' => $request->article_id,
 		]);
 	}

@@ -2721,6 +2721,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 
@@ -4003,6 +4006,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -4037,6 +4053,9 @@ __webpack_require__.r(__webpack_exports__);
   props: ['rol'],
   data: function data() {
     return {
+      user: {
+        'can_see_cost': document.head.querySelector('meta[name="user-can-see-costs"]').content
+      },
       articles: [],
       article: {
         'id': 0,
@@ -6325,6 +6344,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -6460,7 +6481,7 @@ __webpack_require__.r(__webpack_exports__);
         $('#name').focus();
       } else {
         this.article.bar_code = '';
-        $('#bar_code').focus();
+        $('#bar-code').focus();
       }
     },
 
@@ -6615,6 +6636,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modals_Clients_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modals/Clients.vue */ "./resources/js/components/vender/modals/Clients.vue");
 /* harmony import */ var _modals_SuccessfulSale_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modals/SuccessfulSale.vue */ "./resources/js/components/vender/modals/SuccessfulSale.vue");
 /* harmony import */ var _modals_ArticleNotRegister_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modals/ArticleNotRegister.vue */ "./resources/js/components/vender/modals/ArticleNotRegister.vue");
+//
+//
 //
 //
 //
@@ -7147,7 +7170,7 @@ __webpack_require__.r(__webpack_exports__);
         $('#name').focus();
       } else {
         this.article.bar_code = '';
-        $('#bar_code').focus();
+        $('#bar-code').focus();
       }
     },
     removeArticle: function removeArticle(article) {
@@ -8317,6 +8340,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   methods: {
     deleteSale: function deleteSale() {
@@ -8336,6 +8360,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
 //
 //
 //
@@ -65004,90 +65029,37 @@ var render = function() {
         _c("div", { staticClass: "card" }, [
           _vm._m(0),
           _vm._v(" "),
-          _c("form", [
-            _c("div", { staticClass: "card-body" }, [
-              _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col-12 col-lg-6" }, [
-                  _c("div", { staticClass: "card" }, [
-                    _c("div", { staticClass: "card-header" }, [
+          _c("div", { staticClass: "card-body" }, [
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-12 col-lg-6" }, [
+                _c("div", { staticClass: "card" }, [
+                  _c("div", { staticClass: "card-header" }, [
+                    _vm._v(
+                      "\n\t\t\t\t\t\t\t\t\t\tRegistrar un nuevo empleado\n\t\t\t\t\t\t\t\t\t"
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "card-body" }, [
+                    _c("p", { staticClass: "card-title" }, [
                       _vm._v(
-                        "\n\t\t\t\t\t\t\t\t\t\tRegistrar un nuevo empleado\n\t\t\t\t\t\t\t\t\t"
+                        "\n\t\t\t\t\t\t\t\t\t\t\tRegistre un nuevo empleado y asignele permisos para controlar que puede y que no hacer dentro del sistema\n\t\t\t\t\t\t\t\t\t\t"
                       )
                     ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "card-body" }, [
-                      _c("p", { staticClass: "card-title" }, [
-                        _vm._v(
-                          "\n\t\t\t\t\t\t\t\t\t\t\tRegistre un nuevo empleado y asignele permisos para controlar que puede y que no hacer dentro del sistema\n\t\t\t\t\t\t\t\t\t\t"
-                        )
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", { attrs: { for: "name" } }, [
+                        _vm._v("Nombre del empleado")
                       ]),
                       _vm._v(" "),
-                      _c("div", { staticClass: "form-group" }, [
-                        _c("label", { attrs: { for: "name" } }, [
-                          _vm._v("Nombre del empleado")
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "input-group mb-2 mr-sm-2" }, [
-                          _c("div", { staticClass: "input-group-prepend" }, [
-                            _c("div", { staticClass: "input-group-text" }, [
-                              _vm._v(
-                                "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t" +
-                                  _vm._s(_vm.user.company_name) +
-                                  " - \n\t\t\t\t\t\t\t\t\t\t\t\t\t"
-                              )
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.employee.name,
-                                expression: "employee.name"
-                              }
-                            ],
-                            staticClass: "form-control",
-                            attrs: {
-                              type: "text",
-                              id: "name",
-                              autocomplete: "off",
-                              placeholder: "Ingrese el nombre del empleado",
-                              "aria-describedby": "nameHelp"
-                            },
-                            domProps: { value: _vm.employee.name },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.$set(
-                                  _vm.employee,
-                                  "name",
-                                  $event.target.value
-                                )
-                              }
-                            }
-                          })
-                        ]),
-                        _vm._v(" "),
-                        _c(
-                          "small",
-                          {
-                            staticClass: "form-text text-muted",
-                            attrs: { id: "nameHelp" }
-                          },
-                          [
+                      _c("div", { staticClass: "input-group mb-2 mr-sm-2" }, [
+                        _c("div", { staticClass: "input-group-prepend" }, [
+                          _c("div", { staticClass: "input-group-text" }, [
                             _vm._v(
-                              "\n\t\t\t\t\t\t\t\t\t\t\t\tEl empleado se registrara empezando con el nombre de su negocio seguido del nombre de su empleado\n\t\t\t\t\t\t\t\t\t\t\t"
+                              "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t" +
+                                _vm._s(_vm.user.company_name) +
+                                " - \n\t\t\t\t\t\t\t\t\t\t\t\t\t"
                             )
-                          ]
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "form-group" }, [
-                        _c("label", { attrs: { for: "password" } }, [
-                          _vm._v("Contraseña")
+                          ])
                         ]),
                         _vm._v(" "),
                         _c("input", {
@@ -65095,17 +65067,19 @@ var render = function() {
                             {
                               name: "model",
                               rawName: "v-model",
-                              value: _vm.employee.password,
-                              expression: "employee.password"
+                              value: _vm.employee.name,
+                              expression: "employee.name"
                             }
                           ],
                           staticClass: "form-control",
                           attrs: {
-                            type: "password",
-                            id: "password",
-                            placeholder: "Contraseña para el empleado"
+                            type: "text",
+                            id: "name",
+                            autocomplete: "off",
+                            placeholder: "Ingrese el nombre del empleado",
+                            "aria-describedby": "nameHelp"
                           },
-                          domProps: { value: _vm.employee.password },
+                          domProps: { value: _vm.employee.name },
                           on: {
                             input: function($event) {
                               if ($event.target.composing) {
@@ -65113,7 +65087,7 @@ var render = function() {
                               }
                               _vm.$set(
                                 _vm.employee,
-                                "password",
+                                "name",
                                 $event.target.value
                               )
                             }
@@ -65122,251 +65096,293 @@ var render = function() {
                       ]),
                       _vm._v(" "),
                       _c(
-                        "div",
+                        "small",
                         {
-                          directives: [
-                            {
-                              name: "show",
-                              rawName: "v-show",
-                              value:
-                                _vm.employee.name != "" &&
-                                _vm.employee.password != "",
-                              expression:
-                                "employee.name != '' && employee.password != ''"
-                            }
-                          ],
-                          staticClass: "form-group"
+                          staticClass: "form-text text-muted",
+                          attrs: { id: "nameHelp" }
                         },
                         [
-                          _c("label", { attrs: { for: "" } }, [
-                            _vm._v(
-                              "Seleccione los permisos que tendra " +
-                                _vm._s(_vm.capitalize(_vm.employee.name))
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _vm._l(_vm.permissions, function(permission) {
-                            return _c(
-                              "div",
-                              {
-                                staticClass:
-                                  "custom-control custom-checkbox my-1 mr-sm-2 m-b-10"
-                              },
-                              [
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.employee.permissions,
-                                      expression: "employee.permissions"
-                                    }
-                                  ],
-                                  staticClass: "custom-control-input",
-                                  attrs: {
-                                    type: "checkbox",
-                                    id: permission.id
-                                  },
-                                  domProps: {
-                                    value: permission.id,
-                                    checked: Array.isArray(
-                                      _vm.employee.permissions
-                                    )
-                                      ? _vm._i(
-                                          _vm.employee.permissions,
-                                          permission.id
-                                        ) > -1
-                                      : _vm.employee.permissions
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      var $$a = _vm.employee.permissions,
-                                        $$el = $event.target,
-                                        $$c = $$el.checked ? true : false
-                                      if (Array.isArray($$a)) {
-                                        var $$v = permission.id,
-                                          $$i = _vm._i($$a, $$v)
-                                        if ($$el.checked) {
-                                          $$i < 0 &&
-                                            _vm.$set(
-                                              _vm.employee,
-                                              "permissions",
-                                              $$a.concat([$$v])
-                                            )
-                                        } else {
-                                          $$i > -1 &&
-                                            _vm.$set(
-                                              _vm.employee,
-                                              "permissions",
-                                              $$a
-                                                .slice(0, $$i)
-                                                .concat($$a.slice($$i + 1))
-                                            )
-                                        }
-                                      } else {
-                                        _vm.$set(
-                                          _vm.employee,
-                                          "permissions",
-                                          $$c
-                                        )
-                                      }
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c(
-                                  "label",
-                                  {
-                                    staticClass: "custom-control-label c-p",
-                                    attrs: { for: permission.id }
-                                  },
-                                  [
-                                    _vm._v(
-                                      "\n\t\t\t\t\t\t\t\t\t\t\t\t\t" +
-                                        _vm._s(permission.name) +
-                                        "\n\t\t\t\t\t\t\t\t\t\t\t\t"
-                                    )
-                                  ]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "small",
-                                  {
-                                    staticClass: "form-text text-muted",
-                                    attrs: { id: "nameHelp" }
-                                  },
-                                  [
-                                    _vm._v(
-                                      "\n\t\t\t\t\t\t\t\t\t\t\t\t\t" +
-                                        _vm._s(permission.description) +
-                                        "\t\n\t\t\t\t\t\t\t\t\t\t\t\t"
-                                    )
-                                  ]
-                                )
-                              ]
-                            )
-                          })
-                        ],
-                        2
+                          _vm._v(
+                            "\n\t\t\t\t\t\t\t\t\t\t\t\tEl empleado se registrara empezando con el nombre de su negocio seguido del nombre de su empleado\n\t\t\t\t\t\t\t\t\t\t\t"
+                          )
+                        ]
                       )
                     ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "card-footer" }, [
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn btn-primary",
-                          on: {
-                            click: function($event) {
-                              $event.preventDefault()
-                              return _vm.saveEmployee($event)
-                            }
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", { attrs: { for: "password" } }, [
+                        _vm._v("Contraseña")
+                      ]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.employee.password,
+                            expression: "employee.password"
                           }
+                        ],
+                        staticClass: "form-control",
+                        attrs: {
+                          type: "password",
+                          id: "password",
+                          placeholder: "Contraseña para el empleado"
                         },
-                        [
-                          _c("i", { staticClass: "icon-user-plus" }),
-                          _vm._v(
-                            "\n\t\t\t\t\t\t\t\t\t\t\tRegistrar empleado\n\t\t\t\t\t\t\t\t\t\t"
-                          )
-                        ]
-                      )
-                    ])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-12 col-lg-6" }, [
-                  _c(
-                    "ul",
-                    { staticClass: "list-group" },
-                    [
-                      _c(
-                        "li",
-                        {
-                          directives: [
-                            {
-                              name: "show",
-                              rawName: "v-show",
-                              value: _vm.employees.length,
-                              expression: "employees.length"
+                        domProps: { value: _vm.employee.password },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
                             }
-                          ],
-                          staticClass: "list-group-item active"
-                        },
-                        [
+                            _vm.$set(
+                              _vm.employee,
+                              "password",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value:
+                              _vm.employee.name != "" &&
+                              _vm.employee.password != "",
+                            expression:
+                              "employee.name != '' && employee.password != ''"
+                          }
+                        ],
+                        staticClass: "form-group"
+                      },
+                      [
+                        _c("label", { attrs: { for: "" } }, [
                           _vm._v(
-                            "\n\t\t\t\t\t\t\t\t\t\tMis empleados\n\t\t\t\t\t\t\t\t\t"
+                            "Seleccione los permisos que tendra " +
+                              _vm._s(_vm.capitalize(_vm.employee.name))
                           )
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "li",
-                        {
-                          directives: [
+                        ]),
+                        _vm._v(" "),
+                        _vm._l(_vm.permissions, function(permission) {
+                          return _c(
+                            "div",
                             {
-                              name: "show",
-                              rawName: "v-show",
-                              value: _vm.employees.length == 0,
-                              expression: "employees.length == 0"
-                            }
-                          ],
-                          staticClass: "list-group-item active"
-                        },
-                        [
-                          _vm._v(
-                            "\n\t\t\t\t\t\t\t\t\t\tTodavia no hay ningun empleado regtistrado\n\t\t\t\t\t\t\t\t\t"
-                          )
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _vm._l(_vm.employees, function(employee) {
-                        return _c("li", { staticClass: "list-group-item" }, [
-                          _c("i", { staticClass: "icon-user" }),
-                          _vm._v(" "),
-                          _c("strong", [_vm._v(_vm._s(employee.name))]),
-                          _vm._v(" "),
-                          _c("span", { staticClass: "float-right" }, [
-                            _c(
-                              "button",
-                              {
-                                staticClass: "btn btn-danger btn-sm",
+                              staticClass:
+                                "custom-control custom-checkbox my-1 mr-sm-2 m-b-10"
+                            },
+                            [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.employee.permissions,
+                                    expression: "employee.permissions"
+                                  }
+                                ],
+                                staticClass: "custom-control-input",
+                                attrs: { type: "checkbox", id: permission.id },
+                                domProps: {
+                                  value: permission.id,
+                                  checked: Array.isArray(
+                                    _vm.employee.permissions
+                                  )
+                                    ? _vm._i(
+                                        _vm.employee.permissions,
+                                        permission.id
+                                      ) > -1
+                                    : _vm.employee.permissions
+                                },
                                 on: {
-                                  click: function($event) {
-                                    $event.preventDefault()
-                                    return _vm.deleteEmployee(employee)
+                                  change: function($event) {
+                                    var $$a = _vm.employee.permissions,
+                                      $$el = $event.target,
+                                      $$c = $$el.checked ? true : false
+                                    if (Array.isArray($$a)) {
+                                      var $$v = permission.id,
+                                        $$i = _vm._i($$a, $$v)
+                                      if ($$el.checked) {
+                                        $$i < 0 &&
+                                          _vm.$set(
+                                            _vm.employee,
+                                            "permissions",
+                                            $$a.concat([$$v])
+                                          )
+                                      } else {
+                                        $$i > -1 &&
+                                          _vm.$set(
+                                            _vm.employee,
+                                            "permissions",
+                                            $$a
+                                              .slice(0, $$i)
+                                              .concat($$a.slice($$i + 1))
+                                          )
+                                      }
+                                    } else {
+                                      _vm.$set(_vm.employee, "permissions", $$c)
+                                    }
                                   }
                                 }
-                              },
-                              [
-                                _vm._v(
-                                  "\n\t\t\t\t\t\t\t\t\t\t\t\tEliminar\n\t\t\t\t\t\t\t\t\t\t\t"
-                                )
-                              ]
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c("p", { staticClass: "m-0" }, [
-                            _vm._v(
-                              "\n\t\t\t\t\t\t\t\t\t\t\tAlta: " +
-                                _vm._s(_vm.date(employee.created_at)) +
-                                " " +
-                                _vm._s(_vm.since(employee.created_at)) +
-                                "\n\t\t\t\t\t\t\t\t\t\t"
-                            )
-                          ])
-                        ])
-                      })
-                    ],
-                    2
-                  ),
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "label",
+                                {
+                                  staticClass: "custom-control-label c-p",
+                                  attrs: { for: permission.id }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n\t\t\t\t\t\t\t\t\t\t\t\t\t" +
+                                      _vm._s(permission.name) +
+                                      "\n\t\t\t\t\t\t\t\t\t\t\t\t"
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "small",
+                                {
+                                  staticClass: "form-text text-muted",
+                                  attrs: { id: "nameHelp" }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n\t\t\t\t\t\t\t\t\t\t\t\t\t" +
+                                      _vm._s(permission.description) +
+                                      "\t\n\t\t\t\t\t\t\t\t\t\t\t\t"
+                                  )
+                                ]
+                              )
+                            ]
+                          )
+                        })
+                      ],
+                      2
+                    )
+                  ]),
                   _vm._v(" "),
-                  _vm._m(1)
+                  _c("div", { staticClass: "card-footer" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary",
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.saveEmployee($event)
+                          }
+                        }
+                      },
+                      [
+                        _c("i", { staticClass: "icon-user-plus" }),
+                        _vm._v(
+                          "\n\t\t\t\t\t\t\t\t\t\t\tRegistrar empleado\n\t\t\t\t\t\t\t\t\t\t"
+                        )
+                      ]
+                    )
+                  ])
                 ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-12 col-lg-6" }, [
+                _c(
+                  "ul",
+                  { staticClass: "list-group" },
+                  [
+                    _c(
+                      "li",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.employees.length,
+                            expression: "employees.length"
+                          }
+                        ],
+                        staticClass: "list-group-item active"
+                      },
+                      [
+                        _vm._v(
+                          "\n\t\t\t\t\t\t\t\t\t\tMis empleados\n\t\t\t\t\t\t\t\t\t"
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "li",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.employees.length == 0,
+                            expression: "employees.length == 0"
+                          }
+                        ],
+                        staticClass: "list-group-item active"
+                      },
+                      [
+                        _vm._v(
+                          "\n\t\t\t\t\t\t\t\t\t\tTodavia no hay ningun empleado regtistrado\n\t\t\t\t\t\t\t\t\t"
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _vm._l(_vm.employees, function(employee) {
+                      return _c("li", { staticClass: "list-group-item" }, [
+                        _c("i", { staticClass: "icon-user" }),
+                        _vm._v(" "),
+                        _c("strong", [_vm._v(_vm._s(employee.name))]),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "float-right" }, [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-danger btn-sm",
+                              on: {
+                                click: function($event) {
+                                  $event.preventDefault()
+                                  return _vm.deleteEmployee(employee)
+                                }
+                              }
+                            },
+                            [
+                              _vm._v(
+                                "\n\t\t\t\t\t\t\t\t\t\t\t\tEliminar\n\t\t\t\t\t\t\t\t\t\t\t"
+                              )
+                            ]
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("p", { staticClass: "m-0" }, [
+                          _vm._v(
+                            "\n\t\t\t\t\t\t\t\t\t\t\tAlta: " +
+                              _vm._s(_vm.date(employee.created_at)) +
+                              " " +
+                              _vm._s(_vm.since(employee.created_at)) +
+                              "\n\t\t\t\t\t\t\t\t\t\t"
+                          )
+                        ])
+                      ])
+                    })
+                  ],
+                  2
+                ),
+                _vm._v(" "),
+                _vm._m(1)
               ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-footer p-0" })
-          ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-footer p-0" })
         ])
       ])
     ])
@@ -65471,7 +65487,7 @@ var render = function() {
                     _c(
                       "button",
                       {
-                        staticClass: "btn btn-primary m-l-5 float-right",
+                        staticClass: "btn btn-primary",
                         on: { click: _vm.previus }
                       },
                       [
@@ -68367,9 +68383,25 @@ var render = function() {
                                     _vm._v("Nombre")
                                   ]),
                                   _vm._v(" "),
-                                  _c("th", { attrs: { scope: "col" } }, [
-                                    _vm._v("Costo")
-                                  ]),
+                                  _c(
+                                    "th",
+                                    {
+                                      directives: [
+                                        {
+                                          name: "show",
+                                          rawName: "v-show",
+                                          value: _vm.user.can_see_cost == 1,
+                                          expression: "user.can_see_cost == 1"
+                                        }
+                                      ],
+                                      attrs: { scope: "col" }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\r\n\t\t\t\t\t\t\t\t\t\t\t\t\tCosto\r\n\t\t\t\t\t\t\t\t\t\t\t\t"
+                                      )
+                                    ]
+                                  ),
                                   _vm._v(" "),
                                   _c("th", { attrs: { scope: "col" } }, [
                                     _vm._v("Precio")
@@ -68503,9 +68535,25 @@ var render = function() {
                                     _vm._v("Nombre")
                                   ]),
                                   _vm._v(" "),
-                                  _c("th", { attrs: { scope: "col" } }, [
-                                    _vm._v("Costo")
-                                  ]),
+                                  _c(
+                                    "th",
+                                    {
+                                      directives: [
+                                        {
+                                          name: "show",
+                                          rawName: "v-show",
+                                          value: _vm.user.can_see_cost == 1,
+                                          expression: "user.can_see_cost == 1"
+                                        }
+                                      ],
+                                      attrs: { scope: "col" }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\r\n\t\t\t\t\t\t\t\t\t\t\t\t\tCosto\r\n\t\t\t\t\t\t\t\t\t\t\t\t"
+                                      )
+                                    ]
+                                  ),
                                   _vm._v(" "),
                                   _c("th", { attrs: { scope: "col" } }, [
                                     _vm._v("Precio")
@@ -68659,11 +68707,30 @@ var render = function() {
                                           _vm._v(_vm._s(article.name))
                                         ]),
                                         _vm._v(" "),
-                                        _c("td", [
-                                          _vm._v(
-                                            _vm._s(_vm.price(article.cost))
-                                          )
-                                        ]),
+                                        _c(
+                                          "td",
+                                          {
+                                            directives: [
+                                              {
+                                                name: "show",
+                                                rawName: "v-show",
+                                                value:
+                                                  _vm.user.can_see_cost == 1,
+                                                expression:
+                                                  "user.can_see_cost == 1"
+                                              }
+                                            ]
+                                          },
+                                          [
+                                            _vm._v(
+                                              "\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t" +
+                                                _vm._s(
+                                                  _vm.price(article.cost)
+                                                ) +
+                                                "\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t"
+                                            )
+                                          ]
+                                        ),
                                         _vm._v(" "),
                                         article.offer_price
                                           ? _c(
@@ -69165,11 +69232,30 @@ var render = function() {
                                           _vm._v(_vm._s(article.name))
                                         ]),
                                         _vm._v(" "),
-                                        _c("td", [
-                                          _vm._v(
-                                            _vm._s(_vm.price(article.cost))
-                                          )
-                                        ]),
+                                        _c(
+                                          "td",
+                                          {
+                                            directives: [
+                                              {
+                                                name: "show",
+                                                rawName: "v-show",
+                                                value:
+                                                  _vm.user.can_see_cost == 1,
+                                                expression:
+                                                  "user.can_see_cost == 1"
+                                              }
+                                            ]
+                                          },
+                                          [
+                                            _vm._v(
+                                              "\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t" +
+                                                _vm._s(
+                                                  _vm.price(article.cost)
+                                                ) +
+                                                "\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t"
+                                            )
+                                          ]
+                                        ),
                                         _vm._v(" "),
                                         article.offer_price
                                           ? _c(
@@ -74063,82 +74149,96 @@ var render = function() {
                         _c("br"),
                         _vm._v(" "),
                         _vm._l(_vm.marker_groups, function(marker_group) {
-                          return _c("div", { staticClass: "dropdown m-r-5" }, [
-                            _c(
-                              "button",
-                              {
-                                staticClass:
-                                  "btn btn-secondary dropdown-toggle",
-                                attrs: {
-                                  type: "button",
-                                  id: "dropdownMenuButton",
-                                  "data-toggle": "dropdown",
-                                  "aria-haspopup": "true",
-                                  "aria-expanded": "false"
+                          return _c(
+                            "div",
+                            {
+                              directives: [
+                                {
+                                  name: "show",
+                                  rawName: "v-show",
+                                  value: marker_group.markers.length,
+                                  expression: "marker_group.markers.length"
                                 }
-                              },
-                              [
-                                _vm._v(
-                                  "\r\n\t\t\t\t\t\t\t\t\t\t" +
-                                    _vm._s(marker_group.name) +
-                                    "\r\n\t\t\t\t\t\t\t\t\t"
-                                )
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "div",
-                              {
-                                staticClass: "dropdown-menu",
-                                attrs: {
-                                  "aria-labelledby": "dropdownMenuButton"
-                                }
-                              },
-                              _vm._l(marker_group.markers, function(marker) {
-                                return _c(
-                                  "a",
-                                  {
-                                    staticClass: "dropdown-item",
-                                    attrs: { href: "#" },
-                                    on: {
-                                      click: function($event) {
-                                        $event.preventDefault()
-                                        return _vm.addMarker(marker)
+                              ],
+                              staticClass: "dropdown m-r-5"
+                            },
+                            [
+                              _c(
+                                "button",
+                                {
+                                  staticClass:
+                                    "btn btn-secondary dropdown-toggle",
+                                  attrs: {
+                                    type: "button",
+                                    id: "dropdownMenuButton",
+                                    "data-toggle": "dropdown",
+                                    "aria-haspopup": "true",
+                                    "aria-expanded": "false"
+                                  }
+                                },
+                                [
+                                  _vm._v(
+                                    "\r\n\t\t\t\t\t\t\t\t\t\t" +
+                                      _vm._s(marker_group.name) +
+                                      "\r\n\t\t\t\t\t\t\t\t\t"
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                {
+                                  staticClass: "dropdown-menu",
+                                  attrs: {
+                                    "aria-labelledby": "dropdownMenuButton"
+                                  }
+                                },
+                                _vm._l(marker_group.markers, function(marker) {
+                                  return _c(
+                                    "a",
+                                    {
+                                      staticClass: "dropdown-item",
+                                      attrs: { href: "#" },
+                                      on: {
+                                        click: function($event) {
+                                          $event.preventDefault()
+                                          return _vm.addMarker(marker)
+                                        }
                                       }
-                                    }
-                                  },
-                                  [
-                                    _vm._v(
-                                      "\r\n\t\t\t\t\t\t\t\t\t\t\t" +
-                                        _vm._s(marker.article.name) +
-                                        "\r\n\t\t\t\t\t\t\t\t\t\t\t"
-                                    ),
-                                    _c(
-                                      "span",
-                                      {
-                                        directives: [
-                                          {
-                                            name: "show",
-                                            rawName: "v-show",
-                                            value: _vm.show_markers_prices,
-                                            expression: "show_markers_prices"
-                                          }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\r\n\t\t\t\t\t\t\t\t\t\t\t" +
+                                          _vm._s(marker.article.name) +
+                                          "\r\n\t\t\t\t\t\t\t\t\t\t\t"
+                                      ),
+                                      _c(
+                                        "span",
+                                        {
+                                          directives: [
+                                            {
+                                              name: "show",
+                                              rawName: "v-show",
+                                              value: _vm.show_markers_prices,
+                                              expression: "show_markers_prices"
+                                            }
+                                          ]
+                                        },
+                                        [
+                                          _vm._v(
+                                            "\r\n\t\t\t\t\t\t\t\t\t\t\t\t($" +
+                                              _vm._s(marker.article.price) +
+                                              ")\r\n\t\t\t\t\t\t\t\t\t\t\t"
+                                          )
                                         ]
-                                      },
-                                      [
-                                        _vm._v(
-                                          "\r\n\t\t\t\t\t\t\t\t\t\t\t\t($" +
-                                            _vm._s(marker.article.price) +
-                                            ")\r\n\t\t\t\t\t\t\t\t\t\t\t"
-                                        )
-                                      ]
-                                    )
-                                  ]
-                                )
-                              }),
-                              0
-                            )
-                          ])
+                                      )
+                                    ]
+                                  )
+                                }),
+                                0
+                              )
+                            ]
+                          )
                         }),
                         _vm._v(" "),
                         _vm._l(_vm.markers, function(marker) {
@@ -74981,7 +75081,17 @@ var render = function() {
                             _vm._l(_vm.marker_groups, function(marker_group) {
                               return _c(
                                 "div",
-                                { staticClass: "dropdown m-r-5" },
+                                {
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: marker_group.markers.length,
+                                      expression: "marker_group.markers.length"
+                                    }
+                                  ],
+                                  staticClass: "dropdown m-r-5"
+                                },
                                 [
                                   _c(
                                     "button",
@@ -77367,7 +77477,9 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "modal-body" }, [
-      _c("h5", [_vm._v("¿Seguro que quiere eliminar esta venta?")])
+      _c("h5", [_vm._v("¿Seguro que quiere eliminar esta venta?")]),
+      _vm._v(" "),
+      _c("p", [_vm._v("Se repondran las unidades de sus artículos")])
     ])
   }
 ]
@@ -77416,7 +77528,9 @@ var render = function() {
                   _vm._s(_vm.selected_sales.length) +
                   " ventas?"
               )
-            ])
+            ]),
+            _vm._v(" "),
+            _c("p", [_vm._v("Se repondran las unidades de sus artículos")])
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "modal-footer" }, [
@@ -91261,15 +91375,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!*******************************************************!*\
   !*** ./resources/js/components/ingresar/Ingresar.vue ***!
   \*******************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Ingresar_vue_vue_type_template_id_29ccd018_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Ingresar.vue?vue&type=template&id=29ccd018&scoped=true& */ "./resources/js/components/ingresar/Ingresar.vue?vue&type=template&id=29ccd018&scoped=true&");
 /* harmony import */ var _Ingresar_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Ingresar.vue?vue&type=script&lang=js& */ "./resources/js/components/ingresar/Ingresar.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Ingresar_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Ingresar_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _Ingresar_vue_vue_type_style_index_0_id_29ccd018_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Ingresar.vue?vue&type=style&index=0&id=29ccd018&scoped=true&lang=css& */ "./resources/js/components/ingresar/Ingresar.vue?vue&type=style&index=0&id=29ccd018&scoped=true&lang=css&");
+/* empty/unused harmony star reexport *//* harmony import */ var _Ingresar_vue_vue_type_style_index_0_id_29ccd018_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Ingresar.vue?vue&type=style&index=0&id=29ccd018&scoped=true&lang=css& */ "./resources/js/components/ingresar/Ingresar.vue?vue&type=style&index=0&id=29ccd018&scoped=true&lang=css&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -91301,7 +91414,7 @@ component.options.__file = "resources/js/components/ingresar/Ingresar.vue"
 /*!********************************************************************************!*\
   !*** ./resources/js/components/ingresar/Ingresar.vue?vue&type=script&lang=js& ***!
   \********************************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

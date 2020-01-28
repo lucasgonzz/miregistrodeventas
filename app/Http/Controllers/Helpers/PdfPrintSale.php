@@ -277,6 +277,6 @@ class PdfPrintSale extends fpdf {
 		$this->SetFont('Arial', '', 11);
 		$this->AliasNbPages();
 		$this->SetY(-30);
-		$this->Write(5,'Hoja '.$this->PageNo().'/{nb}');
+		// $this->Write(5,'Hoja '.$this->PageNo().'/{nb}');
 	}
 }

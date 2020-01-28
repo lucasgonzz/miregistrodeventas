@@ -81,7 +81,9 @@
 				                  	</label>
 				                </div>
 				                <br>
-								<div class="dropdown m-r-5" v-for="marker_group in marker_groups">
+								<div class="dropdown m-r-5" 
+										v-for="marker_group in marker_groups"
+										v-show="marker_group.markers.length">
 									<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 										{{ marker_group.name }}
 									</button>
@@ -348,7 +350,7 @@ export default {
 				$('#name').focus()
 			} else {
 				this.article.bar_code = ''
-				$('#bar_code').focus()
+				$('#bar-code').focus()
 			}
 		},
 

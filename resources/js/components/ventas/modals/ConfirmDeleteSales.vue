@@ -12,6 +12,7 @@
       </div>
       <div class="modal-body">
         <h5>¿Seguro que quiere eliminar estas {{ selected_sales.length }} ventas?</h5>
+        <p>Se repondran las unidades de sus artículos</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>

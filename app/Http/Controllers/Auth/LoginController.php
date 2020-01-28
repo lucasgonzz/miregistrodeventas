@@ -50,7 +50,7 @@ class LoginController extends Controller
         return view('auth.login');
     }
     
-    public function login() {
+    public function login_owner() {
         $credentials = $this->validate(request(), [
             $this->username() => 'required|string',
             'password' => 'required|string',
@@ -59,8 +59,27 @@ class LoginController extends Controller
         if(Auth::attempt($credentials)){
             return redirect('/');
         }
+        return redirect()->route('show-login-form')->with('errorLogin', 'Datos incorrectos, verifiquelos por favor');
+
+    }
+
+    public function login_employee() {
+        $credentials = $this->validate(request(), [
+            'commerce_name' => 'required|string',
+            'employee_name' => 'required|string',
+            'employee_password' => 'required|string',
+        ]);
+        if (Auth::attempt(['name' => request('employee_name'), 'password' => request('employee_password')])){
+            if(Auth()->user()->owner->company_name == request('commerce_name')){
+                // $owner = User::where('')
+                return redirect('/');
+            }
+            return redirect('login')->with('errorLogin', 'Anduvo mal');
+        }
+
         return redirect('login')->with('errorLogin', 'Datos incorrectos, verifique sus datos por favor');
     }
+
     public function username() {
         return 'name';
     }

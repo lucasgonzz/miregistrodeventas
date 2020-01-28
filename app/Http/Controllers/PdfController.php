@@ -14,9 +14,18 @@ use App\Http\Controllers\Helpers\PdfPrintArticles;
 class PdfController extends Controller
 {
 
+    function getArticleOwnerId() {
+        $user = Auth()->user();
+        if (is_null($user->belongs_to)) {
+            return $user->id;
+        } else {
+            return $user->belongs_to;
+        }
+    }
+
 	function barCodeDirectory() {
-        if(!is_dir(public_path()."/storage/barcodes/".Auth()->user()->id)) {
-            mkdir(public_path().'/storage/barcodes/'.Auth()->user()->id);
+        if(!is_dir(public_path()."/storage/barcodes/".$this->getArticleOwnerId())) {
+            mkdir(public_path().'/storage/barcodes/'.$this->getArticleOwnerId());
         }
 	}
 
@@ -44,9 +53,9 @@ class PdfController extends Controller
 	        $widths = [];
 			// Se crea la imagen del codigo de barras si existe
 	        if (!is_null($bar_code)) {
-		        barcode(public_path().'/storage/barcodes/'.$user->id.'/'.$bar_code.'.png', 
+		        barcode(public_path().'/storage/barcodes/'.$this->getArticleOwnerId().'/'.$bar_code.'.png', 
 		                $bar_code, 20, 'horizontal', 'code128', 1);
-		        $width_image = getimagesize(public_path().'/storage/barcodes/'.$user->id.'/'.$bar_code.'.png');
+		        $width_image = getimagesize(public_path().'/storage/barcodes/'.$this->getArticleOwnerId().'/'.$bar_code.'.png');
 		        $widths['bar_code'] = $width_image[0] * 50 / 200;
 		        $bar_code_printed = true;
 	        }
@@ -158,7 +167,7 @@ class PdfController extends Controller
 	        // Si hay codigo de barra se escribe la imagen
 	        if (!is_null($bar_code)) {
 		        $pdf->Image(
-		        				public_path().'/storage/barcodes/'.$user->id.'/'.$bar_code.'.png',
+		        				public_path().'/storage/barcodes/'.$this->getArticleOwnerId().'/'.$bar_code.'.png',
 		        				$x,
 		        				$y+20,
 		        				$widths['bar_code'],
@@ -245,13 +254,13 @@ class PdfController extends Controller
     	*/
     	$user = Auth()->user();
     	if ($articles_ids_string == 'todos') {
-    		$articles = Article::where('user_id', $user->id)
+    		$articles = Article::where('user_id', $this->getArticleOwnerId())
     							->orderBy('id', 'DESC')
     							->get();
     	} else {
     		$articles_ids = explode('-', $articles_ids_string);
 	    	foreach ($articles_ids as $id_article) {
-	    		$articles[] = Article::where('user_id', $user->id)
+	    		$articles[] = Article::where('user_id', $this->getArticleOwnerId())
 	    								->where('id', $id_article)
 	    								->first();
 	    	}

@@ -46,4 +46,12 @@ class User extends Authenticatable
     public function articles_sub_user() {
         return $this->hasMany('App\Article', 'sub_user_id');
     }
+
+    public function employees() {
+        return $this->hasMany('App\User', 'belongs_to');
+    }
+
+    public function owner() {
+        return $this->belongsTo('App\User', 'id');
+    }
 }

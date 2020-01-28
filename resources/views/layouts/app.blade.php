@@ -7,8 +7,10 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="user" content="{{ Auth()->user() }}">
+    <meta name="user-can-see-costs" 
+            content="{{ Auth()->user()->hasPermissionTo('article.index.cost') }}">
     <meta name="asset" content="{{ asset('') }}">
-    <title>MiRegistroDeVentas</title>
+    <title>Mi Registro de Ventas</title>
 
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 

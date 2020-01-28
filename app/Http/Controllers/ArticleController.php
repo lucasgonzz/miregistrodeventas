@@ -13,10 +13,20 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ArticleController extends Controller
 {
+
+    function getArticleOwnerId() {
+        $user = Auth()->user();
+        if (is_null($user->belongs_to)) {
+            return $user->id;
+        } else {
+            return $user->belongs_to;
+        }
+    }
+
     function index() {
         $user = Auth()->user();
         if ($user->hasRole('commerce')) {
-        	$articles = Article::where('user_id',$user->id)
+        	$articles = Article::where('user_id',$this->getArticleOwnerId())
                                 ->orderBy('id', 'DESC')
                                 ->with('marker')
                                 ->with(array('providers' => function($q) {
@@ -24,7 +34,7 @@ class ArticleController extends Controller
                                 }))
                                 ->paginate(10);
         } else {
-            $articles = Article::where('user_id',$user->id)
+            $articles = Article::where('user_id',$this->getArticleOwnerId())
                                 ->orderBy('id', 'DESC')
                                 ->with('marker')
                                 ->paginate(10);
@@ -61,13 +71,13 @@ class ArticleController extends Controller
     // }
 
     function getAvailables() {
-        return Article::where('user_id', Auth()->user()->id)
+        return Article::where('user_id', $this->getArticleOwnerId())
                         ->select('bar_code', 'name', 'uncontable')
                         ->get();
     }
 
     function getMarkers() {
-        return Article::where('user_id', Auth()->user()->id)
+        return Article::where('user_id', $this->getArticleOwnerId())
                         ->where('marker', 1)
                         ->get();
     }
@@ -75,12 +85,12 @@ class ArticleController extends Controller
     function getByBarCode($bar_code) {
         $user = Auth()->user();
         if ($user->hasRole('commerce')) {
-            return Article::where('user_id', $user->id)
+            return Article::where('user_id', $this->getArticleOwnerId())
                             ->where('bar_code', $bar_code)
                             ->with('providers')
                             ->first();
         } else {
-            return Article::where('user_id', $user->id)
+            return Article::where('user_id', $this->getArticleOwnerId())
                             ->where('bar_code', $bar_code)
                             ->first();
         }
@@ -89,12 +99,12 @@ class ArticleController extends Controller
     function getByName($name) {
         $user = Auth()->user();
         if ($user->hasRole('commerce')) {
-            return Article::where('user_id', $user->id)
+            return Article::where('user_id', $this->getArticleOwnerId())
                             ->where('name', $name)
                             ->with('providers')
                             ->first();
         } else {
-            return Article::where('user_id', $user->id)
+            return Article::where('user_id', $this->getArticleOwnerId())
                             ->where('name', $name)
                             ->first();
         }
@@ -110,19 +120,19 @@ class ArticleController extends Controller
     }
 
     function getBarCodes() {
-        return Article::where('user_id', Auth()->user()->id)
+        return Article::where('user_id', $this->getArticleOwnerId())
                         ->pluck('bar_code');
     }
 
     function getNames() {
-        return Article::where('user_id', Auth()->user()->id)
+        return Article::where('user_id', $this->getArticleOwnerId())
                         // ->whereNull('bar_code')
                         ->pluck('name');
     }
 
     function search($query) {
         $user = Auth()->user();
-        $articles = Article::where('user_id', Auth()->user()->id)
+        $articles = Article::where('user_id', $this->getArticleOwnerId())
                             ->where('bar_code', $query);
         if ($user->hasRole('commerce')) {
             $articles = $articles->with('providers');
@@ -130,7 +140,7 @@ class ArticleController extends Controller
         $articles = $articles->get();
 
         if (count($articles) == 0) {
-            $articles = Article::where('user_id', Auth()->user()->id)
+            $articles = Article::where('user_id', $this->getArticleOwnerId())
                                 ->where('name', 'LIKE', "%$query%");
             if ($user->hasRole('commerce')) {
                 $articles = $articles->with('providers');
@@ -141,20 +151,20 @@ class ArticleController extends Controller
     }
 
     function pre_search($query) {
-        return Article::where('user_id', Auth()->user()->id)
+        return Article::where('user_id', $this->getArticleOwnerId())
                             ->where('name', 'LIKE', "%$query%")->get();
     }
 
     function previusNext($index) {
         $user = Auth()->user();
         if ($user->hasRole('commerce')) {
-            $articles = Article::where('user_id', Auth()->user()->id)
+            $articles = Article::where('user_id', $this->getArticleOwnerId())
                                 ->orderBy('id', 'DESC')
                                 ->with('providers')
                                 ->take($index)
                                 ->get();
         } else {
-            $articles = Article::where('user_id', Auth()->user()->id)
+            $articles = Article::where('user_id', $this->getArticleOwnerId())
                                 ->orderBy('id', 'DESC')
                                 ->take($index)
                                 ->get();
@@ -255,7 +265,7 @@ class ArticleController extends Controller
         $article->price = $request->article['price'];
         $article->previus_price = 0;
         $article->stock = $request->article['stock'];
-        $article->user_id = $user->id;
+        $article->user_id = $this->getArticleOwnerId();
 
         $date = date('Y-m-d');
 
@@ -276,7 +286,7 @@ class ArticleController extends Controller
                                         ]);
         }
 
-        $bar_code = BarCode::where('user_id', $user->id)
+        $bar_code = BarCode::where('user_id', $this->getArticleOwnerId())
                                 ->where('name', $request->article['bar_code'])
                                 ->first();
         if ($bar_code === null) {
@@ -316,7 +326,7 @@ class ArticleController extends Controller
         // return gettype((float)$precio_entre['min']);
         // return (float)$request->precio_entre['max'];
 
-        $articles = Article::where('user_id', $user->id);
+        $articles = Article::where('user_id', $this->getArticleOwnerId());
 
         // Mostrar
         if ($mostrar == 'oferta') {

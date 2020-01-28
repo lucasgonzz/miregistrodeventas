@@ -10,20 +10,29 @@ use App\BarCode;
 
 class BarCodeController extends Controller
 {
+    function getArticleOwnerId() {
+        $user = Auth()->user();
+        if (is_null($user->belongs_to)) {
+            return $user->id;
+        } else {
+            return $user->belongs_to;
+        }
+    }
+
     function index() {
-    	return BarCode::where('user_id', Auth()->user()->id)
+    	return BarCode::where('user_id', $this->getArticleOwnerId())
                         ->orderBy('id', 'DESC')
                         ->with('article')
                         ->get();
     }
 
     function generated() {
-        return BarCode::where('user_id',  Auth()->user()->id)->get();
+        return BarCode::where('user_id',  $this->getArticleOwnerId())->get();
     }
 
     function store($bar_code, $amount, $size, $text) {
         $user = Auth()->user();
-        $barCode = BarCode::where('user_id', $user->id)
+        $barCode = BarCode::where('user_id', $this->getArticleOwnerId())
                             ->where('name', $bar_code)
                             ->first();
 
@@ -31,7 +40,7 @@ class BarCodeController extends Controller
         	BarCode::create([
         		'name' => $bar_code,
         		'amount' => $amount,
-        		'user_id' => $user->id
+        		'user_id' => $this->getArticleOwnerId()
         	]);
         }
 
@@ -58,12 +67,12 @@ class BarCodeController extends Controller
         $y = $pdf->GetY();
         $user = Auth()->user();
         for ($i=0; $i < $amount ; $i++) {
-            if(!is_dir(public_path()."/storage/barcodes/".$user->id)) {
-                mkdir(public_path().'/storage/barcodes/'.$user->id);
+            if(!is_dir(public_path()."/storage/barcodes/".$this->getArticleOwnerId())) {
+                mkdir(public_path().'/storage/barcodes/'.$this->getArticleOwnerId());
             }
-            barcode(public_path().'/storage/barcodes/'.$user->id.'/'.$bar_code.'.png', 
+            barcode(public_path().'/storage/barcodes/'.$this->getArticleOwnerId().'/'.$bar_code.'.png', 
                     $bar_code, 20, 'horizontal', 'code128', $text_below);
-            $pdf->Image(public_path().'/storage/barcodes/'.$user->id.'/'.$bar_code.'.png',$x,$y,$w,0,'PNG');
+            $pdf->Image(public_path().'/storage/barcodes/'.$this->getArticleOwnerId().'/'.$bar_code.'.png',$x,$y,$w,0,'PNG');
             $x += $w;
             if ($x > 210 - $w) {
                 $x = $x_origin;

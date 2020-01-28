@@ -166,7 +166,10 @@
 												</th>
 												<th scope="col">Codigo</th>
 												<th scope="col">Nombre</th>
-												<th scope="col">Costo</th>
+												<th scope="col" 
+													v-show="user.can_see_cost == 1">
+													Costo
+												</th>
 												<th scope="col">Precio</th>
 												<th scope="col" class="td-stock">Stock</th>
 												<th scope="col">Proveedor/es</th>
@@ -188,7 +191,10 @@
 												</th>
 												<th scope="col">Codigo</th>
 												<th scope="col">Nombre</th>
-												<th scope="col">Costo</th>
+												<th scope="col"
+													 v-show="user.can_see_cost == 1">
+													Costo
+												</th>
 												<th scope="col">Precio</th>
 												<th scope="col" class="td-stock">Stock</th>
 												<th scope="col">Ult modificacion</th>
@@ -218,7 +224,12 @@
 														<strong>No tiene</strong>
 													</td>
 													<td>{{ article.name }}</td>
-													<td>{{ price(article.cost) }}</td>
+
+													<!-- Se fija si el usuario tiene
+														permiso para ver los costos -->
+													<td v-show="user.can_see_cost == 1">
+														{{ price(article.cost) }}
+													</td>
 
 													<td v-if="article.offer_price"
 														class="td-price">
@@ -312,7 +323,9 @@
 														<strong>No tiene</strong>
 													</td>
 													<td>{{ article.name }}</td>
-													<td>{{ price(article.cost) }}</td>
+													<td v-show="user.can_see_cost == 1">
+														{{ price(article.cost) }}
+													</td>
 
 													<td v-if="article.offer_price"
 														class="td-price">
@@ -423,6 +436,9 @@ export default {
 	props: ['rol'],
 	data() {
 		return {
+			user: {
+				'can_see_cost': document.head.querySelector('meta[name="user-can-see-costs"]').content
+			},
 
 			articles: [],
 			article: {'id': 0, 'bar_code': '','name': '', 'cost': 0, 'price': 0, 'stock': 0, 'new_stock': 0, 'providers': [], 'created_at': '', 'updated_at': '', 'creado': '', 'actualizado': '', 'act_fecha': true},
