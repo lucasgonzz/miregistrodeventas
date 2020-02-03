@@ -3,6 +3,7 @@
 	<div id="listado">	
 		<editar-articulo :rol="rol" 
 						:article="article" 
+						:can_see_cost="user.can_see_cost"
 						:providers="providers" 
 						@updateArticle="updateArticle"
 						@clearArticle="clearArticle"></editar-articulo>
@@ -370,14 +371,6 @@
 																@click="showAddMarker(article)">
 															<i class="icon-star-1"></i>
 														</button>
-														<!-- <button @click="createMarker(article)" class="btn btn-listado btn-listado-edit">
-															<i v-show="article.marker == 1"
-																:id="'marker-1-'+article.id"
-																class="icon-star-1"></i>
-															<i  v-show="article.marker == 0"
-																:id="'marker-2-'+article.id"
-																class="icon-star-2"></i>
-														</button> -->
 														<button @click="deleteOffer(article)"
 																v-show="article.offer_price"
 																class="btn btn-danger btn-sm">

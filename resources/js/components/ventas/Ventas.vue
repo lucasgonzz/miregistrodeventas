@@ -24,34 +24,36 @@
 				<div class="card-header">
 					<div class="row justify-content-between align-items-center">
 						<div class="col-5">
-							<strong v-show="!is_from_date && !is_from_only_one_date && previus_next == 0">
-								Ventas de hoy 
-							</strong>
-							<strong v-show="is_from_date">
-								Ventas desde {{ date(from) }} hasta {{ date(to) }} 
-								<span v-show="last_day_inclusive">(inclusive)</span>
-							</strong>
-							<strong v-show="is_from_only_one_date">
-								Ventas del {{ date(only_one_date) }}
-							</strong>
-							<strong v-show="previus_next != 0 && !is_from_only_one_date && !is_from_date"
-									class="p-l-5">
-								<span v-show="previus_next == 1 && !is_from_only_one_date">
-									Hace 1 día
-								</span>
-								<span v-show="previus_next > 1 && !is_from_only_one_date">
-									Hace {{ previus_next }} días
-								</span>
-								<span v-show="previus_next == 1 && is_from_only_one_date">
-									1 día atras
-								</span>
-								<span v-show="previus_next > 1 && is_from_only_one_date">
-									{{ previus_next }} días atras
-								</span>
-								<span v-show="previus_next < 0 && is_from_only_one_date">
-									{{ Math.abs(previus_next) }} días después
-								</span>
-							</strong>
+							<h5 class="m-0">
+								<strong v-show="!is_from_date && !is_from_only_one_date && previus_next == 0">
+									Ventas de hoy 
+								</strong>
+								<strong v-show="is_from_date">
+									Ventas desde {{ date(from) }} hasta {{ date(to) }} 
+									<span v-show="last_day_inclusive">(inclusive)</span>
+								</strong>
+								<strong v-show="is_from_only_one_date">
+									Ventas del {{ date(only_one_date) }}
+								</strong>
+								<strong v-show="previus_next != 0 && !is_from_only_one_date && !is_from_date"
+										class="p-l-5">
+									<span v-show="previus_next == 1 && !is_from_only_one_date">
+										Hace 1 día
+									</span>
+									<span v-show="previus_next > 1 && !is_from_only_one_date">
+										Hace {{ previus_next }} días
+									</span>
+									<span v-show="previus_next == 1 && is_from_only_one_date">
+										1 día atras
+									</span>
+									<span v-show="previus_next > 1 && is_from_only_one_date">
+										{{ previus_next }} días atras
+									</span>
+									<span v-show="previus_next < 0 && is_from_only_one_date">
+										{{ Math.abs(previus_next) }} días después
+									</span>
+								</strong>
+							</h5>
 						</div>
 						<div class="col-7 col-rigth">
 							<button v-show="is_from_only_one_date || (previus_next != 0 && !is_from_date)" 
@@ -428,7 +430,9 @@ export default {
 					} else {
 						toastr.error("No hay ventas mas atras")
 						this.previus_next--
-						this.previusNext()
+						if (this.previus_next != 0) {
+							this.previusNext()
+						}
 					}
 					if (this.selected_sales.selected_pages.includes(this.previus_next)) {
 						this.selected_sales.is_all_selected = true

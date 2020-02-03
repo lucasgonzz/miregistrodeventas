@@ -284,30 +284,48 @@ export default {
 				this.available_articles.forEach(article => {
 					if (article.bar_code == this.article.bar_code || article.name == this.article.name) {
 						disponible = true
-						axios.get('articles/get-by-name/'+article.name)
-						.then(res => {
-							var article = res.data
-							article.amount = 1
-							this.possible_articles = []
-							this.articles.push(article)
-							if (article.uncontable == 1) {
-								article.measurement_original = article.measurement
-								setTimeout(() => {
-									$(`#amount-measurement-${article.id}`).focus()
-								}, 500)
-							} else {
-								this.calculateTotal()
-							}
-						})
-						.catch(err => {
-							console.log(err)
-						})
+						if (article.bar_code === null) {
+							axios.get('articles/get-by-name/'+article.name)
+							.then(res => {
+								var article = res.data
+								article.amount = 1
+								this.possible_articles = []
+								this.articles.push(article)
+								if (article.uncontable == 1) {
+									article.measurement_original = article.measurement
+									setTimeout(() => {
+										$(`#amount-measurement-${article.id}`).focus()
+									}, 500)
+								} else {
+									this.calculateTotal()
+								}
+							})
+							.catch(err => {
+								console.log(err)
+							})
+						} else {
+							axios.get('articles/get-by-bar-code/'+article.bar_code)
+							.then(res => {
+								var article = res.data
+								article.amount = 1
+								this.possible_articles = []
+								this.articles.push(article)
+								if (article.uncontable == 1) {
+									article.measurement_original = article.measurement
+									setTimeout(() => {
+										$(`#amount-measurement-${article.id}`).focus()
+									}, 500)
+								} else {
+									this.calculateTotal()
+								}
+							})
+							.catch(err => {
+								console.log(err)
+							})
+						}
 					} 
 				})
 			}
-			// if (!disponible) {
-			// 	toastr.error('No registrado')
-			// }
 		},
 		addMarker(marker) {
 			this.article.name = marker.article.name

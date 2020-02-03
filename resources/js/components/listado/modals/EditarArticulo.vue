@@ -43,7 +43,7 @@
 					<label for="cost">Actualizado</label>
 					<input type="text" name="cost" v-model="article.actualizado" class="form-control" disabled>
 				</div>
-				<div class="form-group">
+				<div class="form-group" v-show="can_see_cost">
 					<label for="cost">Costo</label>
 					<input type="number" name="cost" v-model="article.cost" id="costo" class="form-control focus-red">
 					<small class="form-text text-muted">
@@ -164,7 +164,7 @@
 </template>
 <script>
 export default {
-	props: ['article', 'rol', 'providers'],	
+	props: ['article', 'rol', 'providers', 'can_see_cost'],	
 	methods: {
 		date(date) {
 			return moment(date).format('DD/MM/YY')

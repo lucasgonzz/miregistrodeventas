@@ -40,6 +40,9 @@ class MainController extends Controller
     function provider_empleados() {
         return view('provider.main.empleados');
     }
+    function provider_config() {
+        return view('provider.main.config');
+    }
 
     // Commerce
     function commerce_vender() {

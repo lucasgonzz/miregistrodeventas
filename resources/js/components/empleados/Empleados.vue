@@ -14,7 +14,11 @@
 								<div class="col-12 col-lg-6">
 									<div class="card">
 										<div class="card-header">
-											Registrar un nuevo empleado
+											<strong>
+												<strong>
+													Registrar un nuevo empleado
+											</strong>
+											</strong>
 										</div>
 										<div class="card-body">
 											<p class="card-title">
@@ -79,13 +83,15 @@
 								</div>
 								<div class="col-12 col-lg-6">
 									<ul class="list-group">
-										<li v-show="employees.length" 
-											class="list-group-item active">
-											Mis empleados
-										</li>
-										<li v-show="employees.length == 0" 
-											class="list-group-item active">
-											Todavia no hay ningun empleado regtistrado
+										<li	class="list-group-item active">
+											<strong>
+												<span v-if="employees.length">
+													Mis empleados
+												</span>
+												<span v-else>
+													Todavia no hay ningun empleado regtistrado
+												</span>
+											</strong>
 										</li>
 										<li v-for="employee in employees" class="list-group-item">
 											<i class="icon-user"></i>
@@ -99,15 +105,13 @@
 											<p class="m-0">
 												Alta: {{ date(employee.created_at) }} {{ since(employee.created_at) }}
 											</p>
-											<!-- <button @click="employeeDetails"
-													class="btn btn-primary float-right">
-												Ver
-											</button> -->
 										</li>
 									</ul>
 									<div class="card m-t-20">
 										<div class="card-header">
-											¿Por que deberia asignarle permisos a mis empleados?
+											<strong>
+												¿Por que deberia asignarle permisos a mis empleados?
+											</strong>
 										</div>
 										<div class="card-body">
 											Si un empleado tiene permisos para vender, por ejemplo, podría registrar nuevas ventas y quedarse con el artículo  ya que el stock de ese artículo coincidiría con los que tiene en su negocio. 

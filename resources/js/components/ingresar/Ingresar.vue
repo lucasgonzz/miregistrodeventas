@@ -343,14 +343,6 @@ export default {
 				$('#stock').focus()
 			}
 		},
-		// Cambiar(palbra_que_escribio) {
-		// 	if (palbra_que_escribio < 8) {
-		// 		console.log('Tiene que ser mayor a 8')
-		// 	} else {
-		// 		console.log('Esta bien escrita')
-		// 	}
-		// 	palbra_que_escribio.toUpperCase()
-		// }
 		changeToStock() {
 			$('#stock').focus()
 		},
@@ -470,6 +462,7 @@ export default {
 		},
 		validate() {
 			var ok = true
+			console.log('validadndo')
 			if (this.article.name == '') {
 				ok = false
 				toastr.error('El campo nombre es obligatorio')
@@ -486,11 +479,19 @@ export default {
 				$('#price').focus()
 			}
 			// if (this.article.bar_code == '') {
-				if (this.names.includes(this.article.name)) {
-					ok = false
-					toastr.error('Ya hay un artículo con este nombre')
-					$('#name').focus()
-				}
+			// 	console.log('entro')
+			// 	this.names.forEach(name => {
+			// 		if (name.toLowerCase() == this.article.name) {
+			// 			console.log('entro tmb')
+			// 			ok = false
+			// 			toastr.error('Ya hay un artículo con este nombre')
+			// 			$('#name').focus()
+			// 		}
+			// 	})
+				// if (this.names.includes(this.article.name)) {
+				// } else {
+				// 	console.log('No entro')
+				// }
 			// }
 			return ok
 		},

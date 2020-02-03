@@ -164,3 +164,9 @@
 .icon-star-2:before {
   content: "\56";
 }
+.icon-config:before {
+  content: "\6b";
+}
+.icon-sign-out:before {
+  content: "\6f";
+}

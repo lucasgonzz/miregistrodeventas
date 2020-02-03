@@ -36,39 +36,35 @@ class UserController extends Controller
     	$employee->permissions()->attach($request->employee['permissions']);
     }
 
+    function getUser() {
+        return Auth()->user();
+    }
+
+    function getCompanyName() {
+        return Auth()->user()->company_name;
+    }
+
+    function setCompanyName($company_name) {
+        $user_id = Auth()->user()->id;
+        $user = User::find($user_id);
+        $user->company_name = $company_name;
+        $user->save();
+    }
+
     public function password() {
         return view('auth.password');
     }
 
     public function update_password(Request $request) {
-        $rules = [
-            'mypassword' => 'required',
-            'password' => 'required|confirmed',
-        ];
 
-        $messages = [
-            'mypassword.required' => 'Este campo es requerido',
-            'password.required' => 'Este campo es requerido',
-            'password.confirmed' => 'Las contraseñas no coinciden',
-        ];
-
-        $validator = Validator::make($request->all(), $rules, $messages);
-
-        if ($validator->fails()) {
-            return redirect()->route('change-password')->withErrors($validator);
+        if (Hash::check($request->password, Auth()->user()->password)) {
+            $user = User::find(Auth()->user()->id);
+            $user->update([
+                'password' => bcrypt($request->new_password),
+            ]);
+            return response('ok');
         } else {
-            if (Hash::check($request->mypassword, Auth()->user()->password)) {
-                $user = User::find(Auth()->user()->id);
-                $user->update([
-                    'password' => bcrypt($request->password),
-                ]);
-                return redirect()->route('change-password')
-                                    ->with('status', 'Contraseña actualizada con exito');
-            } else {
-                return redirect()->route('change-password')
-                                    ->with('message', 'La contraseña actual no coincide');
-
-            }
+            return response('no');
         }
     }
 }

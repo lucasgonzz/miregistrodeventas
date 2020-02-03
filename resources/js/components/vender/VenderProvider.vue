@@ -94,21 +94,27 @@
 				                </div>
 				                <br>
 								<div class="dropdown m-r-5" 
-										v-for="marker_group in marker_groups"
-										v-show="marker_group.markers.length">
+										v-for="marker_group in marker_groups">
 									<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 										{{ marker_group.name }}
 									</button>
 									<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-										<a v-for="marker in marker_group.markers"
-											@click.prevent="addMarker(marker)"
-											class="dropdown-item" 
-											href="#">
-											{{ marker.article.name }}
-											<span v-show="show_markers_prices">
-												(${{ marker.article.price }})
-											</span>
-										</a>
+										<template v-if="marker_group.markers.length">
+											<a v-for="marker in marker_group.markers"
+												@click.prevent="addMarker(marker)"
+												class="dropdown-item" 
+												href="#">
+												{{ marker.article.name }}
+												<span v-show="show_markers_prices">
+													(${{ marker.article.price }})
+												</span>
+											</a>
+										</template>
+										<template v-else>
+											<a href="#" class="dropdown-item">
+												Sin marcadores
+											</a>
+										</template>
 									</div>
 								</div>
 								<button v-for="marker in markers"
@@ -443,25 +449,45 @@ export default {
 				this.available_articles.forEach(article => {
 					if (article.bar_code == this.article.bar_code || article.name == this.article.name) {
 						disponible = true
-						axios.get('articles/get-by-name/'+article.name)
-						.then(res => {
-							var article = res.data
-							this.possible_articles = []
-							this.articles.push(article)
-							if (article.uncontable == 1) {
+						if (article.bar_code === null) {
+							axios.get('articles/get-by-name/'+article.name)
+							.then(res => {
+								var article = res.data
 								article.amount = 1
-								article.measurement_original = article.measurement
-								setTimeout(() => {
-									$(`#amount-measurement-${article.id}`).focus()
-								}, 500)
-							} else {
-								article.amount = Number(this.article.amount)
-								this.calculateTotal()
-							}
-						})
-						.catch(err => {
-							console.log(err)
-						})
+								this.possible_articles = []
+								this.articles.push(article)
+								if (article.uncontable == 1) {
+									article.measurement_original = article.measurement
+									setTimeout(() => {
+										$(`#amount-measurement-${article.id}`).focus()
+									}, 500)
+								} else {
+									this.calculateTotal()
+								}
+							})
+							.catch(err => {
+								console.log(err)
+							})
+						} else {
+							axios.get('articles/get-by-bar-code/'+article.bar_code)
+							.then(res => {
+								var article = res.data
+								article.amount = 1
+								this.possible_articles = []
+								this.articles.push(article)
+								if (article.uncontable == 1) {
+									article.measurement_original = article.measurement
+									setTimeout(() => {
+										$(`#amount-measurement-${article.id}`).focus()
+									}, 500)
+								} else {
+									this.calculateTotal()
+								}
+							})
+							.catch(err => {
+								console.log(err)
+							})
+						}
 					} 
 				})
 			}

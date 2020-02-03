@@ -8,7 +8,11 @@
 			<div class="col-lg-9">	
 				<div class="card">
 					<div class="card-header">
-						Codigos de barra
+						<h5 class="m-0">
+							<strong>
+								Codigos de barra
+							</strong>
+						</h5>
 					</div>
 					<form>
 						<div class="card-body">
