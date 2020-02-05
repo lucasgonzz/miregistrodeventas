@@ -43,6 +43,8 @@
 									<span v-show="previus_next > 1 && !is_from_only_one_date">
 										Hace {{ previus_next }} días
 									</span>
+								</strong>
+								<strong v-show="previus_next != 0 && is_from_only_one_date">
 									<span v-show="previus_next == 1 && is_from_only_one_date">
 										1 día atras
 									</span>
@@ -146,7 +148,7 @@
 			        		</strong>
 			        	</div>
 			        </div>
-					<div class="row" v-show="is_loading">
+					<<!-- div class="row" v-show="is_loading">
 						<div class="col">
 							<div class="spinner-listado">
 								<div class="spinner">
@@ -156,7 +158,8 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> -->
+					<cargando :is_loading="is_loading"></cargando>
 					<div class="row" v-show="!is_loading">
 						<div class="col">
 							<table class="table table-striped">
@@ -408,7 +411,7 @@ export default {
 		// Metodos del header
 		previusDay() {
 			this.previus_next++
-			this.previusNext()
+			this.previusNext('previus')
 		},
 		nextDay() {
 			if (this.previus_next == 1) {
@@ -416,16 +419,17 @@ export default {
 				this.getSales()
 			} else {
 				this.previus_next--
-				this.previusNext()
+				this.previusNext('next')
 			}
 		},
-		previusNext() {
+		previusNext(direction) {
 			if (this.only_one_date == '') {
 				this.is_loading = true
-				axios.get('sales/previus-next/'+this.previus_next)
+				axios.get('sales/previus-next/'+this.previus_next+'/'+direction)
 				.then( res => {
-					var sales = res.data
+					var sales = res.data.sales
 					if (sales.length) {
+						this.previus_next = res.data.index
 						this.sales = sales
 					} else {
 						toastr.error("No hay ventas mas atras")
@@ -445,7 +449,7 @@ export default {
 					console.log(err)
 				})
 			} else {
-				axios.get('sales/previus-next/'+this.previus_next+'/'+this.only_one_date)
+				axios.get('sales/previus-next/'+this.previus_next+'/'+direction+'/'+this.only_one_date)
 				.then( res => {
 					// console.log(res.data)
 					this.sales = res.data

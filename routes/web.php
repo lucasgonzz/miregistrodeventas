@@ -97,7 +97,7 @@ Route::group(['middleware' => ['has.role:provider']], function () {
 		Route::get('/mayoristas/sales', 'SaleController@index');
 		Route::get('/mayoristas/sales/from-date/{from}/{to}/{last_day_inclusive}', 'SaleController@fromDate');
 		Route::get('/mayoristas/sales/only-one-date/{date}', 'SaleController@onlyOneDate');
-		Route::get('/mayoristas/sales/previus-next/{previus_next}/{only_one_date?}', 'SaleController@previusNext');
+		Route::get('/mayoristas/sales/previus-next/{previus_next}/{direction?}/{only_one_date?}', 'SaleController@previusNext');
 		Route::get('/mayoristas/sales/pdf/{sales_id}/{company_name}/{articles_cost}/{articles_subtotal_cost}/{articles_total_price}/{articles_total_cost}/{borders}', 'SaleController@pdf');
 		Route::delete('/mayoristas/sales/{id}', 'SaleController@delete');
 		Route::delete('/mayoristas/sales/delete-sales/{sales_id}', 'SaleController@deleteSales');
@@ -185,7 +185,7 @@ Route::group(['middleware' => ['has.role:commerce']], function () {
 		Route::get('/comercios/sales', 'SaleController@index');
 		Route::get('/comercios/sales/from-date/{from}/{to}/{last_day_inclusive}', 'SaleController@fromDate');
 		Route::get('/comercios/sales/only-one-date/{date}', 'SaleController@onlyOneDate');
-		Route::get('/comercios/sales/previus-next/{previus_next}/{only_one_date?}', 'SaleController@previusNext');
+		Route::get('/comercios/sales/previus-next/{previus_next}/{direction}/{only_one_date?}', 'SaleController@previusNext');
 
 		Route::get('/comercios/sales/pdf/{sales_id}/{company_name}/{articles_cost}/{articles_subtotal_cost}/{articles_total_price}/{articles_total_cost}/{borders}', 'SaleController@pdf');
 		Route::delete('/comercios/sales/{id}', 'SaleController@delete');

@@ -42,31 +42,76 @@ class SaleController extends Controller
         return $sales;
     }
 
-    function previusNext($index, $only_one_date = null) {
+    /*
+    |--------------------------------------------------------------------------
+    | PreviusNext
+    |--------------------------------------------------------------------------
+    |
+    |   * El parametro index indica el numero de dias a retroceder
+    |   * Direction indica si se esta subiendo o bajando, se usa en el caso
+    |   de que no haya ventas en tal fecha, si se esta bajando continua bajando
+    |   y viceversa
+    |   * only_one_date indica si se esta retrocediendo desde una fecha en especifico
+    |   Si es nulo es porque se esta retrocediendo desde el principio
+    |   Si no es nulo se empieza a retroceder desde la fecha que llega en esa variable
+    |   
+    */
+    function previusNext($index, $direction, $only_one_date = null) {
         $user = Auth()->user();
         if (is_null($only_one_date)) {
             $carbon = Carbon::now('America/Argentina/Buenos_Aires');
         } else {
             $carbon = Carbon::create($only_one_date);
         }
+        $sales = [];
         $date = $carbon->subDays($index);
-        if ($user->hasRole('provider')) {
-            $sales = Sale::where('user_id', $this->getArticleOwnerId())
-                                ->whereDate('created_at', $date)
-                                ->orderBy('id', 'DESC')
-                                ->with('client')
-                                ->with('articles')
-                                ->orderBy('created_at', 'DESC')
-                                ->get();
-        } else {
-            $sales = Sale::where('user_id', $this->getArticleOwnerId())
-                                ->whereDate('created_at', $date)
-                                ->orderBy('id', 'DESC')
-                                ->with('articles')
-                                ->orderBy('created_at', 'DESC')
-                                ->get();
+
+        // Se obtine la fecha de la primer compra para saber cuando dejar de buscar
+        $limit_sale = Sale::where('user_id', $this->getArticleOwnerId())
+                            ->orderBy('id', 'ASC')
+                            ->first();
+        $limit_date = $limit_sale->created_at;
+
+        while (count($sales) == 0 && $date >= $limit_date) {
+            if ($user->hasRole('provider')) {
+                $sales = Sale::where('user_id', $this->getArticleOwnerId())
+                                    ->whereDate('created_at', $date)
+                                    ->orderBy('id', 'DESC')
+                                    ->with('client')
+                                    ->with('articles')
+                                    ->orderBy('created_at', 'DESC')
+                                    ->get();
+            } else {
+                $sales = Sale::where('user_id', $this->getArticleOwnerId())
+                                    ->whereDate('created_at', $date)
+                                    ->orderBy('id', 'DESC')
+                                    ->with('articles')
+                                    ->orderBy('created_at', 'DESC')
+                                    ->get();
+            }
+            if (count($sales) == 0) {
+                if ($direction == 'previus') {
+                    $index++;
+                } else {
+                    $index--;
+                }
+                if (is_null($only_one_date)) {
+                    $carbon = Carbon::now('America/Argentina/Buenos_Aires');
+                } else {
+                    $carbon = Carbon::create($only_one_date);
+                }
+                if ($index == 0) {
+                    dd('entro');
+                    $date = date('Y-m-d');
+                } else {
+                    $date = $carbon->subDays($index);
+                }
+            }
         }
-        return $sales;
+        return [
+            'index' => $index,
+            'sales' => $sales
+        ];
     }
 
     function onlyOneDate($date) {

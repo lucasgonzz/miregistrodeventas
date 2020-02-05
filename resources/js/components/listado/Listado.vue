@@ -128,18 +128,19 @@
 								</button>
 							</div>
 						</div>
-						<div class="row" v-show="isLoading">
+						<!-- <div class="row" v-show="is_loading">
 							<div class="col">
 								<div class="spinner-listado">
 									<div class="spinner">
 										<div class="spinner-border text-primary" role="status">
-											<span class="sr-only">Loading...</span>
+											<span class="sr-only">Cargando...</span>
 										</div>
 									</div>
 								</div>
 							</div>
-						</div>
-						<div class="row" v-show="!isLoading">
+						</div> -->
+						<cargando :is_loading="is_loading"></cargando>
+						<div class="row" v-show="!is_loading">
 							<div class="col">
 								<info-filtrados :filtro="filtro" :is_filter="is_filter" 
 												:providers="providers"
@@ -147,7 +148,7 @@
 								</info-filtrados>
 							</div>
 						</div>
-						<div class="row" v-show="!isLoading">
+						<div class="row" v-show="!is_loading">
 							<div class="col">
 								<div class="table-responsive">						
 									<table class="table">
@@ -435,7 +436,7 @@ export default {
 
 			articles: [],
 			article: {'id': 0, 'bar_code': '','name': '', 'cost': 0, 'price': 0, 'stock': 0, 'new_stock': 0, 'providers': [], 'created_at': '', 'updated_at': '', 'creado': '', 'actualizado': '', 'act_fecha': true},
-			isLoading: false,
+			is_loading: false,
 			all_selected_articles: false,
 
 			// Marcadores
@@ -592,10 +593,10 @@ export default {
 		----------------------------------------------------------------------------------- */
 		search() {
 			this.searching = true
-			this.isLoading = true
+			this.is_loading = true
 			axios.get('articles/search/'+this.search_query)
 			.then( res => {
-				this.isLoading = false
+				this.is_loading = false
 				var articles = res.data
 				if (articles.length > 0) {
 					this.articles = res.data
@@ -623,10 +624,10 @@ export default {
 		-----------------------------------------------------------------------------------
 		*/
 		getArticles(page) {
-			this.isLoading = true
+			this.is_loading = true
 			axios.get('articles?page=' + page)
 			.then( res => {
-				this.isLoading = false
+				this.is_loading = false
 				this.articles = res.data.articles.data;
 				console.log(res.data.articles.data)
 				this.pagination = res.data.pagination;
@@ -909,6 +910,7 @@ export default {
 			axios.delete('articles/delete-articles/'+this.selected_articles.selected_articles.join('-'))
 			.then(res => {
 				this.selected_articles.selected_articles = []
+				// this.selected_articles.is_all_selected = false
 				this.updateArticlesList(true)
 				toastr.success('Artículos eliminados correctamente')
 				$('#delete-articles').modal('hide')
@@ -938,7 +940,7 @@ export default {
 			* Filtra los proveedores para que aparescan solo una vez en la lista
 		-------------------------------------------------------------------------- */
 		filter(filtro) {
-			this.isLoading = true
+			this.is_loading = true
 			$('#listado-filtrar').modal('hide')
 			axios.post('articles/filter', {
 				mostrar: filtro.mostrar,
@@ -947,7 +949,7 @@ export default {
 				providers: filtro.providers
 			})
 			.then( res => {
-				this.isLoading = false
+				this.is_loading = false
 				this.is_filter = true
 				console.log(res.data)
 				this.articles = res.data

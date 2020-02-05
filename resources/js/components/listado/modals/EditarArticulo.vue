@@ -24,7 +24,8 @@
 						<input v-else
 								type="text" 
 								v-model="article.new_bar_code" 
-								name="bar-code" 
+								name="bar-code"
+								autocomplete="off" 
 								:placeholder="'Ingrese un codigo de barras para '+article.name" 
 								class="form-control">
 					</div>
@@ -45,23 +46,36 @@
 				</div>
 				<div class="form-group" v-show="can_see_cost">
 					<label for="cost">Costo</label>
-					<input type="number" name="cost" v-model="article.cost" id="costo" class="form-control focus-red">
+					<input type="number" 
+							name="cost" 
+							v-model="article.cost" 
+							id="costo" 
+							autocomplete="off" 
+							class="form-control focus-red">
 					<small class="form-text text-muted">
 						Para agregar decimales (centavos) coloque una coma para separar las unidades	
 					</small>
 				</div>
 				<div class="form-group">
 					<label for="price">Precio</label>
-					<input type="number" name="price" v-model="article.price" class="form-control focus-red">
+					<input type="number" 
+							name="price" 
+							v-model="article.price" 
+							autocomplete="off" 
+							class="form-control focus-red">
 					<small class="form-text text-muted">
 						Para agregar decimales (centavos) coloque una coma para separar las unidades	
 					</small>
 				</div>
 				<div class="form-group" v-show="article.offer_price">
 					<label for="price">Precio de oferta</label>
-					<input type="number" name="price" v-model="article.offer_price" class="form-control focus-red">
+					<input type="number" 
+							name="price" 
+							v-model="article.offer_price" 
+							autocomplete="off" 
+							class="form-control focus-red">
 					<small class="form-text text-muted">
-						Para agregar decimales (centavos) coloque una coma para separar las unidades	
+						Para agregar decimales (centavos) coloque una coma para separar las unidades
 					</small>
 				</div>
 				<div class="form-group" v-show="article.previus_price">
@@ -71,15 +85,20 @@
 				<div class="form-group">
 					<label for="stock">
 						Cantidad para agregar
-						<span v-show="article.uncontable == 1"> en {{ article.measurement }}(s)</span>
+						<span v-show="article.uncontable == 1"> 
+							en {{ article.measurement }}(s)
+						</span>
 					</label>
 					<input type="number" 
 							min="0"
+							autocomplete="off" 
 							v-model="article.new_stock" 
 							class="form-control focus-red">
 					<small>
 						Actualmente hay {{ article.stock }} 
-						<span v-show="article.uncontable == 1"> {{ article.measurement }}(s)</span>
+						<span v-show="article.uncontable == 1"> 
+							{{ article.measurement }}(s)
+						</span>
 					</small>
 				</div>
 				<div class="form-group" v-show="rol == 'commerce' && article.new_stock > 0">
@@ -130,7 +149,11 @@
 				</div>
 				<div class="form-group">
 					<label for="name">Nombre</label>
-					<input type="text" name="name" v-model="article.name" class="form-control focus-red">
+					<input type="text" 
+							name="name" 
+							v-model="article.name"
+							autocomplete="off" 
+							class="form-control focus-red">
 				</div>
 				<div class="form-group">
 					<div class="custom-control custom-checkbox my-1 mr-sm-2 m-b-10">

@@ -31,7 +31,7 @@
 									Porcentaje Fijo
 								</button> -->
 								<button @click="previus" 
-										class="btn btn-primary">
+										class="btn btn-primary float-right">
 									<i class="icon-undo"></i>
 									Anterior
 								</button>

@@ -41,5 +41,17 @@ class ArticlesTableSeeder extends Seeder
             	'user_id' => $i,
             ]);
         }
+
+        for ($i=0; $i < 30; $i++) { 
+            Article::create([
+                'name' => 'Auto a control remoto',
+                'bar_code' => $i,
+                'cost' => 500,
+                'price' => 700,
+                'uncontable' => 0,
+                'stock' => 30,
+                'user_id' => 2,
+            ]);
+        }
     }
 }
