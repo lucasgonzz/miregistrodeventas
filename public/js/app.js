@@ -66749,7 +66749,7 @@ var render = function() {
                     _c(
                       "button",
                       {
-                        staticClass: "btn btn-block btn-left btn-warning m-0",
+                        staticClass: "btn btn-block btn-left btn-info m-0",
                         on: {
                           click: function($event) {
                             $event.preventDefault()

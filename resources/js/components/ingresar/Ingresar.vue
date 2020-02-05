@@ -225,7 +225,7 @@
 						<div class="row m-0">
 							<div class="col-4 p-0">
 								<button @click.prevent="showPrintTickets" 
-										class="btn btn-block btn-left btn-warning m-0">
+										class="btn btn-block btn-left btn-info m-0">
 									<i class="icon-tag"></i>
 									Tickets ({{ articles_id_to_print.length }})
 								</button>
