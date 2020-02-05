@@ -20,30 +20,14 @@
 			<div class="col-lg-7">	
 				<div class="card">
 					<div class="card-header">
-						<div class="row align-items-center">
-							<div class="col col-lg-5">
-								<h5 class="m-b-0">
-									<strong>Ingresar un nuevo artículo</strong>
-								</h5>
-							</div>
-							<div class="col">
-								<!-- <button class="btn btn-success">
-									Porcentaje Fijo
-								</button> -->
-								<button @click="previus" 
-										class="btn btn-primary float-right">
-									<i class="icon-undo"></i>
-									Anterior
-								</button>
-							</div>
-						</div>
+						<h5 class="m-b-0">
+							<strong>Ingresar un nuevo artículo</strong>
+						</h5>
 					</div>
 					<div class="card-body">
 						<h6 class="h6">
 							<strong>Complete con los datos del artículo que quiera ingresar</strong>
 						</h6>
-						
-						
 						<div class="custom-control custom-checkbox my-1 mr-sm-2 m-b-10">
 							<input v-model="article.is_uncontable" 
 									type="checkbox" 
@@ -241,12 +225,19 @@
 						<div class="row m-0">
 							<div class="col-4 p-0">
 								<button @click.prevent="showPrintTickets" 
-										class="btn btn-block btn-left btn-primary m-0">
+										class="btn btn-block btn-left btn-info m-0">
 									<i class="icon-tag"></i>
 									Tickets ({{ articles_id_to_print.length }})
 								</button>
 							</div>
-							<div class="col-8 p-0">
+							<div class="col-4 p-0">
+								<button @click="previus" 
+										class="btn btn-block btn-center btn-primary m-0">
+									<i class="icon-undo"></i>
+									Anterior
+								</button>
+							</div>
+							<div class="col-4 p-0">
 								<button @click.prevent="saveArticle"
 										class="btn btn-block btn-right btn-success m-0">
 									<i class="icon-check"></i>

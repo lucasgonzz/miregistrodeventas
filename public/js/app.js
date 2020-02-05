@@ -2831,15 +2831,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -65797,27 +65788,7 @@ var render = function() {
         _c("div", { staticClass: "row justify-content-center" }, [
           _c("div", { staticClass: "col-lg-7" }, [
             _c("div", { staticClass: "card" }, [
-              _c("div", { staticClass: "card-header" }, [
-                _c("div", { staticClass: "row align-items-center" }, [
-                  _vm._m(0),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-primary float-right",
-                        on: { click: _vm.previus }
-                      },
-                      [
-                        _c("i", { staticClass: "icon-undo" }),
-                        _vm._v(
-                          "\r\n\t\t\t\t\t\t\t\t\tAnterior\r\n\t\t\t\t\t\t\t\t"
-                        )
-                      ]
-                    )
-                  ])
-                ])
-              ]),
+              _vm._m(0),
               _vm._v(" "),
               _c("div", { staticClass: "card-body" }, [
                 _vm._m(1),
@@ -66778,7 +66749,7 @@ var render = function() {
                     _c(
                       "button",
                       {
-                        staticClass: "btn btn-block btn-left btn-primary m-0",
+                        staticClass: "btn btn-block btn-left btn-info m-0",
                         on: {
                           click: function($event) {
                             $event.preventDefault()
@@ -66797,7 +66768,23 @@ var render = function() {
                     )
                   ]),
                   _vm._v(" "),
-                  _c("div", { staticClass: "col-8 p-0" }, [
+                  _c("div", { staticClass: "col-4 p-0" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-block btn-center btn-primary m-0",
+                        on: { click: _vm.previus }
+                      },
+                      [
+                        _c("i", { staticClass: "icon-undo" }),
+                        _vm._v(
+                          "\r\n\t\t\t\t\t\t\t\t\tAnterior\r\n\t\t\t\t\t\t\t\t"
+                        )
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-4 p-0" }, [
                     _c(
                       "button",
                       {
@@ -66832,7 +66819,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col col-lg-5" }, [
+    return _c("div", { staticClass: "card-header" }, [
       _c("h5", { staticClass: "m-b-0" }, [
         _c("strong", [_vm._v("Ingresar un nuevo artículo")])
       ])
