@@ -2831,15 +2831,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -65797,27 +65788,7 @@ var render = function() {
         _c("div", { staticClass: "row justify-content-center" }, [
           _c("div", { staticClass: "col-lg-7" }, [
             _c("div", { staticClass: "card" }, [
-              _c("div", { staticClass: "card-header" }, [
-                _c("div", { staticClass: "row align-items-center" }, [
-                  _vm._m(0),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-primary float-right",
-                        on: { click: _vm.previus }
-                      },
-                      [
-                        _c("i", { staticClass: "icon-undo" }),
-                        _vm._v(
-                          "\r\n\t\t\t\t\t\t\t\t\tAnterior\r\n\t\t\t\t\t\t\t\t"
-                        )
-                      ]
-                    )
-                  ])
-                ])
-              ]),
+              _vm._m(0),
               _vm._v(" "),
               _c("div", { staticClass: "card-body" }, [
                 _vm._m(1),
@@ -66778,7 +66749,7 @@ var render = function() {
                     _c(
                       "button",
                       {
-                        staticClass: "btn btn-block btn-left btn-primary m-0",
+                        staticClass: "btn btn-block btn-left btn-warning m-0",
                         on: {
                           click: function($event) {
                             $event.preventDefault()
@@ -66797,7 +66768,23 @@ var render = function() {
                     )
                   ]),
                   _vm._v(" "),
-                  _c("div", { staticClass: "col-8 p-0" }, [
+                  _c("div", { staticClass: "col-4 p-0" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-block btn-center btn-primary m-0",
+                        on: { click: _vm.previus }
+                      },
+                      [
+                        _c("i", { staticClass: "icon-undo" }),
+                        _vm._v(
+                          "\r\n\t\t\t\t\t\t\t\t\tAnterior\r\n\t\t\t\t\t\t\t\t"
+                        )
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-4 p-0" }, [
                     _c(
                       "button",
                       {
@@ -66832,7 +66819,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col col-lg-5" }, [
+    return _c("div", { staticClass: "card-header" }, [
       _c("h5", { staticClass: "m-b-0" }, [
         _c("strong", [_vm._v("Ingresar un nuevo artículo")])
       ])
@@ -93726,15 +93713,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!***************************************************!*\
   !*** ./resources/js/components/ventas/Ventas.vue ***!
   \***************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Ventas_vue_vue_type_template_id_28b7df74___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Ventas.vue?vue&type=template&id=28b7df74& */ "./resources/js/components/ventas/Ventas.vue?vue&type=template&id=28b7df74&");
 /* harmony import */ var _Ventas_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Ventas.vue?vue&type=script&lang=js& */ "./resources/js/components/ventas/Ventas.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Ventas_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Ventas_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _Ventas_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Ventas.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/ventas/Ventas.vue?vue&type=style&index=0&lang=css&");
+/* empty/unused harmony star reexport *//* harmony import */ var _Ventas_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Ventas.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/ventas/Ventas.vue?vue&type=style&index=0&lang=css&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 /* harmony import */ var _Ventas_vue_vue_type_custom_index_0_blockType_html__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Ventas.vue?vue&type=custom&index=0&blockType=html */ "./resources/js/components/ventas/Ventas.vue?vue&type=custom&index=0&blockType=html");
 /* harmony import */ var _Ventas_vue_vue_type_custom_index_0_blockType_html__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_Ventas_vue_vue_type_custom_index_0_blockType_html__WEBPACK_IMPORTED_MODULE_4__);
@@ -93783,7 +93769,7 @@ component.options.__file = "resources/js/components/ventas/Ventas.vue"
 /*!****************************************************************************!*\
   !*** ./resources/js/components/ventas/Ventas.vue?vue&type=script&lang=js& ***!
   \****************************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
