@@ -51,7 +51,11 @@
 						<div class="col-2">	
 							<div class="input-group mb-2 mr-sm-2">
 								<div class="input-group-prepend">
-								  	<div class="input-group-text">Cantidad</div>
+								  	<div class="input-group-text">
+										<span v-show="loading_cantidad"
+												class="spinner-border spinner-border-sm m-r-5" role="status" aria-hidden="true"></span>
+								  		Cantidad
+								  	</div>
 								</div>
 								<input type="number" 
 										v-model="article.amount"
@@ -129,12 +133,27 @@
 						</div>
 					</div>
 				</div>
-					<div class="row">
-						<div class="col">
-							<h5 class="card-title">Total: {{ price(total) }}</h5>
+					<div class="row m-b-10">
+						<div class="col-3">
+							<h5 class="card-title m-0">Total: {{ price(total) }}</h5>
 							<p class="card-text">
 								{{ cantidad_articulos }} artículos, {{ cantidad_unidades }} unidades
 							</p>
+						</div>
+						<div class="col" v-show="percentage_card != 1">
+							<div class="form-group">
+			                    <div class="custom-control custom-checkbox my-1 mr-sm-2">
+			                        <input class="custom-control-input c-p" 
+			                            v-model="with_card" 
+			                            type="checkbox" 
+			                            id="with_card">
+			                        <label class="custom-control-label c-p" 
+			                            for="with_card">
+			                            Con tarjeta 
+			                            ({{ getPercentageCard() }}% mas)
+			                        </label>
+			                    </div>
+							</div>
 						</div>
 					</div>
 					<div class="row">
@@ -253,6 +272,8 @@
 									id="vender"
 									v-show="!ventaRealizada"
 									:class="selected_client == 0 ? 'disabled' : ''" class="btn btn-success btn-block btn-lg">
+								<span v-show="vendiendo"
+										class="spinner-border spinner-border-sm spinner-btn-vender" role="status" aria-hidden="true"></span>
 								Vender
 							</button>
 							<button @click="nuevaVenta" 
@@ -285,6 +306,8 @@ export default {
 				name: '',
 				amount: '',
 			},
+			loading_cantidad: false,
+			vendiendo: false,
 			possible_articles: [],
 
 			clients: [],
@@ -301,6 +324,9 @@ export default {
 			total: 0,
 			cantidad_articulos: 0,
 			cantidad_unidades: 0,
+			// Tarjeta
+			with_card: false,
+			percentage_card: parseFloat('1.' + document.head.querySelector('meta[name="percentage-card"]').content), 
 
 			// Marcadores
 			markers: [],
@@ -308,6 +334,11 @@ export default {
 			show_markers: true,
 			show_markers_prices: true,
 		}
+	},
+	watch: {
+		with_card() {
+			this.calculateTotal()
+		},
 	},
 	methods: {
 		price(p) {
@@ -318,6 +349,12 @@ export default {
 				this.show_markers = false
 			} else {
 				this.show_markers = true
+			}
+		},
+		getPercentageCard() {
+			if (this.percentage_card != 1) {
+				var n = this.percentage_card + '0'
+				return n.substr(2)
 			}
 		},
 		getSubTotal(article) {
@@ -449,9 +486,11 @@ export default {
 				this.available_articles.forEach(article => {
 					if (article.bar_code == this.article.bar_code || article.name == this.article.name) {
 						disponible = true
+						this.loading_cantidad = true
 						if (article.bar_code === null) {
 							axios.get('articles/get-by-name/'+article.name)
 							.then(res => {
+								this.loading_cantidad = false
 								var article = res.data
 								article.amount = 1
 								this.possible_articles = []
@@ -469,8 +508,10 @@ export default {
 								console.log(err)
 							})
 						} else {
+							this.loading_bar_code = true
 							axios.get('articles/get-by-bar-code/'+article.bar_code)
 							.then(res => {
+								this.loading_cantidad = false
 								var article = res.data
 								article.amount = 1
 								this.possible_articles = []
@@ -532,6 +573,12 @@ export default {
 				}
 			})
 			this.article.amount = ''
+
+			// Si es con tarjeta se calcula el total por el porcentaje de la tarjeta
+			if (this.with_card) {
+				this.total = this.total * this.percentage_card
+			}
+
 			if (this.article.name != '') {
 				this.article.name = ''
 				$('#name').focus()
@@ -548,11 +595,14 @@ export default {
 		// Venta
 		vender() {
 			if(this.selected_client!=0) {
+				this.vendiendo = true
 				axios.post('sales', {
 					client_id: this.selected_client,
 					articles: this.articles,
+					with_card: this.with_card,
 				})
 				.then(res => {
+					this.vendiendo = false
 					console.log(res.data)
 					this.sale = res.data
 					this.articles = []	
@@ -778,5 +828,11 @@ export default {
 }
 .dropdown {
 	display: inline-block;
+}
+.spinner-border-sm {
+	margin-bottom: 1px;
+}
+.spinner-btn-vender {
+	margin-bottom: 4px;
 }
 </style>

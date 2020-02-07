@@ -36,6 +36,33 @@
 							</div>
 						</div>
 					</div>
+					<div class="card m-b-20">
+						<div class="card-header">
+							<strong>
+								Porcentaje para las tarjetas
+							</strong>
+						</div>
+						<div class="card-body">
+							<div class="form-group">
+								<label for="">Porcentaje actual</label>
+								<input type="number"
+										min="0"
+										max="100"
+										v-model="percentage_card"
+										class="form-control">
+								<small class="form-text text-muted">
+									Porcentaje que se le aumentara al total de la venta si se vende con tarjeta
+								</small>
+							</div>
+							<div class="form-group">
+								<button @click="savePercentageCard"
+										class="btn btn-primary float-right">
+                            		<i class="icon-refresh"></i>
+									Actualizar porcentaje
+								</button>
+							</div>
+						</div>
+					</div>
 					<div class="card">
 						<div class="card-header">
 							<strong>
@@ -87,6 +114,7 @@ export default {
 	data() {
 		return {
 			company_name: '',
+			percentage_card: 0,
 			password: '',
 			new_password: '',
 			confirmed_password: '',
@@ -107,6 +135,21 @@ export default {
 			.then(res => {
 				toastr.success('Nombre del comercio actualizado correctamente')
 				// this.getCompanyName()
+			})
+		},
+		getPercentageCard() {
+			axios.get('get-percentage-card')
+			.then(res => {
+				this.percentage_card = res.data
+			})
+			.catch(err => {
+				console.log(err)
+			})
+		},
+		savePercentageCard() {
+			axios.get('set-percentage-card/'+this.percentage_card)
+			.then(res => {
+				toastr.success('Porcentaje para las tarjetas actualizado correctamente')
 			})
 		},
 		updatePassword() {
@@ -139,6 +182,7 @@ export default {
 	},
 	created() {
 		this.getCompanyName()
+		this.getPercentageCard()
 	}
 }
 </script>

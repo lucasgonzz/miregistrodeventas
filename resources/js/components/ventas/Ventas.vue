@@ -109,6 +109,23 @@
 										<button type="button" class="btn btn-secondary">
 											Total: {{ price(total) }}
 										</button>
+										<button @click="sales_with_card"
+												type="button" 
+												class="btn btn-primary">
+											<span v-show="showing_only_with_card_sales">
+												<i class="icon-undo"></i>
+												Todas las ventas
+											</span>
+											<span v-show="!showing_only_with_card_sales">
+												<i class="icon-credit-card p-r-5"></i>
+												<span v-show="cant_card_sales() > 0">
+													{{ cant_card_sales() }} Tarjetas
+												</span>
+												<span v-show="cant_card_sales() == 0">
+													Sin tarjetas
+												</span>
+											</span>
+										</button>
 									</div>
 								</div>
 								<!-- <div class="form-group">
@@ -148,7 +165,7 @@
 			        		</strong>
 			        	</div>
 			        </div>
-					<<!-- div class="row" v-show="is_loading">
+					<!-- <div class="row" v-show="is_loading">
 						<div class="col">
 							<div class="spinner-listado">
 								<div class="spinner">
@@ -239,6 +256,8 @@
 													class="btn btn-danger btn-sm">
 												<i class="icon-trash-3"></i>
 											</button>
+											<i v-show="sale.percentage_card != null"
+												class="icon-credit-card text-primary card-icon"></i>
 										</td>
 									</tr>
 								</tbody>
@@ -284,6 +303,8 @@ export default {
 			selected_sales: [],
 			order_sales: 'latest',
 			sales: [],
+			previus_sales: [],
+			showing_only_with_card_sales: false,
 			sale: {},
 			total: 0,
 			total_articles: 0,
@@ -354,6 +375,17 @@ export default {
 			})
 			return cantidad_unidades
 		},
+		cant_card_sales() {
+			var cantidad_sales = 0
+			this.sales.forEach(sale => {
+				if (sale.percentage_card === null) {
+
+				} else {
+					cantidad_sales++
+				}
+			})
+			return cantidad_sales
+		},
 		getCost(sale) {
 			var cost = 0
 			sale.articles.forEach(article => {
@@ -366,11 +398,6 @@ export default {
 						cost += parseFloat(article.cost) * article.pivot.amount / 1000
 					}				
 				}
-				// if (this.actual_prices) {
-				// 	cost += parseFloat(article.cost) * article.pivot.amount
-				// } else {
-				// 	cost += parseFloat(article.pivot.cost) * article.pivot.amount
-				// }
 			})
 			return numeral(cost).format('$0,0.00')
 		},
@@ -531,6 +558,29 @@ export default {
 			})
 		},
 
+		// Metodos del titulo
+
+		sales_with_card() {
+			if (!this.showing_only_with_card_sales) {
+				var sales = []
+				this.sales.forEach(sale => {
+					console.log('entroasdsadsd')
+					if (sale.percentage_card === null) {
+
+					} else {
+						console.log('entro')
+						sales.push(sale)
+					}
+				})
+				this.showing_only_with_card_sales = true
+				this.previus_sales = this.sales
+				this.sales = sales
+			} else {
+				this.showing_only_with_card_sales = false
+				this.sales = this.previus_sales
+			}
+		},
+
 		// Resumen de ventas
 		showResumen() {
 			$('#sales-summary').modal('show')
@@ -596,9 +646,10 @@ export default {
 		},
 
 		getSales() {
+			this.is_loading = true
 			axios.get('sales')
 			.then(res => {
-				console.log(res.data)
+				this.is_loading = false
 				this.sales = res.data
 			})
 			.catch(err => {
@@ -622,13 +673,14 @@ export default {
 	}
 }
 </script>
-<style>
+<style scoped>
 .col-rigth {
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-end;
 }
-td {
-	vertical-align: middle !important;	
+
+.card-icon {
+	font-size: 1.5rem
 }
 </style>

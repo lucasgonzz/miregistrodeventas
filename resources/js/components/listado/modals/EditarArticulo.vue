@@ -179,7 +179,11 @@
 						data-dismiss="modal">
 					Cancelar
 				</button>
-				<button type="button" class="btn btn-primary focus-red" v-on:click="updateArticle">Actualizar</button>
+				<button type="button" class="btn btn-primary focus-red" v-on:click="updateArticle">
+					<span v-show="actualizando"
+							class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>		
+					Actualizar
+				</button>
 			</div>
 		</div>
 	</div>
@@ -187,7 +191,7 @@
 </template>
 <script>
 export default {
-	props: ['article', 'rol', 'providers', 'can_see_cost'],	
+	props: ['article', 'rol', 'providers', 'can_see_cost', 'actualizando'],	
 	methods: {
 		date(date) {
 			return moment(date).format('DD/MM/YY')
@@ -204,3 +208,8 @@ export default {
 	}
 }
 </script>
+<style scoped>
+.spinner-border-sm {
+	margin-bottom: 2px;
+}
+</style>

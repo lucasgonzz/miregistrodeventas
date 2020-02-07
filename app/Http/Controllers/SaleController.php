@@ -65,15 +65,18 @@ class SaleController extends Controller
         }
         $sales = [];
         $date = $carbon->subDays($index);
+        // echo "primera fecha: ".$date;
 
         // Se obtine la fecha de la primer compra para saber cuando dejar de buscar
         $limit_sale = Sale::where('user_id', $this->getArticleOwnerId())
                             ->orderBy('id', 'ASC')
                             ->first();
         $limit_date = $limit_sale->created_at;
+        // echo " fecha limite: ".$limit_date;
 
         while (count($sales) == 0 && $date >= $limit_date) {
-            if ($user->hasRole('provider')) {
+            
+        if ($user->hasRole('provider')) {
                 $sales = Sale::where('user_id', $this->getArticleOwnerId())
                                     ->whereDate('created_at', $date)
                                     ->orderBy('id', 'DESC')
@@ -90,10 +93,12 @@ class SaleController extends Controller
                                     ->get();
             }
             if (count($sales) == 0) {
-                if ($direction == 'previus') {
-                    $index++;
-                } else {
-                    $index--;
+                if ($index != 0) {
+                    if ($direction == 'previus') {
+                        $index++;
+                    } else {
+                        $index--;
+                    }
                 }
                 if (is_null($only_one_date)) {
                     $carbon = Carbon::now('America/Argentina/Buenos_Aires');
@@ -101,7 +106,6 @@ class SaleController extends Controller
                     $carbon = Carbon::create($only_one_date);
                 }
                 if ($index == 0) {
-                    dd('entro');
                     $date = date('Y-m-d');
                 } else {
                     $date = $carbon->subDays($index);
@@ -194,7 +198,7 @@ class SaleController extends Controller
     }
 
     function store(Request $request) {
-        // return $request->articles[0]['measurement'];
+        $with_card = (bool)$request->with_card;
         $user = Auth()->user();
         $last_sale = Sale::where('user_id', $this->getArticleOwnerId())
                             ->orderby('created_at','DESC')
@@ -204,11 +208,13 @@ class SaleController extends Controller
             	$sale = Sale::create([
             		'user_id' => $this->getArticleOwnerId(),
                     'num_sale' => 1,
+                    'percentage_card' => $with_card ? $user->percentage_card : null,
             		'client_id' => $request->client_id
             	]);
             } else {
                 $sale = Sale::create([
                     'user_id' => $this->getArticleOwnerId(),
+                    'percentage_card' => $with_card ? $user->percentage_card : null,
                     'num_sale' => 1,
                 ]);
             }
@@ -219,6 +225,7 @@ class SaleController extends Controller
                 $sale = Sale::create([
                     'user_id' => $this->getArticleOwnerId(),
                     'num_sale' => $num_sale,
+                    'percentage_card' => $with_card ? $user->percentage_card : null,
                     'client_id' => $request->client_id
                 ]);
             } else {
@@ -226,6 +233,7 @@ class SaleController extends Controller
                 $num_sale++;
                 $sale = Sale::create([
                     'user_id' => $this->getArticleOwnerId(),
+                    'percentage_card' => $with_card ? $user->percentage_card : null,
                     'num_sale' => $num_sale,
                 ]);
             }

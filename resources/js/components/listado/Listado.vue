@@ -5,6 +5,7 @@
 						:article="article" 
 						:can_see_cost="user.can_see_cost"
 						:providers="providers" 
+						:actualizando="actualizando"
 						@updateArticle="updateArticle"
 						@clearArticle="clearArticle"></editar-articulo>
 		<add-marker @deleteMarkerGroup="deleteMarkerGroup"
@@ -435,6 +436,7 @@ export default {
 			},
 
 			articles: [],
+			actualizando: false,
 			article: {'id': 0, 'bar_code': '','name': '', 'cost': 0, 'price': 0, 'stock': 0, 'new_stock': 0, 'providers': [], 'created_at': '', 'updated_at': '', 'creado': '', 'actualizado': '', 'act_fecha': true},
 			is_loading: false,
 			all_selected_articles: false,
@@ -659,10 +661,12 @@ export default {
 			* Reinicia las propiedades del articulo
 		----------------------------------------------------------------------------------- */
 		updateArticle(article) {
+			this.actualizando = true
 			axios.put('articles/'+this.article.id, {
 				article: article
 			})
 			.then( res => {
+				this.actualizando = false
 				this.updateArticlesList()
 				$('#listado-edit-article').modal('hide')
 				toastr.success(`${article.name} se actualizo con exito`)

@@ -19,8 +19,8 @@ $factory->define(Article::class, function (Faker $faker) {
     return [
     	'bar_code' => $b_c == 1 ? $bar_code : null,
         'name' => $faker->name,
-        'cost' => 50,
-        'price' => 100,
+        'cost' => 1000,
+        'price' => 10000,
         // 'cost' => $cost,
         // 'price' => rand($cost, $cost*2),
         'previus_price' => 0,

@@ -21,6 +21,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password', 128);
             $table->integer('belongs_to')->nullable()->unsigned();
+            $table->decimal('percentage_card')->nullable();
             $table->rememberToken();
 
             $table->foreign('belongs_to')->references('id')->on('users');

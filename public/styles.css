@@ -170,3 +170,6 @@
 .icon-sign-out:before {
   content: "\6f";
 }
+.icon-credit-card:before {
+  content: "\75";
+}

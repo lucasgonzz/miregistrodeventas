@@ -9,6 +9,7 @@
 					:rol="rol"
 					:article="article"
 					:previusNext="previus_next"
+					:actualizando="actualizando"
 					@previus="previus"
 					@next="next"
 					@clearArticle="clearArticle"
@@ -51,7 +52,7 @@
 								v-model="article.bar_code"
 								placeholder="Codigo de barras">
 
-							<a href="codigos-de-barra" class="btn btn-link" v-show="article.bar_code == ''">
+							<a href="codigos-de-barra" class="btn btn-secondary btn-sm m-t-10" v-show="article.bar_code == ''">
 								¿No tiene codigo de barras? Crea uno aca
 							</a>
 						</div>
@@ -80,7 +81,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="row m-b-5">
+						<div class="row">
 							<div :class="article.is_uncontable ? 'col-5' : 'col'">
 								<label for="cost">Costo</label>
 								<input type="number" 
@@ -120,7 +121,7 @@
 
 								<a @click.prevent="showPorcentageForPrice"
 									href="#" 
-									class="btn btn-link" v-show="porcentage_for_price == 0">
+									class="btn btn-secondary btn-sm m-t-10" v-show="porcentage_for_price == 0">
 									Usar un porcentaje fijo
 								</a>
 								<a @click.prevent="stopPorcentageForPrice"
@@ -152,7 +153,7 @@
 								Sí el proximo artículo también es del {{ article.created_at }} se recordara
 							</small>
 						</div>
-						<div class="row m-b-15" v-if="rol == 'commerce'">
+						<div class="row" v-if="rol == 'commerce'">
 							<div class="col">
 								<div class="form-group">
 									<label class="label-block" for="providers">Proveedor</label>
@@ -181,8 +182,11 @@
 										Sí el proximo artículo es de/los mismos proveedores se recordara
 									</small>
 								</div>
-								<a href="#" @click.prevent="showProviders">
-									Proveedores (agregar, eliminar)...
+								<a href="#" 
+									class="btn btn-secondary btn-sm m-t-10"
+									@click.prevent="showProviders">
+									<i class="icon-user"></i>
+									Proveedores
 								</a>
 							</div>
 							<div class="col">
@@ -225,7 +229,7 @@
 						<div class="row m-0">
 							<div class="col-4 p-0">
 								<button @click.prevent="showPrintTickets" 
-										class="btn btn-block btn-left btn-info m-0">
+										class="btn btn-block btn-left btn-link m-0">
 									<i class="icon-tag"></i>
 									Tickets ({{ articles_id_to_print.length }})
 								</button>
@@ -240,7 +244,10 @@
 							<div class="col-4 p-0">
 								<button @click.prevent="saveArticle"
 										class="btn btn-block btn-right btn-success m-0">
-									<i class="icon-check"></i>
+									<i v-show="!guardando"
+										class="icon-check"></i>
+									<span v-show="guardando"
+											class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
 									Guardar
 								</button>
 							</div>
@@ -280,6 +287,8 @@ export default {
 				act_fecha: true,
 				created_at: new Date().toISOString().slice(0,10),
 			},
+			guardando: false,
+			actualizando: false,
 			articles: [],
 			porcentage_for_price: 0,
 			articles_id_to_print: [],
@@ -491,10 +500,12 @@ export default {
 		saveArticle() {
 			var ok = this.validate()
 			if ( ok ) {
+				this.guardando = true
 				axios.post('articles', {
 					article: this.article
 				})
 				.then( res => {
+					this.guardando = false
 					var article = res.data
 					if (this.article.bar_code != '') {
 						this.bar_codes.push(this.article.bar_code)
@@ -513,10 +524,12 @@ export default {
 			}
 		},
 		updateArticle() {
+			this.actualizando = true
 			axios.put('articles/'+this.article.id, {
 				article: this.article
 			})
 			.then( res => {
+				this.actualizando = false
 				var article = res.data
 				this.articles.push(article)
 				this.articles_id_to_print.push(article.id)
@@ -649,5 +662,11 @@ export default {
 .input-uncontable-stock {
 	width: 60%;
 	display: inline-block;
+}
+.form-group {
+	margin-bottom: .5rem;
+}
+.spinner-border-sm {
+	margin-bottom: 3px;
 }
 </style>

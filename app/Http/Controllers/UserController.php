@@ -25,7 +25,8 @@ class UserController extends Controller
             'name' => ucwords($request->employee['name']),
     		'company_name' => $user->company_name,
     		'password' => Hash::make($request->employee['password']),
-    		'belongs_to' => $user->id,
+            'belongs_to' => $user->id,
+    		'percentage_card' => $user->percentage_card,
     	]);
 
     	if ($user->hasRole('provider')) {
@@ -49,6 +50,25 @@ class UserController extends Controller
         $user = User::find($user_id);
         $user->company_name = $company_name;
         $user->save();
+        foreach ($user->employees as $employee) {
+            $employee->company_name = $company_name;
+            $employee->save();
+        }
+    }
+
+    function getPercentageCard() {
+        return Auth()->user()->percentage_card;
+    }
+
+    function setPercentageCard($percentage_card) {
+        $user_id = Auth()->user()->id;
+        $user = User::find($user_id);
+        $user->percentage_card = $percentage_card;
+        $user->save();
+        foreach ($user->employees as $employee) {
+            $employee->percentage_card = $percentage_card;
+            $employee->save();
+        }
     }
 
     public function password() {

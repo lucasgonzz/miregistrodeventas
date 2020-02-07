@@ -220,5 +220,7 @@ Route::group(['middleware' => ['has.role:commerce']], function () {
 	Route::get('/get-company-name', 'UserController@getCompanyName');
 	Route::get('/set-company-name/{company_name}', 
 				'UserController@setCompanyName');
+	Route::get('/get-percentage-card', 'UserController@getPercentageCard');
+	Route::get('/set-percentage-card/{percetane_card}', 'UserController@setPercentageCard');
 	Route::post('/user/password', 'UserController@update_password');
 

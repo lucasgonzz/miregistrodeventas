@@ -18,6 +18,7 @@ class CreateSalesTable extends Migration
 
             $table->integer('user_id')->unsigned();
             $table->integer('num_sale');
+            $table->decimal('percentage_card')->nullable();
             $table->integer('client_id')->nullable()->unsigned();
 
             $table->foreign('user_id')

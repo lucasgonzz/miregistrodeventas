@@ -11,6 +11,7 @@ class Sale extends Model
     	'user_id',
     	'client_id',
         'num_sale',
+        'percentage_card',
     ];
 
     public function articles() {

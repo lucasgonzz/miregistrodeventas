@@ -7,7 +7,11 @@
 					<div class="col-5">	
 						<div class="input-group mb-2 mr-sm-2">
 							<div class="input-group-prepend">
-							  	<div class="input-group-text">Codigo de barras</div>
+							  	<div class="input-group-text">
+									<span v-show="loading_bar_code"
+											class="spinner-border spinner-border-sm m-r-5" role="status" aria-hidden="true"></span>
+							  		Codigo de barras
+							  	</div>
 							</div>
 							<input type="text" 
 									v-model="article.bar_code"
@@ -21,7 +25,11 @@
 					<div class="col-5">
 						<div class="input-group mb-2 mr-sm-2">
 							<div class="input-group-prepend">
-							  	<div class="input-group-text">Nombre</div>
+							  	<div class="input-group-text">
+									<span v-show="loading_name"
+											class="spinner-border spinner-border-sm m-r-5" role="status" aria-hidden="true"></span>
+							  		Nombre
+							  	</div>
 							</div>
 							<input type="text" 
 									v-model="article.name"
@@ -47,7 +55,11 @@
 						<button type="submit"
 								@click="vender"
 								:class="articles.length ? '' : 'disabled'" 
-								class="btn btn-primary btn-block mb-2">Vender</button>
+								class="btn btn-primary btn-block mb-2">
+							<span v-show="vendiendo"
+									class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+							Vender
+						</button>
 					</div>
 				</div>
 			</div>
@@ -111,12 +123,26 @@
 						</div>
 					</div>
 				</div>
-				<div class="row">
-					<div class="col">
-						<h5 class="card-title">Total: {{ price(total) }}</h5>
+				<div class="row m-b-5">
+					<div class="col-4">
+						<h5 class="m-b-0">Total: {{ price(total) }}</h5>
 						<p class="card-text">
 							{{ cantidad_articulos }} artículos, {{ cantidad_unidades }} unidades
 						</p>
+					</div>
+					<div class="col" v-show="percentage_card != 1">
+						<div class="form-group">
+		                    <div class="custom-control custom-checkbox my-1 mr-sm-2">
+		                        <input class="custom-control-input c-p" 
+		                            v-model="with_card" 
+		                            type="checkbox" 
+		                            id="with_card">
+		                        <label class="custom-control-label c-p" 
+		                            for="with_card">
+		                            Con tarjeta
+		                        </label>
+		                    </div>
+						</div>
 					</div>
 				</div>
 				<div class="row">
@@ -232,11 +258,16 @@ export default {
 				name: '',
 				enteredByName: false,
 			},
+			loading_bar_code: false,
+			loading_name: false,
+			vendiendo: false,
 			articles: [],
 
 			total: 0,
 			cantidad_articulos: 0,
 			cantidad_unidades: 0,
+			with_card: false,
+			percentage_card: parseFloat('1.' + document.head.querySelector('meta[name="percentage-card"]').content), 
 			possible_articles: [],
 			available_articles: [],
 			names: [],
@@ -256,6 +287,11 @@ export default {
 		this.getMarkerGroups()
 		this.getAvailableArticles()
 		$('#bar-code').focus()
+	},
+	watch: {
+		with_card() {
+			this.calculateTotal()
+		},
 	},
 	methods: {
 		price(p) {
@@ -285,8 +321,10 @@ export default {
 					if (article.bar_code == this.article.bar_code || article.name == this.article.name) {
 						disponible = true
 						if (article.bar_code === null) {
+							this.loading_name = true
 							axios.get('articles/get-by-name/'+article.name)
 							.then(res => {
+								this.loading_name = false
 								var article = res.data
 								article.amount = 1
 								this.possible_articles = []
@@ -304,8 +342,10 @@ export default {
 								console.log(err)
 							})
 						} else {
+							this.loading_bar_code = true
 							axios.get('articles/get-by-bar-code/'+article.bar_code)
 							.then(res => {
+								this.loading_bar_code = false
 								var article = res.data
 								article.amount = 1
 								this.possible_articles = []
@@ -360,6 +400,10 @@ export default {
 				}
 			})
 
+			if (this.with_card) {
+				this.total = this.total * this.percentage_card
+			}
+
 			this.resetInputs()
 		},
 		resetInputs() {
@@ -408,6 +452,7 @@ export default {
 				this.available_articles = res.data
 			})
 			.catch(err => {
+				this.getAvailableArticles()
 				console.log(err)
 			})
 		},
@@ -485,16 +530,20 @@ export default {
 
 		vender() {
 			if (this.articles.length > 0) {
+				this.vendiendo = true
 				axios.post('sales', {
 					articles: this.articles,
+					with_card: this.with_card,
 				})
 				.then(res => {
+					this.vendiendo = false
 					// console.log('aca esta: ')
-					// console.log(res.data)
+					console.log(res.data)
 					this.articles = []	
 					this.total = 0
 					this.cantidad_articulos = 0
 					this.cantidad_unidades = 0
+					this.with_card = false
 					toastr.success('Venta realizada correctamente')
 					$('#bar-code').focus()
 				})
@@ -548,5 +597,8 @@ export default {
 }
 .dropdown {
 	display: inline-block;
+}
+.spinner-border-sm {
+	margin-bottom: 1px;
 }
 </style>

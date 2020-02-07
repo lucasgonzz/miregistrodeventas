@@ -150,6 +150,8 @@
 				<button type="button" 
 						class="btn btn-primary focus-red" 
 						@click="updateArticle">
+					<span v-show="actualizando"
+							class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
 					Actualizar
 				</button>
 			</div>
@@ -160,7 +162,7 @@
 </template>
 <script>
 export default {
-	props: ['article', 'rol', 'providers', 'previusNext'],	
+	props: ['article', 'rol', 'providers', 'previusNext', 'actualizando'],
 	methods: {
 		date(date) {
 			return moment(date).format('DD/MM/YY')
@@ -197,3 +199,8 @@ export default {
 	}
 }
 </script>
+<style scoped>
+.spinner-border-sm {
+	margin-bottom: 2px;
+}
+</style>

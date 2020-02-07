@@ -16120,6 +16120,10 @@ a.text-dark:focus {
   margin: 0px;
 }
 
+td {
+  vertical-align: middle !important;
+}
+
 .navbar .nav-link {
   font-size: 1.2rem;
   color: rgba(52, 144, 220, 0.7) !important;
@@ -16141,6 +16145,10 @@ a.text-dark:focus {
   padding: 0.7rem 0.75rem;
   font-size: 1rem;
   font-weight: bolder;
+}
+
+.btn-left:hover {
+  text-decoration: none;
 }
 
 .btn-center {

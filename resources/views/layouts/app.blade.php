@@ -7,6 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="user" content="{{ Auth()->user() }}">
+    <meta name="percentage-card" content="{{ Auth()->user()->percentage_card }}">
     <meta name="user-can-see-costs" 
             content="{{ Auth()->user()->hasPermissionTo('article.index.cost') }}">
     <meta name="asset" content="{{ asset('') }}">
