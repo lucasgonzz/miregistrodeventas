@@ -3731,6 +3731,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['providers'],
   data: function data() {
@@ -6556,11 +6564,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -6638,12 +6641,27 @@ __webpack_require__.r(__webpack_exports__);
           if (article.bar_code == _this2.article.bar_code || article.name == _this2.article.name) {
             disponible = true;
 
-            if (article.bar_code === null) {
+            if (_this2.article.bar_code != '') {
+              _this2.loading_bar_code = true;
+            } else {
               _this2.loading_name = true;
+            }
+
+            if (article.bar_code === null) {
               axios.get('articles/get-by-name/' + article.name).then(function (res) {
-                _this2.loading_name = false;
+                if (_this2.article.bar_code != '') {
+                  _this2.loading_bar_code = false;
+                } else {
+                  _this2.loading_name = false;
+                }
+
                 var article = res.data;
                 article.amount = 1;
+
+                if (article.stock != null) {
+                  article.stock--;
+                }
+
                 _this2.possible_articles = [];
 
                 _this2.articles.push(article);
@@ -6660,11 +6678,20 @@ __webpack_require__.r(__webpack_exports__);
                 console.log(err);
               });
             } else {
-              _this2.loading_bar_code = true;
               axios.get('articles/get-by-bar-code/' + article.bar_code).then(function (res) {
-                _this2.loading_bar_code = false;
+                if (_this2.article.bar_code != '') {
+                  _this2.loading_bar_code = false;
+                } else {
+                  _this2.loading_name = false;
+                }
+
                 var article = res.data;
                 article.amount = 1;
+
+                if (article.stock != null) {
+                  article.stock--;
+                }
+
                 _this2.possible_articles = [];
 
                 _this2.articles.push(article);
@@ -6706,7 +6733,6 @@ __webpack_require__.r(__webpack_exports__);
         }
 
         if (article.uncontable == 0) {
-          article.stock -= article.amount;
           _this3.total += price * article.amount;
           _this3.cantidad_unidades += article.amount;
         } else {
@@ -6840,11 +6866,37 @@ __webpack_require__.r(__webpack_exports__);
     },
     up: function up(article) {
       article.amount++;
-      this.calculateTotal(); // this.addTotal(article, true)
+
+      if (article.stock != null) {
+        if (article.uncontable == 0) {
+          article.stock--;
+        } else {
+          if (article.measurement == article.measurement_original) {
+            article.stock -= article.amount;
+          } else {
+            article.stock -= article.amount / 1000;
+          }
+        }
+      }
+
+      this.calculateTotal();
     },
     down: function down(article) {
       if (article.amount > 1) {
         article.amount--;
+
+        if (article.stock != null) {
+          if (article.uncontable == 0) {
+            article.stock++;
+          } else {
+            if (article.measurement == article.measurement_original) {
+              article.stock += article.amount;
+            } else {
+              article.stock += article.amount / 1000;
+            }
+          }
+        }
+
         this.calculateTotal();
       } else {
         toastr.error('No se pueden restar mas unidades');
@@ -7403,7 +7455,7 @@ __webpack_require__.r(__webpack_exports__);
               axios.get('articles/get-by-name/' + article.name).then(function (res) {
                 _this5.loading_cantidad = false;
                 var article = res.data;
-                article.amount = 1;
+                article.amount = parseInt(_this5.article.amount);
                 _this5.possible_articles = [];
 
                 _this5.articles.push(article);
@@ -7424,7 +7476,7 @@ __webpack_require__.r(__webpack_exports__);
               axios.get('articles/get-by-bar-code/' + article.bar_code).then(function (res) {
                 _this5.loading_cantidad = false;
                 var article = res.data;
-                article.amount = 1;
+                article.amount = parseInt(_this5.article.amount);
                 _this5.possible_articles = [];
 
                 _this5.articles.push(article);
@@ -7504,6 +7556,9 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     removeArticle: function removeArticle(article) {
+      this.total -= Number(article.price) * article.amount;
+      this.cantidad_articulos--;
+      this.cantidad_unidades -= article.amount;
       var i = this.articles.indexOf(article);
       this.articles.splice(i, 1);
     },
@@ -13745,7 +13800,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.col[data-v-005d53d4] {\r\n\tpadding: 100px;\n}\t\r\n", ""]);
+exports.push([module.i, "\n.col[data-v-005d53d4] {\r\n\tpadding: 200px;\n}\t\r\n", ""]);
 
 // exports
 
@@ -68403,137 +68458,141 @@ var render = function() {
       }
     },
     [
-      _c("div", { staticClass: "modal-dialog", attrs: { role: "document" } }, [
-        _c("div", { staticClass: "modal-content" }, [
-          _vm._m(0),
-          _vm._v(" "),
-          _c("div", { staticClass: "modal-body" }, [
-            _c("div", { staticClass: "row" }, [
-              _c("div", { staticClass: "col" }, [
-                _c("div", { staticClass: "card" }, [
-                  _c("div", { staticClass: "card-header" }, [
-                    _vm._v(
-                      "\r\n\t\t\t\t\t\t\t\tAgregar un nuevo proveedor\r\n\t\t\t\t\t\t\t"
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "card-body" }, [
-                    _c("div", { staticClass: "form-group" }, [
-                      _c("label", { attrs: { for: "cost" } }, [
-                        _vm._v("Nombre del nuevo proveedor")
-                      ]),
-                      _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.provider.name,
-                            expression: "provider.name"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: {
-                          type: "text",
-                          name: "cost",
-                          placeholder: "Nombre del nuevo proveedor"
-                        },
-                        domProps: { value: _vm.provider.name },
-                        on: {
-                          keyup: function($event) {
-                            if (
-                              !$event.type.indexOf("key") &&
-                              _vm._k(
-                                $event.keyCode,
-                                "enter",
-                                13,
-                                $event.key,
-                                "Enter"
-                              )
-                            ) {
-                              return null
+      _c(
+        "div",
+        {
+          staticClass: "modal-dialog modal-dialog-scrollable",
+          attrs: { role: "document" }
+        },
+        [
+          _c("div", { staticClass: "modal-content" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c("div", { staticClass: "modal-body" }, [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col" }, [
+                  _c("div", { staticClass: "card" }, [
+                    _vm._m(1),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "card-body" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "cost" } }, [
+                          _vm._v("Nombre del nuevo proveedor")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.provider.name,
+                              expression: "provider.name"
                             }
-                            return _vm.saveProvider($event)
+                          ],
+                          staticClass: "form-control",
+                          attrs: {
+                            type: "text",
+                            name: "cost",
+                            placeholder: "Nombre del nuevo proveedor"
                           },
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
+                          domProps: { value: _vm.provider.name },
+                          on: {
+                            keyup: function($event) {
+                              if (
+                                !$event.type.indexOf("key") &&
+                                _vm._k(
+                                  $event.keyCode,
+                                  "enter",
+                                  13,
+                                  $event.key,
+                                  "Enter"
+                                )
+                              ) {
+                                return null
+                              }
+                              return _vm.saveProvider($event)
+                            },
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.provider,
+                                "name",
+                                $event.target.value
+                              )
                             }
-                            _vm.$set(_vm.provider, "name", $event.target.value)
                           }
-                        }
-                      })
+                        })
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "card-footer" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary focus-red",
+                          attrs: { type: "button" },
+                          on: { click: _vm.saveProvider }
+                        },
+                        [
+                          _vm._v(
+                            "\r\n\t\t\t\t\t\t\t\t\tGuardar proveedor\r\n\t\t\t\t\t\t\t\t"
+                          )
+                        ]
+                      )
                     ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "card-footer" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-primary focus-red",
-                        attrs: { type: "button" },
-                        on: { click: _vm.saveProvider }
-                      },
-                      [
-                        _vm._v(
-                          "\r\n\t\t\t\t\t\t\t\t\tGuardar proveedor\r\n\t\t\t\t\t\t\t\t"
-                        )
-                      ]
-                    )
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row m-t-10" }, [
+                _c("div", { staticClass: "col" }, [
+                  _c("div", { staticClass: "card" }, [
+                    _vm._m(2),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "card-body" }, [
+                      _c(
+                        "ul",
+                        { staticClass: "list-group" },
+                        _vm._l(_vm.providers, function(provider) {
+                          return _c("li", { staticClass: "list-group-item" }, [
+                            _vm._v(
+                              "\r\n\t\t\t\t\t\t\t\t\t\t" +
+                                _vm._s(provider.name) +
+                                "\r\n\t\t\t\t\t\t\t\t\t\t"
+                            ),
+                            _c(
+                              "button",
+                              {
+                                staticClass:
+                                  "btn btn-danger btn-sm float-right",
+                                on: {
+                                  click: function($event) {
+                                    return _vm.deleteProvider(provider)
+                                  }
+                                }
+                              },
+                              [
+                                _vm._v(
+                                  "\r\n\t\t\t\t\t\t\t\t\t\t\tEliminar\r\n\t\t\t\t\t\t\t\t\t\t"
+                                )
+                              ]
+                            )
+                          ])
+                        }),
+                        0
+                      )
+                    ])
                   ])
                 ])
               ])
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "row m-t-10" }, [
-              _c("div", { staticClass: "col" }, [
-                _c("div", { staticClass: "card" }, [
-                  _c("div", { staticClass: "card-header" }, [
-                    _vm._v(
-                      "\r\n\t\t\t\t\t\t\t\tMis proveedores\r\n\t\t\t\t\t\t\t"
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "card-body" }, [
-                    _c(
-                      "ul",
-                      { staticClass: "list-group" },
-                      _vm._l(_vm.providers, function(provider) {
-                        return _c("li", { staticClass: "list-group-item" }, [
-                          _vm._v(
-                            "\r\n\t\t\t\t\t\t\t\t\t\t" +
-                              _vm._s(provider.name) +
-                              "\r\n\t\t\t\t\t\t\t\t\t\t"
-                          ),
-                          _c(
-                            "button",
-                            {
-                              staticClass: "btn btn-danger btn-sm float-right",
-                              on: {
-                                click: function($event) {
-                                  return _vm.deleteProvider(provider)
-                                }
-                              }
-                            },
-                            [
-                              _vm._v(
-                                "\r\n\t\t\t\t\t\t\t\t\t\t\tEliminar\r\n\t\t\t\t\t\t\t\t\t\t"
-                              )
-                            ]
-                          )
-                        ])
-                      }),
-                      0
-                    )
-                  ])
-                ])
-              ])
-            ])
-          ]),
-          _vm._v(" "),
-          _vm._m(1)
-        ])
-      ])
+            _vm._m(3)
+          ])
+        ]
+      )
     ]
   )
 }
@@ -68543,7 +68602,9 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "modal-header" }, [
-      _c("h5", { staticClass: "modal-title" }, [_vm._v("Proveedores")]),
+      _c("h5", { staticClass: "modal-title" }, [
+        _c("strong", [_vm._v("\r\n\t\t\t\t\t\tProveedores\r\n\t\t\t\t\t")])
+      ]),
       _vm._v(" "),
       _c(
         "button",
@@ -68557,6 +68618,28 @@ var staticRenderFns = [
         },
         [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
       )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header" }, [
+      _c("strong", [
+        _vm._v(
+          "\r\n\t\t\t\t\t\t\t\t\tAgregar un nuevo proveedor\r\n\t\t\t\t\t\t\t\t"
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header" }, [
+      _c("strong", [
+        _vm._v("\r\n\t\t\t\t\t\t\t\t\tMis proveedores\r\n\t\t\t\t\t\t\t\t")
+      ])
     ])
   },
   function() {
@@ -75347,39 +75430,25 @@ var render = function() {
                       _c("td", [_vm._v(_vm._s(article.name))]),
                       _vm._v(" "),
                       article.stock
-                        ? _c(
-                            "td",
-                            [
-                              article.stock
-                                ? [
-                                    _vm._v(
-                                      "\r\n\t\t\t\t\t\t\t\t\t\t\tSin datos\t\t\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t\t\t\t\t\t\t"
-                                    )
-                                  ]
-                                : [
-                                    article.uncontable == 1
-                                      ? _c("span", [
-                                          _vm._v(
-                                            "\r\n\t\t\t\t\t\t\t\t\t\t\t\t" +
-                                              _vm._s(article.stock) +
-                                              " " +
-                                              _vm._s(
-                                                article.measurement_original
-                                              ) +
-                                              "s\r\n\t\t\t\t\t\t\t\t\t\t\t"
-                                          )
-                                        ])
-                                      : _c("span", [
-                                          _vm._v(
-                                            "\r\n\t\t\t\t\t\t\t\t\t\t\t\t" +
-                                              _vm._s(article.stock) +
-                                              " \r\n\t\t\t\t\t\t\t\t\t\t\t"
-                                          )
-                                        ])
-                                  ]
-                            ],
-                            2
-                          )
+                        ? _c("td", [
+                            article.uncontable == 1
+                              ? _c("span", [
+                                  _vm._v(
+                                    "\r\n\t\t\t\t\t\t\t\t\t\t\t" +
+                                      _vm._s(article.stock) +
+                                      " " +
+                                      _vm._s(article.measurement_original) +
+                                      "s\r\n\t\t\t\t\t\t\t\t\t\t"
+                                  )
+                                ])
+                              : _c("span", [
+                                  _vm._v(
+                                    "\r\n\t\t\t\t\t\t\t\t\t\t\t" +
+                                      _vm._s(article.stock) +
+                                      " \r\n\t\t\t\t\t\t\t\t\t\t"
+                                  )
+                                ])
+                          ])
                         : _c("td", [
                             _vm._v(
                               "\r\n\t\t\t\t\t\t\t\t\t\tsin datos\r\n\t\t\t\t\t\t\t\t\t"

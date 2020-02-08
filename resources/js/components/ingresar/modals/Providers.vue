@@ -1,9 +1,13 @@
 <template>
 <div class="modal fade" id="providers" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog" role="document">
+	<div class="modal-dialog modal-dialog-scrollable" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">Proveedores</h5>
+				<h5 class="modal-title">
+					<strong>
+						Proveedores
+					</strong>
+				</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -13,7 +17,9 @@
 					<div class="col">
 						<div class="card">
 							<div class="card-header">
-								Agregar un nuevo proveedor
+								<strong>
+									Agregar un nuevo proveedor
+								</strong>
 							</div>
 							<div class="card-body">
 								<div class="form-group">
@@ -39,7 +45,9 @@
 					<div class="col">
 						<div class="card">
 							<div class="card-header">
-								Mis proveedores
+								<strong>
+									Mis proveedores
+								</strong>
 							</div>
 							<div class="card-body">
 								<ul class="list-group">

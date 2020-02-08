@@ -492,7 +492,7 @@ export default {
 							.then(res => {
 								this.loading_cantidad = false
 								var article = res.data
-								article.amount = 1
+								article.amount = parseInt(this.article.amount)
 								this.possible_articles = []
 								this.articles.push(article)
 								if (article.uncontable == 1) {
@@ -513,7 +513,7 @@ export default {
 							.then(res => {
 								this.loading_cantidad = false
 								var article = res.data
-								article.amount = 1
+								article.amount = parseInt(this.article.amount)
 								this.possible_articles = []
 								this.articles.push(article)
 								if (article.uncontable == 1) {
@@ -588,6 +588,9 @@ export default {
 			}
 		},
 		removeArticle(article) {
+			this.total -= Number(article.price) * article.amount
+			this.cantidad_articulos--
+			this.cantidad_unidades -= article.amount
 			var i = this.articles.indexOf(article)
 			this.articles.splice(i, 1)
 		},

@@ -183,17 +183,12 @@
 									</td>
 									<td>{{ article.name }}</td>
 									<td v-if="article.stock">
-										<template v-if="article.stock">
-											Sin datos											
-										</template>
-										<template v-else>
-											<span v-if="article.uncontable == 1">
-												{{ article.stock }} {{ article.measurement_original }}s
-											</span>
-											<span v-else>
-												{{ article.stock }} 
-											</span>
-										</template>
+										<span v-if="article.uncontable == 1">
+											{{ article.stock }} {{ article.measurement_original }}s
+										</span>
+										<span v-else>
+											{{ article.stock }} 
+										</span>
 									</td>
 									<td v-else>
 										sin datos
@@ -320,13 +315,24 @@ export default {
 				this.available_articles.forEach(article => {
 					if (article.bar_code == this.article.bar_code || article.name == this.article.name) {
 						disponible = true
-						if (article.bar_code === null) {
+						if (this.article.bar_code != '') {
+							this.loading_bar_code = true
+						} else {
 							this.loading_name = true
+						}
+						if (article.bar_code === null) {
 							axios.get('articles/get-by-name/'+article.name)
 							.then(res => {
-								this.loading_name = false
+								if (this.article.bar_code != '') {
+									this.loading_bar_code = false
+								} else {
+									this.loading_name = false
+								}
 								var article = res.data
 								article.amount = 1
+								if (article.stock != null) {
+									article.stock--
+								}
 								this.possible_articles = []
 								this.articles.push(article)
 								if (article.uncontable == 1) {
@@ -342,12 +348,18 @@ export default {
 								console.log(err)
 							})
 						} else {
-							this.loading_bar_code = true
 							axios.get('articles/get-by-bar-code/'+article.bar_code)
 							.then(res => {
-								this.loading_bar_code = false
+								if (this.article.bar_code != '') {
+									this.loading_bar_code = false
+								} else {
+									this.loading_name = false
+								}
 								var article = res.data
 								article.amount = 1
+								if (article.stock != null) {
+									article.stock--
+								}
 								this.possible_articles = []
 								this.articles.push(article)
 								if (article.uncontable == 1) {
@@ -385,7 +397,6 @@ export default {
 				}
 
 				if (article.uncontable == 0) {
-					article.stock -= article.amount
 					this.total += price * article.amount
 					this.cantidad_unidades += article.amount
 				} else {
@@ -516,12 +527,33 @@ export default {
 		},
 		up(article) {
 			article.amount++
+			if (article.stock != null) {
+				if (article.uncontable == 0) {
+					article.stock--
+				} else {
+					if (article.measurement == article.measurement_original) {
+						article.stock -= article.amount
+					} else {
+						article.stock -= article.amount / 1000
+					}
+				}
+			}
 			this.calculateTotal()
-			// this.addTotal(article, true)
 		},
 		down(article) {
 			if (article.amount > 1) {
 				article.amount--
+				if (article.stock != null) {
+					if (article.uncontable == 0) {
+						article.stock++
+					} else {
+						if (article.measurement == article.measurement_original) {
+							article.stock += article.amount
+						} else {
+							article.stock += article.amount / 1000
+						}
+					}
+				}
 				this.calculateTotal()
 			} else {
 				toastr.error('No se pueden restar mas unidades')

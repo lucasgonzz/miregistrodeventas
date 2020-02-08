@@ -16,6 +16,6 @@ export default {
 </script>
 <style scoped>
 .col {
-	padding: 100px;
+	padding: 200px;
 }	
 </style>

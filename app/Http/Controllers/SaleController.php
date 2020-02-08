@@ -75,7 +75,7 @@ class SaleController extends Controller
         // echo " fecha limite: ".$limit_date;
 
         while (count($sales) == 0 && $date >= $limit_date) {
-            
+        // echo "entro";
         if ($user->hasRole('provider')) {
                 $sales = Sale::where('user_id', $this->getArticleOwnerId())
                                     ->whereDate('created_at', $date)
@@ -93,6 +93,7 @@ class SaleController extends Controller
                                     ->get();
             }
             if (count($sales) == 0) {
+                // echo "No tenia en: " . $index;
                 if ($index != 0) {
                     if ($direction == 'previus') {
                         $index++;
