@@ -1,6 +1,6 @@
 <template>
 <div class="modal fade" id="is-marker" tabindex="-1" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+	<div class="modal-dialog modal-dialog-scrollable" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title">
@@ -44,8 +44,3 @@ export default {
 	},
 }
 </script>
-<style>
-.input-inline {
-	width: 50% !important;
-}
-</style>

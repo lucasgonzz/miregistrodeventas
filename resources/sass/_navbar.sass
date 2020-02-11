@@ -5,8 +5,13 @@
 		&:hover
 			color: $blue !important
 
-	.nav-link-active
-		font-weight: bold
-		color: $blue !important
-		border-radius: 0px 0px 3px 3px
-		border-bottom: 4px solid $blue
+	@media (min-width: 768px)
+		.nav-link-active
+			font-weight: bold
+			color: $blue !important
+			border-radius: 0px 0px 3px 3px
+			border-bottom: 4px solid $blue
+	@media (max-width: 768px)
+		.nav-link-active
+			font-weight: bold
+			color: $blue !important

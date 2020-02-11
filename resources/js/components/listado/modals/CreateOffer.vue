@@ -110,9 +110,6 @@ export default {
 }
 </script>
 <style scoped>
-.modal-lg {
-	width: 50%;
-}
 .form-group {
 	width: 40%;
 }

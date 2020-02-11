@@ -1,6 +1,6 @@
 <template>
 <div class="modal fade" id="listado-edit-article" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog" role="document">
+	<div class="modal-dialog modal-dialog-scrollable" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title">Editar <strong>{{ article.name }}</strong> | <i class="icon-barcode"></i> {{ article.bar_code }}</h5>
@@ -103,12 +103,22 @@
 				</div>
 				<div class="form-group" v-show="rol == 'commerce' && article.new_stock > 0">
 					<label class="label-block" for="provider_modal">
-						<span v-show="article.new_stock == 1">
-							De que proveedor es esta unidad
-						</span>
-						<span v-show="article.new_stock > 1">
-							De que proveedor son estas {{ article.new_stock }} unidades
-						</span>
+						<template v-if="article.uncontable == 0">
+							<span v-show="article.new_stock == 1">
+								De que proveedor es esta unidad
+							</span>
+							<span v-show="article.new_stock > 1">
+								De que proveedor son estas {{ article.new_stock }} unidades
+							</span>
+						</template>
+						<template v-else>
+							<span v-show="article.new_stock == 1">
+								De que proveedor es este {{ article.measurement }}
+							</span>
+							<span v-show="article.new_stock > 1">
+								De que proveedor son estos {{ article.new_stock }} {{ article.measurement }}s
+							</span>
+						</template>
 					</label>
 					<select v-model="article.provider"
 							id="provider_modal" 

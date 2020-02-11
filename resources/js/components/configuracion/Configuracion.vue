@@ -51,7 +51,7 @@
 										v-model="percentage_card"
 										class="form-control">
 								<small class="form-text text-muted">
-									Porcentaje que se le aumentara al total de la venta si se vende con tarjeta
+									Porcentaje de recargo para las ventas con tarjeta
 								</small>
 							</div>
 							<div class="form-group">

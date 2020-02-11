@@ -123,8 +123,3 @@ export default {
 	},
 }
 </script>
-<style>
-.input-inline {
-	width: 50% !important;
-}
-</style>

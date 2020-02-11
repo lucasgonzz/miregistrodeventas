@@ -23,7 +23,7 @@
 			<div class="card">
 				<div class="card-header">
 					<div class="row justify-content-between align-items-center">
-						<div class="col-5">
+						<div class="col-lg-5">
 							<h5 class="m-0">
 								<strong v-show="!is_from_date && !is_from_only_one_date && previus_next == 0">
 									Ventas de hoy 
@@ -57,7 +57,7 @@
 								</strong>
 							</h5>
 						</div>
-						<div class="col-7 col-rigth">
+						<div class="col-lg-7 col-right">
 							<button v-show="is_from_only_one_date || (previus_next != 0 && !is_from_date)" 
 									class="btn m-l-5 btn-primary" 
 									@click="nextDay">
@@ -179,94 +179,93 @@
 					<cargando :is_loading="is_loading"></cargando>
 					<div class="row" v-show="!is_loading">
 						<div class="col">
-							<table class="table table-striped">
-								<thead class="thead-dark">
-									<tr>
-										<th>
-						                    <div class="custom-control custom-checkbox my-1 mr-sm-2">
-						                        <input class="custom-control-input" 
-						                            v-model="selected_sales.is_all_selected" 
-						                            type="checkbox" 
-						                            @change="selectAllSales"
-						                            id="is_all_selected">
-						                        <label class="custom-control-label" 
-						                            for="is_all_selected">
-						                        </label>
-						                    </div>
-										</th>
-										<th scope="col">Ver</th>
-										<th v-show="is_from_date || previus_next!=0 || is_from_only_one_date" scope="col">
-											Fecha
-										</th>
-										<th scope="col">Hora</th>
-										<th scope="col" v-show="rol == 'provider'">Cliente</th>
-										<th scope="col">Cant. Artículos</th>
-										<th scope="col">Cant. Unidades</th>
-										<th v-show="show_costs" scope="col">Costo</th>
-										<th scope="col">Total</th>
-										<th>Eliminar</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr v-for="sale in sales"
-										:class="selected_sales.selected_sales.includes(sale.id) ? 'bg-warning' : ''">
-										<td>
-						                    <div class="custom-control custom-checkbox my-1 mr-sm-2">
-						                        <input class="custom-control-input" 
-						                            v-model="selected_sales.selected_sales" 
-						                            type="checkbox" 
-						                            :value="sale.id"
-						                            :id="sale.id">
-						                        <label class="custom-control-label" 
-						                            :for="sale.id">
-						                        </label>
-						                    </div>
-										</td>
-										<td class="td-options" @click="showSaleDetails(sale)">
-											<button class="btn btn-listado btn-listado-edit">
-												<i class="icon-eye"></i>
-											</button>
-										</td>
-										<td v-show="is_from_date || previus_next!=0 || is_from_only_one_date">
-											<i class="icon-calendar"></i>
-											{{ date(sale.created_at) }}
-										</td>
-										<td>
-											<i class="icon-clock-1"></i>
-											{{ hour(sale.created_at) }}
-										</td>
-										<td v-if="rol == 'provider'">
-											<span v-if="sale.client">
-												{{ sale.client.name }}
-											</span>
-											<span v-else>
-												Sin datos
-											</span>
-										</td>
-										<td>{{ cantidad_articulos(sale) }}</td>
-										<td>{{ cantidad_unidades(sale) }}</td>
-										<th v-show="show_costs" scope="row">
-											{{ getCost(sale) }}
-										</th>
-										<th scope="row">
-											{{ getPrice(sale) }}
-										</th>
-										<td>
-											<button @click="confirmDeleteSale(sale)"
-													class="btn btn-danger btn-sm">
-												<i class="icon-trash-3"></i>
-											</button>
-											<i v-show="sale.percentage_card != null"
-												class="icon-credit-card text-primary card-icon"></i>
-										</td>
-									</tr>
-								</tbody>
-							</table>
+							<div class="table-responsive">
+								<table class="table table-striped">
+									<thead class="thead-dark">
+										<tr>
+											<th>
+							                    <div class="custom-control custom-checkbox my-1 mr-sm-2">
+							                        <input class="custom-control-input" 
+							                            v-model="selected_sales.is_all_selected" 
+							                            type="checkbox" 
+							                            @change="selectAllSales"
+							                            id="is_all_selected">
+							                        <label class="custom-control-label" 
+							                            for="is_all_selected">
+							                        </label>
+							                    </div>
+											</th>
+											<th scope="col">Ver</th>
+											<th v-show="is_from_date || previus_next!=0 || is_from_only_one_date" scope="col">
+												Fecha
+											</th>
+											<th scope="col">Hora</th>
+											<th scope="col" v-show="rol == 'provider'">Cliente</th>
+											<th scope="col">Cant. Artículos</th>
+											<th scope="col">Cant. Unidades</th>
+											<th v-show="show_costs" scope="col">Costo</th>
+											<th scope="col">Total</th>
+											<th>Eliminar</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr v-for="sale in sales"
+											:class="selected_sales.selected_sales.includes(sale.id) ? 'bg-warning' : ''">
+											<td>
+							                    <div class="custom-control custom-checkbox my-1 mr-sm-2">
+							                        <input class="custom-control-input" 
+							                            v-model="selected_sales.selected_sales" 
+							                            type="checkbox" 
+							                            :value="sale.id"
+							                            :id="sale.id">
+							                        <label class="custom-control-label" 
+							                            :for="sale.id">
+							                        </label>
+							                    </div>
+											</td>
+											<td class="td-options" @click="showSaleDetails(sale)">
+												<button class="btn btn-listado btn-listado-edit">
+													<i class="icon-eye"></i>
+												</button>
+											</td>
+											<td v-show="is_from_date || previus_next!=0 || is_from_only_one_date">
+												<i class="icon-calendar"></i>
+												{{ date(sale.created_at) }}
+											</td>
+											<td>
+												<i class="icon-clock-1"></i>
+												{{ hour(sale.created_at) }}
+											</td>
+											<td v-if="rol == 'provider'">
+												<span v-if="sale.client">
+													{{ sale.client.name }}
+												</span>
+												<span v-else>
+													Sin datos
+												</span>
+											</td>
+											<td>{{ cantidad_articulos(sale) }}</td>
+											<td>{{ cantidad_unidades(sale) }}</td>
+											<th v-show="show_costs" scope="row">
+												{{ getCost(sale) }}
+											</th>
+											<th scope="row">
+												{{ getPrice(sale) }}
+											</th>
+											<td>
+												<button @click="confirmDeleteSale(sale)"
+														class="btn btn-danger btn-sm">
+													<i class="icon-trash-3"></i>
+												</button>
+												<i v-show="sale.percentage_card != null"
+													class="icon-credit-card text-primary card-icon"></i>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="card-footer p-0">
-
 				</div>
 			</div>
 		</div>
@@ -674,7 +673,7 @@ export default {
 }
 </script>
 <style scoped>
-.col-rigth {
+.col-right {
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-end;

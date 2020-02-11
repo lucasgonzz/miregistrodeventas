@@ -26,58 +26,60 @@
                         </label>
                     </div>
                 </div>
-                <table class="table table-striped">
-                    <thead class="thead-dark">
-                        <th scope="col">Nombre</th>    
-                        <th scope="col">Cantidad</th>      
-                        <th v-show="show_costs" scope="col">Costo</th>      
-                        <th scope="col" class="td-lg">Precio</th>      
-                        <th v-show="show_costs" scope="col">Sub Total Costos</th>      
-                        <th scope="col">Sub Total</th>      
-                    </thead>
-                    <tbody>
-                        <tr v-for="article in sale.articles">
-                            <td>{{ article.name }}</td>
-                            <td>
-                                <span v-if="article.uncontable == 1">                                    
-                                    {{ article.pivot.amount }} {{ article.pivot.measurement }}(s)
-                                </span>
-                                <span v-else>
-                                    {{ article.pivot.amount }}
-                                </span>
-                            </td>
-                            <td v-show="show_costs">
-                                {{ price(article.pivot.cost) }}
-                            </td>
-                            <td class="td-lg">
-                                <span v-if="article.uncontable == 1">
-                                    {{ price(article.pivot.price) }} el {{ article.measurement }}
-                                </span>
-                                <span v-else>
-                                    {{ price(article.pivot.price) }}
+                <div class="table-responsive">                      
+                    <table class="table table-striped">
+                        <thead class="thead-dark">
+                            <th scope="col">Nombre</th>    
+                            <th scope="col">Cantidad</th>      
+                            <th v-show="show_costs" scope="col">Costo</th>      
+                            <th scope="col" class="td-lg">Precio</th>      
+                            <th v-show="show_costs" scope="col">Sub Total Costos</th>      
+                            <th scope="col">Sub Total</th>      
+                        </thead>
+                        <tbody>
+                            <tr v-for="article in sale.articles">
+                                <td>{{ article.name }}</td>
+                                <td>
+                                    <span v-if="article.uncontable == 1">                                    
+                                        {{ article.pivot.amount }} {{ article.pivot.measurement }}(s)
+                                    </span>
+                                    <span v-else>
+                                        {{ article.pivot.amount }}
+                                    </span>
+                                </td>
+                                <td v-show="show_costs">
+                                    {{ price(article.pivot.cost) }}
+                                </td>
+                                <td class="td-lg">
+                                    <span v-if="article.uncontable == 1">
+                                        {{ price(article.pivot.price) }} el {{ article.measurement }}
+                                    </span>
+                                    <span v-else>
+                                        {{ price(article.pivot.price) }}
+                                        <span v-show="sale.percentage_card != null">
+                                            (
+                                                <i class="icon-credit-card text-primary"></i>
+                                                {{ price_with_card(article) }}
+                                            )
+                                        </span>
+                                    </span>
+                                </td>
+                                <td v-show="show_costs">
+                                    {{ getSubTotalCost(article) }}
+                                </td>
+                                <td>
+                                    {{ getSubTotal(article) }}
                                     <span v-show="sale.percentage_card != null">
                                         (
                                             <i class="icon-credit-card text-primary"></i>
-                                            {{ price_with_card(article) }}
+                                            {{ total_with_card(article) }}
                                         )
                                     </span>
-                                </span>
-                            </td>
-                            <td v-show="show_costs">
-                                {{ getSubTotalCost(article) }}
-                            </td>
-                            <td>
-                                {{ getSubTotal(article) }}
-                                <span v-show="sale.percentage_card != null">
-                                    (
-                                        <i class="icon-credit-card text-primary"></i>
-                                        {{ total_with_card(article) }}
-                                    )
-                                </span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -153,11 +155,3 @@ export default {
     }
 }
 </script>
-<style>
-.modal-lg {
-    min-width: 1000px;
-}
-.td-lg {
-
-}
-</style>

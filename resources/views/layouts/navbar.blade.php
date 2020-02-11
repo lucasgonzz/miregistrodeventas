@@ -12,13 +12,15 @@
             <!-- Left Side Of Navbar -->
             <ul class="navbar-nav mr-auto">
                 @if (Auth()->user()->hasRole('provider'))
-                    @if (Auth()->user()->hasPermissionTo('sale.create'))
-                    <li class="nav-item">
-                        <a class="nav-link {{ active('mayoristas/vender') }}" href="{{ route('vender.provider') }}">
-                            <!-- <i class="icon-tag"></i> -->
-                            Vender
-                        </a>
-                    </li>
+                    @if (Agent::isDesktop())
+                        @if (Auth()->user()->hasPermissionTo('sale.create'))
+                        <li class="nav-item">
+                            <a class="nav-link {{ active('mayoristas/vender') }}" href="{{ route('vender.provider') }}">
+                                <!-- <i class="icon-tag"></i> -->
+                                Vender
+                            </a>
+                        </li>
+                        @endif
                     @endif
                     @if (Auth()->user()->hasPermissionTo('article.create'))
                     <li class="nav-item">
@@ -62,13 +64,15 @@
                     @endif
                 @endif
                 @if (Auth()->user()->hasRole('commerce'))
-                    @if (Auth()->user()->hasPermissionTo('sale.create'))
-                    <li class="nav-item">
-                        <a class="nav-link {{ active('comercios/vender') }}" href="{{ route('vender.commerce') }}">
-                            <!-- <i class="icon-tag"></i> -->
-                            Vender
-                        </a>
-                    </li>
+                    @if (Agent::isDesktop())
+                        @if (Auth()->user()->hasPermissionTo('sale.create'))
+                        <li class="nav-item">
+                            <a class="nav-link {{ active('comercios/vender') }}" href="{{ route('vender.commerce') }}">
+                                <!-- <i class="icon-tag"></i> -->
+                                Vender
+                            </a>
+                        </li>
+                        @endif
                     @endif
                     @if (Auth()->user()->hasPermissionTo('article.create'))
                     <li class="nav-item">

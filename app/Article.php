@@ -43,6 +43,6 @@ class Article extends Model
         return $this->belongsToMany('App\Provider')
                                                     ->withPivot('amount', 'cost', 'price')
                                                     ->withTimestamps()
-                                                    ->latest();
+                                                    ->orderBy('id', 'ASC');
     }
 }

@@ -188,6 +188,7 @@ class ArticleController extends Controller
     function update(Request $request, $id) {
         $article = Article::find($id);
         $updated_article = $request->article;
+        // return $updated_article['new_stock'];
 
         if (isset($updated_article['new_bar_code'])) {
             $article->bar_code = $updated_article['new_bar_code'];
@@ -209,14 +210,16 @@ class ArticleController extends Controller
         $article->stock += (int)$updated_article['new_stock'];
         $article->save();
         if (Auth()->user()->hasRole('commerce')) {
-            $article->providers()
-                                ->attach(
-                                    $updated_article['provider'], 
-                                    [
-                                        'amount' => $updated_article['new_stock'],
-                                        'cost' => $updated_article['cost'],
-                                        'price' => $updated_article['price'],
-                                    ]);
+            if ($updated_article['new_stock'] != '0') {
+                $article->providers()
+                                    ->attach(
+                                        $updated_article['provider'], 
+                                        [
+                                            'amount' => $updated_article['new_stock'],
+                                            'cost' => $updated_article['cost'],
+                                            'price' => $updated_article['price'],
+                                        ]);
+            }
         }
         return $article;
     }

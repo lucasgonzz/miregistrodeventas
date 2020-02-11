@@ -57,21 +57,28 @@ class SalesTableSeeder extends Seeder
             if ($i == 2) {
                 continue;
             } else {
+                $hora = 9;
+                $minutos = 0;
                 for ($j=0; $j < 7; $j++) { 
+                    $hora++;
+                    if ($minutos == 60) {
+                        $minutos = 0;
+                    }
+                    $minutos += 10;
                     $num_sale++;
                     $n = rand(0, 1);
                     $sale = Sale::create([
                         'user_id' => 2,
                         'num_sale' => $num_sale,
                         'percentage_card' => $n == 0 ? 50 : null,
-                        'created_at' => $i == 0 ? date('Y-m-d') : Carbon::now()->subDay($i)
+                        'created_at' => $i == 0 ? date('Y-m-d') . ' ' . "$hora:$minutos:00" : Carbon::now()->subDay($i)
                     ]); 
                     $articles = Article::where('user_id', 2)
                                             ->inRandomOrder()
-                                            ->limit(50)->get();
+                                            ->limit(rand(4, 10))->get();
                     foreach ($articles as $article) {
                         $sale->articles()->attach($article->id, [
-                                                                    'amount' => rand(1,4),
+                                                                    'amount' => rand(1,2),
                                                                     'cost' => $article->cost,
                                                                     'price' => $article->price,
                                                                 ]);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Jenssegers\Agent\Agent;
 
 class MainController extends Controller
 {
@@ -12,14 +13,51 @@ class MainController extends Controller
 
 	function index() {
 		$user = Auth()->user();
+        $agent = new Agent();
 		if ($user->hasRole('provider')) {
-    		return redirect()->route('vender.provider');
+            if ($agent->isMobile()) {
+                if ($user->hasPermissionTo('article.create')) {
+                    return redirect()->route('ingresar.provider');
+                } else if ($user->hasPermissionTo('article.index')) {
+                    return redirect()->route('listado.provider');
+                } else if ($user->hasPermissionTo('sale.index')) {
+                    return redirect()->route('ventas.provider');
+                }
+            } else {
+                if ($user->hasPermissionTo('sale.create')) {
+        		    return redirect()->route('vender.provider');
+                } else if ($user->hasPermissionTo('article.create')) {
+                    return redirect()->route('ingresar.provider');
+                } else if ($user->hasPermissionTo('article.index')) {
+                    return redirect()->route('listado.provider');
+                } else if ($user->hasPermissionTo('sale.index')) {
+                    return redirect()->route('ventas.provider');
+                }
+            }
     		// return view('provider.main.vender');
-			$this->vender_provider();
+			// $this->vender_provider();
 		} else if ($user->hasRole('commerce')) {
-    		return redirect()->route('vender.commerce');
+            if ($agent->isMobile()) {
+                if ($user->hasPermissionTo('article.create')) {
+                    return redirect()->route('ingresar.commerce');
+                } else if ($user->hasPermissionTo('article.index')) {
+                    return redirect()->route('listado.commerce');
+                } else if ($user->hasPermissionTo('sale.index')) {
+                    return redirect()->route('ventas.commerce');
+                }
+            } else {
+                if ($user->hasPermissionTo('sale.create')) {
+                    return redirect()->route('vender.commerce');
+                } else if ($user->hasPermissionTo('article.create')) {
+                    return redirect()->route('ingresar.commerce');
+                } else if ($user->hasPermissionTo('article.index')) {
+                    return redirect()->route('listado.commerce');
+                } else if ($user->hasPermissionTo('sale.index')) {
+                    return redirect()->route('ventas.commerce');
+                }
+            }
     		// return view('commerce.main.vender');
-			$this->vender_commerce();
+			// $this->vender_commerce();
 		}
 	}
 

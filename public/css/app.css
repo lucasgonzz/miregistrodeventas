@@ -16124,6 +16124,34 @@ td {
   vertical-align: middle !important;
 }
 
+.card {
+  border: 2px solid rgba(51, 51, 51, 0.2);
+}
+
+.form-control {
+  border: 2px solid rgba(51, 51, 51, 0.3);
+}
+
+.card-header {
+  border-bottom: 2px solid rgba(51, 51, 51, 0.2);
+}
+
+.card-footer {
+  border-top: 2px solid rgba(51, 51, 51, 0.2);
+}
+
+@media (min-width: 768px) {
+  .modal-lg {
+    min-width: 700px;
+  }
+}
+
+@media (max-width: 768px) {
+  .modal-lg {
+    max-width: 94%;
+  }
+}
+
 .navbar .nav-link {
   font-size: 1.2rem;
   color: rgba(52, 144, 220, 0.7) !important;
@@ -16133,11 +16161,20 @@ td {
   color: #3490dc !important;
 }
 
-.navbar .nav-link-active {
-  font-weight: bold;
-  color: #3490dc !important;
-  border-radius: 0px 0px 3px 3px;
-  border-bottom: 4px solid #3490dc;
+@media (min-width: 768px) {
+  .navbar .nav-link-active {
+    font-weight: bold;
+    color: #3490dc !important;
+    border-radius: 0px 0px 3px 3px;
+    border-bottom: 4px solid #3490dc;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar .nav-link-active {
+    font-weight: bold;
+    color: #3490dc !important;
+  }
 }
 
 .btn-left {
@@ -16171,7 +16208,6 @@ td {
 
 .input-search:focus {
   border: 1px solid #ced4da;
-  border-bottom: none;
 }
 
 .btn-search {

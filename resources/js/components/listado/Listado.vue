@@ -44,7 +44,7 @@
 									<input type="search" class="form-control input-search" 
 											placeholder="Buscar por codigo o nombre"
 											v-model="search_query" @keyup="preSearch" @keyup.enter="search">
-									<div class="resultados">
+									<div class="resultados" v-show="search_query.length > 1">
 										<ul>
 											<li @click="selectPreSearch(article.name)" v-for="article in pre_search">
 												{{ article.name }}
@@ -647,7 +647,7 @@ export default {
 			* Setea las propiedades del articulos con las del articulo pasado por parametro
 		----------------------------------------------------------------------------------- */
 		editArticle(article) {
-			console.log(article)
+			// console.log(article)
 			this.setArticle(article)
 			this.article.creado = this.date(article.created_at)+' '+this.since(article.created_at)
 			this.article.actualizado = this.date(article.updated_at)+' '+this.since(article.updated_at)

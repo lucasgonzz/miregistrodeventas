@@ -21,7 +21,7 @@
 			<div class="col-lg-7">	
 				<div class="card">
 					<div class="card-header">
-						<h5 class="m-b-0">
+						<h5 class="m-0">
 							<strong>Ingresar un nuevo artículo</strong>
 						</h5>
 					</div>
@@ -48,6 +48,7 @@
 							<input 
 								type="text" id="bar_code" name="bar_code" 
 								class="form-control focus-red" autofocus="true" 
+								autocomplete="off" 
 								@keyup.enter="isRegister" 
 								v-model="article.bar_code"
 								placeholder="Codigo de barras">
@@ -89,6 +90,7 @@
 										placeholder="Ingrese el costo"
 										required 
 										id="cost"
+										autocomplete="off" 
 										@keyup.enter="changeToPrice"
 										@keyup="calculatePorcentageForPrice"
 										v-model="article.cost">
@@ -104,6 +106,7 @@
 										:class="article.is_uncontable ? 'input-uncontable-price' : ''"
 										placeholder="Ingrese el precio"
 										required 
+										autocomplete="off" 
 										id="price"
 										@keyup.enter="changeToDate"
 										v-model="article.price">
@@ -169,7 +172,7 @@
 										</option>
 									</select>
 								</div>
-								<div class="custom-control custom-checkbox my-1 mr-sm-2 m-b-10">
+								<!-- <div class="custom-control custom-checkbox my-1 mr-sm-2 m-b-10">
 									<input v-model="remember_provider" 
 											type="checkbox" 
 											class="custom-control-input" 
@@ -181,7 +184,7 @@
 									<small class="form-text text-muted">
 										Sí el proximo artículo es de/los mismos proveedores se recordara
 									</small>
-								</div>
+								</div> -->
 								<a href="#" 
 									class="btn btn-secondary btn-sm m-t-10"
 									@click.prevent="showProviders">
@@ -196,6 +199,7 @@
 										class="form-control focus-red" 
 										:class="article.is_uncontable ? 'input-uncontable-stock' : ''"
 										id="stock"
+										autocomplete="off" 
 										@keyup.enter="saveArticle"
 										placeholder="Ingrese la cantidad"
 										v-model="article.stock">
@@ -294,7 +298,7 @@ export default {
 			articles_id_to_print: [],
 			// pre_search: [],
 			providers: [],
-			remember_provider: true,
+			// remember_provider: true,
 			remember_date: false,
 			bar_codes: [],
 			names: [],
@@ -595,9 +599,9 @@ export default {
 			this.article.price = ''
 			this.article.stock = ''
 			this.article.new_stock = ''
-			if (!this.remember_provider) {
-				this.article.provider = this.providers[0].id
-			}
+			// if (!this.remember_provider) {
+			// 	this.article.provider = this.providers[0].id
+			// }
 			if (!this.remember_date) {
 				this.article.created_at = new Date().toISOString().slice(0,10)
 			}

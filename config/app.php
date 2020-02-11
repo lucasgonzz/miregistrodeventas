@@ -178,6 +178,9 @@ return [
         // Roles
         Spatie\Permission\PermissionServiceProvider::class,
 
+        // Mobile detection
+        Jenssegers\Agent\AgentServiceProvider::class,
+
     ],
 
     /*
@@ -229,6 +232,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
+        // Mobile Detection
+        'Agent' => Jenssegers\Agent\Facades\Agent::class,
     ],
 
 ];

@@ -19,11 +19,11 @@ $factory->define(Article::class, function (Faker $faker) {
     return [
     	'bar_code' => $b_c == 1 ? $bar_code : null,
         'name' => $faker->name,
-        'cost' => 1000,
-        'price' => 10000,
+        'cost' => $cost,
+        'price' => $cost * 1.5,
         // 'cost' => $cost,
         // 'price' => rand($cost, $cost*2),
-        'previus_price' => 0,
+        // 'previus_price' => 0,
         'stock' => rand(10, 25),
         'user_id' => rand(1, 2),
     ];

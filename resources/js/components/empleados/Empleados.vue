@@ -1,5 +1,7 @@
 <template>
 	<div id="codigos-de-barra">
+		<employees-list :employees="employees"
+						@deleteEmployee="deleteEmployee"></employees-list>
 		<div class="row justify-content-center">
 			<div class="col-lg-9">	
 				<div class="card">
@@ -10,14 +12,20 @@
 					</div>
 					<!-- <form> -->
 						<div class="card-body">
+							<div class="row d-md-none m-b-10">
+								<div class="col">
+									<button @click="showEmployees"
+											class="btn btn-success">
+										Ver mis empleados
+									</button>							
+								</div>
+							</div>
 							<div class="row">
 								<div class="col-12 col-lg-6">
 									<div class="card">
 										<div class="card-header">
 											<strong>
-												<strong>
-													Registrar un nuevo empleado
-											</strong>
+												Registrar un nuevo empleado
 											</strong>
 										</div>
 										<div class="card-body">
@@ -26,20 +34,13 @@
 											</p>
 											<div class="form-group">
 												<label for="name">Nombre del empleado</label>
-												<div class="input-group mb-2 mr-sm-2">
-													<div class="input-group-prepend">
-														<div class="input-group-text">
-															{{ user.company_name }} - 
-														</div>
-													</div>
-													<input v-model="employee.name"
-															type="text" 
-															id="name" 
-															autocomplete="off" 
-															class="form-control" 
-															placeholder="Ingrese el nombre del empleado" 
-															aria-describedby="nameHelp">
-												</div>
+												<input v-model="employee.name"
+														type="text" 
+														id="name" 
+														autocomplete="off" 
+														class="form-control" 
+														placeholder="Ingrese el nombre del empleado" 
+														aria-describedby="nameHelp">
 												<small id="nameHelp" class="form-text text-muted">
 													El empleado se registrara empezando con el nombre de su negocio seguido del nombre de su empleado
 												</small>
@@ -52,37 +53,11 @@
 														placeholder="Contraseña para el empleado" 
 														class="form-control">
 											</div>
-											<div class="form-group" 
-												v-show="employee.name != '' && employee.password != ''">
-												<label for="">Seleccione los permisos que tendra {{ capitalize(employee.name) }}</label>
-												<div v-for="permission in permissions" class="custom-control custom-checkbox my-1 mr-sm-2 m-b-10">
-													<input v-model="employee.permissions" 
-															type="checkbox" 
-															class="custom-control-input" 
-															:id="permission.id" 
-															:value="permission.id">
-													<label class="custom-control-label c-p" 
-															:for="permission.id">
-														{{ permission.name }}
-													</label>
-													<small id="nameHelp" 
-															class="form-text text-muted">
-														{{ permission.description }}	
-													</small>
-												</div>
-											</div>
-										</div>
-										<div class="card-footer">
-											<button @click.prevent="saveEmployee"
-													class="btn btn-primary">
-												<i class="icon-user-plus"></i>
-												Registrar empleado
-											</button>
 										</div>
 									</div>
 								</div>
 								<div class="col-12 col-lg-6">
-									<ul class="list-group">
+									<ul class="list-group d-none d-md-block">
 										<li	class="list-group-item active">
 											<strong>
 												<span v-if="employees.length">
@@ -107,7 +82,41 @@
 											</p>
 										</li>
 									</ul>
-									<div class="card m-t-20">
+									<div class="card m-t-20" 
+											v-show="employee.name != '' && employee.password != ''">
+										<div class="card-header">
+											<strong>
+												Seleccione los permisos para {{ employee.name }}
+											</strong>
+										</div>
+										<div class="card-body">
+											<div class="form-group">
+												<div v-for="permission in permissions" class="custom-control custom-checkbox my-1 mr-sm-2 m-b-10">
+													<input v-model="employee.permissions" 
+															type="checkbox" 
+															class="custom-control-input" 
+															:id="permission.id" 
+															:value="permission.id">
+													<label class="custom-control-label c-p" 
+															:for="permission.id">
+														{{ permission.name }}
+													</label>
+													<small id="nameHelp" 
+															class="form-text text-muted">
+														{{ permission.description }}	
+													</small>
+												</div>
+											</div>
+											<div class="card-footer">
+												<button @click.prevent="saveEmployee"
+														class="btn btn-primary">
+													<i class="icon-user-plus"></i>
+													Registrar empleado
+												</button>
+											</div>
+										</div>
+									</div>
+									<!-- <div class="card m-t-20">
 										<div class="card-header">
 											<strong>
 												¿Por que deberia asignarle permisos a mis empleados?
@@ -116,7 +125,7 @@
 										<div class="card-body">
 											Si un empleado tiene permisos para vender, por ejemplo, podría registrar nuevas ventas y quedarse con el artículo  ya que el stock de ese artículo coincidiría con los que tiene en su negocio. 
 										</div>
-									</div>
+									</div> -->
 								</div>
 							</div>					
 						</div>
@@ -130,7 +139,11 @@
 	</div>
 </template>
 <script>
+import EmployeesList from './modals/EmployeesList.vue'
 export default {
+	components: {
+		EmployeesList
+	},
 	props: ['rol'],
 	data() {
 		return {
@@ -197,6 +210,9 @@ export default {
 			.catch(err => {
 				console.log(err)
 			})
+		},
+		showEmployees() {
+			$('#employees-list').modal('show')
 		}
 	},
 	created() {
