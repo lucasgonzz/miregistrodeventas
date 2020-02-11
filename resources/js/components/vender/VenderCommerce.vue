@@ -64,7 +64,6 @@
 				</div>
 			</div>
 			<div class="card-body">
-
 				<div class="row m-b-10" 
 							v-show="!show_markers">
 					<div class="col">
@@ -75,7 +74,7 @@
 					</div>
 				</div>
 				<div class="row m-b-10" 
-							v-show="(markers.length || marker_groups.length) && show_markers">
+							v-if="(markers.length || marker_groups.length) && show_markers">
 					<div class="col">
 						<div class="card" v-show="show_markers">
 							<div class="card-header p-5">

@@ -4274,6 +4274,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 
@@ -4587,6 +4588,7 @@ __webpack_require__.r(__webpack_exports__);
           this.filter(this.filtro);
         } else {
           this.getArticles(this.pagination.current_page);
+          console.log('aca entro');
         }
       }
 
@@ -4602,29 +4604,6 @@ __webpack_require__.r(__webpack_exports__);
       $('#listado-delete-article').modal('show');
     },
     // Marcadores
-    // createMarker(article) {
-    // 	if (article.marker) {
-    // 		axios.get(`articles/delete-marker/${article.id}`)
-    // 		.then(res => {
-    // 			$(`#marker-1-${article.id}`).removeClass('icon-star-1')
-    // 			$(`#marker-1-${article.id}`).addClass('icon-star-2')
-    // 			toastr.success('Marcador eliminado correctamente')
-    // 		})
-    // 		.catch(err => {
-    // 			console.log(err)
-    // 		})
-    // 	} else {
-    // 		axios.get(`articles/create-marker/${article.id}`)
-    // 		.then(res => {
-    // 			$(`#marker-2-${article.id}`).removeClass('icon-star-2')
-    // 			$(`#marker-2-${article.id}`).addClass('icon-star-1')
-    // 			toastr.success('Marcador añadido correctamente')
-    // 		})
-    // 		.catch(err => {
-    // 			console.log(err)
-    // 		})
-    // 	}
-    // },
     deleteMarker: function deleteMarker(marker_id) {
       var _this7 = this;
 
@@ -5115,20 +5094,25 @@ __webpack_require__.r(__webpack_exports__);
       this.$emit('addMarkerToGroup', marker_group.id, this.article.id);
     },
     addMarker: function addMarker() {
+      var _this2 = this;
+
       axios.post('markers', {
         article_id: this.article.id
       }).then(function (res) {
         $('#add-marker').modal('hide');
+
+        _this2.$emit('updateArticlesList');
+
         toastr.success('Marcador creado correctamente');
       })["catch"](function (err) {
         console.log(err);
       });
     },
     getMarkerGroups: function getMarkerGroups() {
-      var _this2 = this;
+      var _this3 = this;
 
       axios.get('marker-groups').then(function (res) {
-        _this2.marker_groups = res.data;
+        _this3.marker_groups = res.data;
       })["catch"](function (err) {
         console.log(err);
       });
@@ -6687,7 +6671,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -7074,6 +7057,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modals_Clients_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modals/Clients.vue */ "./resources/js/components/vender/modals/Clients.vue");
 /* harmony import */ var _modals_SuccessfulSale_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modals/SuccessfulSale.vue */ "./resources/js/components/vender/modals/SuccessfulSale.vue");
 /* harmony import */ var _modals_ArticleNotRegister_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modals/ArticleNotRegister.vue */ "./resources/js/components/vender/modals/ArticleNotRegister.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -68778,7 +68774,8 @@ var render = function() {
           attrs: { marker_groups: _vm.marker_groups, article: _vm.article },
           on: {
             deleteMarkerGroup: _vm.deleteMarkerGroup,
-            addMarkerToGroup: _vm.addMarkerToGroup
+            addMarkerToGroup: _vm.addMarkerToGroup,
+            updateArticlesList: _vm.updateArticlesList
           }
         }),
         _vm._v(" "),
@@ -75187,310 +75184,305 @@ var render = function() {
             ]
           ),
           _vm._v(" "),
-          _c(
-            "div",
-            {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value:
-                    (_vm.markers.length || _vm.marker_groups.length) &&
-                    _vm.show_markers,
-                  expression:
-                    "(markers.length || marker_groups.length) && show_markers"
-                }
-              ],
-              staticClass: "row m-b-10"
-            },
-            [
-              _c("div", { staticClass: "col" }, [
-                _c(
-                  "div",
-                  {
-                    directives: [
-                      {
-                        name: "show",
-                        rawName: "v-show",
-                        value: _vm.show_markers,
-                        expression: "show_markers"
-                      }
-                    ],
-                    staticClass: "card"
-                  },
-                  [
-                    _c("div", { staticClass: "card-header p-5" }, [
-                      _c("div", { staticClass: "row" }, [
-                        _vm._m(0),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "col-6" }, [
-                          _c(
-                            "div",
-                            {
-                              staticClass:
-                                "custom-control custom-checkbox my-1 mr-sm-2 c-p float-right"
-                            },
-                            [
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.show_markers,
-                                    expression: "show_markers"
-                                  }
-                                ],
-                                staticClass: "custom-control-input c-p",
-                                attrs: { type: "checkbox", id: "show-markers" },
-                                domProps: {
-                                  checked: Array.isArray(_vm.show_markers)
-                                    ? _vm._i(_vm.show_markers, null) > -1
-                                    : _vm.show_markers
-                                },
-                                on: {
-                                  change: function($event) {
-                                    var $$a = _vm.show_markers,
-                                      $$el = $event.target,
-                                      $$c = $$el.checked ? true : false
-                                    if (Array.isArray($$a)) {
-                                      var $$v = null,
-                                        $$i = _vm._i($$a, $$v)
-                                      if ($$el.checked) {
-                                        $$i < 0 &&
-                                          (_vm.show_markers = $$a.concat([$$v]))
-                                      } else {
-                                        $$i > -1 &&
-                                          (_vm.show_markers = $$a
-                                            .slice(0, $$i)
-                                            .concat($$a.slice($$i + 1)))
-                                      }
-                                    } else {
-                                      _vm.show_markers = $$c
-                                    }
-                                  }
-                                }
-                              }),
-                              _vm._v(" "),
-                              _vm._m(1)
-                            ]
-                          ),
+          (_vm.markers.length || _vm.marker_groups.length) && _vm.show_markers
+            ? _c("div", { staticClass: "row m-b-10" }, [
+                _c("div", { staticClass: "col" }, [
+                  _c(
+                    "div",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.show_markers,
+                          expression: "show_markers"
+                        }
+                      ],
+                      staticClass: "card"
+                    },
+                    [
+                      _c("div", { staticClass: "card-header p-5" }, [
+                        _c("div", { staticClass: "row" }, [
+                          _vm._m(0),
                           _vm._v(" "),
-                          _c(
-                            "div",
-                            {
-                              staticClass:
-                                "custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2 c-p float-right"
-                            },
-                            [
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.show_markers_prices,
-                                    expression: "show_markers_prices"
-                                  }
-                                ],
-                                staticClass: "custom-control-input c-p",
-                                attrs: {
-                                  type: "checkbox",
-                                  id: "show_markers_prices"
-                                },
-                                domProps: {
-                                  checked: Array.isArray(
-                                    _vm.show_markers_prices
-                                  )
-                                    ? _vm._i(_vm.show_markers_prices, null) > -1
-                                    : _vm.show_markers_prices
-                                },
-                                on: {
-                                  change: function($event) {
-                                    var $$a = _vm.show_markers_prices,
-                                      $$el = $event.target,
-                                      $$c = $$el.checked ? true : false
-                                    if (Array.isArray($$a)) {
-                                      var $$v = null,
-                                        $$i = _vm._i($$a, $$v)
-                                      if ($$el.checked) {
-                                        $$i < 0 &&
-                                          (_vm.show_markers_prices = $$a.concat(
-                                            [$$v]
-                                          ))
-                                      } else {
-                                        $$i > -1 &&
-                                          (_vm.show_markers_prices = $$a
-                                            .slice(0, $$i)
-                                            .concat($$a.slice($$i + 1)))
-                                      }
-                                    } else {
-                                      _vm.show_markers_prices = $$c
-                                    }
-                                  }
-                                }
-                              }),
-                              _vm._v(" "),
-                              _vm._m(2)
-                            ]
-                          )
-                        ])
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      {
-                        directives: [
-                          {
-                            name: "show",
-                            rawName: "v-show",
-                            value: _vm.show_markers,
-                            expression: "show_markers"
-                          }
-                        ],
-                        staticClass: "card-body p-5"
-                      },
-                      [
-                        _vm._l(_vm.marker_groups, function(marker_group) {
-                          return _c(
-                            "div",
-                            {
-                              directives: [
-                                {
-                                  name: "show",
-                                  rawName: "v-show",
-                                  value: marker_group.markers.length,
-                                  expression: "marker_group.markers.length"
-                                }
-                              ],
-                              staticClass: "dropdown m-l-5 m-b-5"
-                            },
-                            [
-                              _c(
-                                "button",
-                                {
-                                  staticClass:
-                                    "btn btn-secondary btn-sm dropdown-toggle",
-                                  attrs: {
-                                    type: "button",
-                                    id: "dropdownMenuButton",
-                                    "data-toggle": "dropdown",
-                                    "aria-haspopup": "true",
-                                    "aria-expanded": "false"
-                                  }
-                                },
-                                [
-                                  _vm._v(
-                                    "\r\n\t\t\t\t\t\t\t\t\t\t" +
-                                      _vm._s(marker_group.name) +
-                                      "\r\n\t\t\t\t\t\t\t\t\t"
-                                  )
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "div",
-                                {
-                                  staticClass: "dropdown-menu",
-                                  attrs: {
-                                    "aria-labelledby": "dropdownMenuButton"
-                                  }
-                                },
-                                _vm._l(marker_group.markers, function(marker) {
-                                  return _c(
-                                    "a",
-                                    {
-                                      staticClass: "dropdown-item btn-sm",
-                                      attrs: { href: "#" },
-                                      on: {
-                                        click: function($event) {
-                                          $event.preventDefault()
-                                          return _vm.addMarker(marker)
-                                        }
-                                      }
-                                    },
-                                    [
-                                      _vm._v(
-                                        "\r\n\t\t\t\t\t\t\t\t\t\t\t" +
-                                          _vm._s(marker.article.name) +
-                                          "\r\n\t\t\t\t\t\t\t\t\t\t\t"
-                                      ),
-                                      _c(
-                                        "span",
-                                        {
-                                          directives: [
-                                            {
-                                              name: "show",
-                                              rawName: "v-show",
-                                              value: _vm.show_markers_prices,
-                                              expression: "show_markers_prices"
-                                            }
-                                          ]
-                                        },
-                                        [
-                                          _vm._v(
-                                            "\r\n\t\t\t\t\t\t\t\t\t\t\t\t($" +
-                                              _vm._s(marker.article.price) +
-                                              ")\r\n\t\t\t\t\t\t\t\t\t\t\t"
-                                          )
-                                        ]
-                                      )
-                                    ]
-                                  )
-                                }),
-                                0
-                              )
-                            ]
-                          )
-                        }),
-                        _vm._v(" "),
-                        _vm._l(_vm.markers, function(marker) {
-                          return _c(
-                            "button",
-                            {
-                              staticClass: "btn btn-primary btn-sm m-l-5 m-b-5",
-                              on: {
-                                click: function($event) {
-                                  return _vm.addMarker(marker)
-                                }
-                              }
-                            },
-                            [
-                              _vm._v(
-                                "\r\n\t\t\t\t\t\t\t\t\t" +
-                                  _vm._s(marker.article.name) +
-                                  "\r\n\t\t\t\t\t\t\t\t\t"
-                              ),
-                              _c(
-                                "span",
-                                {
+                          _c("div", { staticClass: "col-6" }, [
+                            _c(
+                              "div",
+                              {
+                                staticClass:
+                                  "custom-control custom-checkbox my-1 mr-sm-2 c-p float-right"
+                              },
+                              [
+                                _c("input", {
                                   directives: [
                                     {
-                                      name: "show",
-                                      rawName: "v-show",
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.show_markers,
+                                      expression: "show_markers"
+                                    }
+                                  ],
+                                  staticClass: "custom-control-input c-p",
+                                  attrs: {
+                                    type: "checkbox",
+                                    id: "show-markers"
+                                  },
+                                  domProps: {
+                                    checked: Array.isArray(_vm.show_markers)
+                                      ? _vm._i(_vm.show_markers, null) > -1
+                                      : _vm.show_markers
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      var $$a = _vm.show_markers,
+                                        $$el = $event.target,
+                                        $$c = $$el.checked ? true : false
+                                      if (Array.isArray($$a)) {
+                                        var $$v = null,
+                                          $$i = _vm._i($$a, $$v)
+                                        if ($$el.checked) {
+                                          $$i < 0 &&
+                                            (_vm.show_markers = $$a.concat([
+                                              $$v
+                                            ]))
+                                        } else {
+                                          $$i > -1 &&
+                                            (_vm.show_markers = $$a
+                                              .slice(0, $$i)
+                                              .concat($$a.slice($$i + 1)))
+                                        }
+                                      } else {
+                                        _vm.show_markers = $$c
+                                      }
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _vm._m(1)
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              {
+                                staticClass:
+                                  "custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2 c-p float-right"
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
                                       value: _vm.show_markers_prices,
                                       expression: "show_markers_prices"
                                     }
+                                  ],
+                                  staticClass: "custom-control-input c-p",
+                                  attrs: {
+                                    type: "checkbox",
+                                    id: "show_markers_prices"
+                                  },
+                                  domProps: {
+                                    checked: Array.isArray(
+                                      _vm.show_markers_prices
+                                    )
+                                      ? _vm._i(_vm.show_markers_prices, null) >
+                                        -1
+                                      : _vm.show_markers_prices
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      var $$a = _vm.show_markers_prices,
+                                        $$el = $event.target,
+                                        $$c = $$el.checked ? true : false
+                                      if (Array.isArray($$a)) {
+                                        var $$v = null,
+                                          $$i = _vm._i($$a, $$v)
+                                        if ($$el.checked) {
+                                          $$i < 0 &&
+                                            (_vm.show_markers_prices = $$a.concat(
+                                              [$$v]
+                                            ))
+                                        } else {
+                                          $$i > -1 &&
+                                            (_vm.show_markers_prices = $$a
+                                              .slice(0, $$i)
+                                              .concat($$a.slice($$i + 1)))
+                                        }
+                                      } else {
+                                        _vm.show_markers_prices = $$c
+                                      }
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _vm._m(2)
+                              ]
+                            )
+                          ])
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: _vm.show_markers,
+                              expression: "show_markers"
+                            }
+                          ],
+                          staticClass: "card-body p-5"
+                        },
+                        [
+                          _vm._l(_vm.marker_groups, function(marker_group) {
+                            return _c(
+                              "div",
+                              {
+                                directives: [
+                                  {
+                                    name: "show",
+                                    rawName: "v-show",
+                                    value: marker_group.markers.length,
+                                    expression: "marker_group.markers.length"
+                                  }
+                                ],
+                                staticClass: "dropdown m-l-5 m-b-5"
+                              },
+                              [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass:
+                                      "btn btn-secondary btn-sm dropdown-toggle",
+                                    attrs: {
+                                      type: "button",
+                                      id: "dropdownMenuButton",
+                                      "data-toggle": "dropdown",
+                                      "aria-haspopup": "true",
+                                      "aria-expanded": "false"
+                                    }
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\r\n\t\t\t\t\t\t\t\t\t\t" +
+                                        _vm._s(marker_group.name) +
+                                        "\r\n\t\t\t\t\t\t\t\t\t"
+                                    )
                                   ]
-                                },
-                                [
-                                  _vm._v(
-                                    "\r\n\t\t\t\t\t\t\t\t\t\t($" +
-                                      _vm._s(marker.article.price) +
-                                      ")\r\n\t\t\t\t\t\t\t\t\t"
-                                  )
-                                ]
-                              )
-                            ]
-                          )
-                        })
-                      ],
-                      2
-                    )
-                  ]
-                )
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass: "dropdown-menu",
+                                    attrs: {
+                                      "aria-labelledby": "dropdownMenuButton"
+                                    }
+                                  },
+                                  _vm._l(marker_group.markers, function(
+                                    marker
+                                  ) {
+                                    return _c(
+                                      "a",
+                                      {
+                                        staticClass: "dropdown-item btn-sm",
+                                        attrs: { href: "#" },
+                                        on: {
+                                          click: function($event) {
+                                            $event.preventDefault()
+                                            return _vm.addMarker(marker)
+                                          }
+                                        }
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\r\n\t\t\t\t\t\t\t\t\t\t\t" +
+                                            _vm._s(marker.article.name) +
+                                            "\r\n\t\t\t\t\t\t\t\t\t\t\t"
+                                        ),
+                                        _c(
+                                          "span",
+                                          {
+                                            directives: [
+                                              {
+                                                name: "show",
+                                                rawName: "v-show",
+                                                value: _vm.show_markers_prices,
+                                                expression:
+                                                  "show_markers_prices"
+                                              }
+                                            ]
+                                          },
+                                          [
+                                            _vm._v(
+                                              "\r\n\t\t\t\t\t\t\t\t\t\t\t\t($" +
+                                                _vm._s(marker.article.price) +
+                                                ")\r\n\t\t\t\t\t\t\t\t\t\t\t"
+                                            )
+                                          ]
+                                        )
+                                      ]
+                                    )
+                                  }),
+                                  0
+                                )
+                              ]
+                            )
+                          }),
+                          _vm._v(" "),
+                          _vm._l(_vm.markers, function(marker) {
+                            return _c(
+                              "button",
+                              {
+                                staticClass:
+                                  "btn btn-primary btn-sm m-l-5 m-b-5",
+                                on: {
+                                  click: function($event) {
+                                    return _vm.addMarker(marker)
+                                  }
+                                }
+                              },
+                              [
+                                _vm._v(
+                                  "\r\n\t\t\t\t\t\t\t\t\t" +
+                                    _vm._s(marker.article.name) +
+                                    "\r\n\t\t\t\t\t\t\t\t\t"
+                                ),
+                                _c(
+                                  "span",
+                                  {
+                                    directives: [
+                                      {
+                                        name: "show",
+                                        rawName: "v-show",
+                                        value: _vm.show_markers_prices,
+                                        expression: "show_markers_prices"
+                                      }
+                                    ]
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\r\n\t\t\t\t\t\t\t\t\t\t($" +
+                                        _vm._s(marker.article.price) +
+                                        ")\r\n\t\t\t\t\t\t\t\t\t"
+                                    )
+                                  ]
+                                )
+                              ]
+                            )
+                          })
+                        ],
+                        2
+                      )
+                    ]
+                  )
+                ])
               ])
-            ]
-          ),
+            : _vm._e(),
           _vm._v(" "),
           _c("div", { staticClass: "row m-b-5" }, [
             _c("div", { staticClass: "col-4" }, [
@@ -76205,8 +76197,8 @@ var render = function() {
                     {
                       name: "show",
                       rawName: "v-show",
-                      value: _vm.markers.length || _vm.marker_groups.length,
-                      expression: "markers.length || marker_groups.length"
+                      value: !_vm.show_markers,
+                      expression: "!show_markers"
                     }
                   ],
                   staticClass: "row m-b-10"
@@ -76214,56 +76206,39 @@ var render = function() {
                 [
                   _c("div", { staticClass: "col" }, [
                     _c(
-                      "div",
+                      "button",
                       {
-                        staticClass:
-                          "custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2 c-p"
+                        staticClass: "btn btn-primary float-right",
+                        on: { click: _vm.showMarkers }
                       },
                       [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.show_markers,
-                              expression: "show_markers"
-                            }
-                          ],
-                          staticClass: "custom-control-input c-p",
-                          attrs: { type: "checkbox", id: "show-markers" },
-                          domProps: {
-                            checked: Array.isArray(_vm.show_markers)
-                              ? _vm._i(_vm.show_markers, null) > -1
-                              : _vm.show_markers
-                          },
-                          on: {
-                            change: function($event) {
-                              var $$a = _vm.show_markers,
-                                $$el = $event.target,
-                                $$c = $$el.checked ? true : false
-                              if (Array.isArray($$a)) {
-                                var $$v = null,
-                                  $$i = _vm._i($$a, $$v)
-                                if ($$el.checked) {
-                                  $$i < 0 &&
-                                    (_vm.show_markers = $$a.concat([$$v]))
-                                } else {
-                                  $$i > -1 &&
-                                    (_vm.show_markers = $$a
-                                      .slice(0, $$i)
-                                      .concat($$a.slice($$i + 1)))
-                                }
-                              } else {
-                                _vm.show_markers = $$c
-                              }
-                            }
-                          }
-                        }),
-                        _vm._v(" "),
-                        _vm._m(2)
+                        _vm._v(
+                          "\r\n\t\t\t\t\t\t\tMostrar Marcadores\r\n\t\t\t\t\t\t"
+                        )
                       ]
-                    ),
-                    _vm._v(" "),
+                    )
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value:
+                        (_vm.markers.length || _vm.marker_groups.length) &&
+                        _vm.show_markers,
+                      expression:
+                        "(markers.length || marker_groups.length) && show_markers"
+                    }
+                  ],
+                  staticClass: "row m-b-10"
+                },
+                [
+                  _c("div", { staticClass: "col" }, [
                     _c(
                       "div",
                       {
@@ -76278,7 +76253,130 @@ var render = function() {
                         staticClass: "card"
                       },
                       [
-                        _vm._m(3),
+                        _c("div", { staticClass: "card-header p-5" }, [
+                          _c("div", { staticClass: "row" }, [
+                            _vm._m(2),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "col-6" }, [
+                              _c(
+                                "div",
+                                {
+                                  staticClass:
+                                    "custom-control custom-checkbox my-1 mr-sm-2 c-p float-right"
+                                },
+                                [
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.show_markers,
+                                        expression: "show_markers"
+                                      }
+                                    ],
+                                    staticClass: "custom-control-input c-p",
+                                    attrs: {
+                                      type: "checkbox",
+                                      id: "show-markers"
+                                    },
+                                    domProps: {
+                                      checked: Array.isArray(_vm.show_markers)
+                                        ? _vm._i(_vm.show_markers, null) > -1
+                                        : _vm.show_markers
+                                    },
+                                    on: {
+                                      change: function($event) {
+                                        var $$a = _vm.show_markers,
+                                          $$el = $event.target,
+                                          $$c = $$el.checked ? true : false
+                                        if (Array.isArray($$a)) {
+                                          var $$v = null,
+                                            $$i = _vm._i($$a, $$v)
+                                          if ($$el.checked) {
+                                            $$i < 0 &&
+                                              (_vm.show_markers = $$a.concat([
+                                                $$v
+                                              ]))
+                                          } else {
+                                            $$i > -1 &&
+                                              (_vm.show_markers = $$a
+                                                .slice(0, $$i)
+                                                .concat($$a.slice($$i + 1)))
+                                          }
+                                        } else {
+                                          _vm.show_markers = $$c
+                                        }
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _vm._m(3)
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                {
+                                  staticClass:
+                                    "custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2 c-p float-right"
+                                },
+                                [
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.show_markers_prices,
+                                        expression: "show_markers_prices"
+                                      }
+                                    ],
+                                    staticClass: "custom-control-input c-p",
+                                    attrs: {
+                                      type: "checkbox",
+                                      id: "show_markers_prices"
+                                    },
+                                    domProps: {
+                                      checked: Array.isArray(
+                                        _vm.show_markers_prices
+                                      )
+                                        ? _vm._i(
+                                            _vm.show_markers_prices,
+                                            null
+                                          ) > -1
+                                        : _vm.show_markers_prices
+                                    },
+                                    on: {
+                                      change: function($event) {
+                                        var $$a = _vm.show_markers_prices,
+                                          $$el = $event.target,
+                                          $$c = $$el.checked ? true : false
+                                        if (Array.isArray($$a)) {
+                                          var $$v = null,
+                                            $$i = _vm._i($$a, $$v)
+                                          if ($$el.checked) {
+                                            $$i < 0 &&
+                                              (_vm.show_markers_prices = $$a.concat(
+                                                [$$v]
+                                              ))
+                                          } else {
+                                            $$i > -1 &&
+                                              (_vm.show_markers_prices = $$a
+                                                .slice(0, $$i)
+                                                .concat($$a.slice($$i + 1)))
+                                          }
+                                        } else {
+                                          _vm.show_markers_prices = $$c
+                                        }
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _vm._m(4)
+                                ]
+                              )
+                            ])
+                          ])
+                        ]),
                         _vm._v(" "),
                         _c(
                           "div",
@@ -76291,80 +76389,29 @@ var render = function() {
                                 expression: "show_markers"
                               }
                             ],
-                            staticClass: "card-body"
+                            staticClass: "card-body p-5"
                           },
                           [
-                            _c(
-                              "div",
-                              {
-                                staticClass:
-                                  "custom-control custom-checkbox  custom-control-inline-50 my-1 mr-sm-2 c-p"
-                              },
-                              [
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.show_markers_prices,
-                                      expression: "show_markers_prices"
-                                    }
-                                  ],
-                                  staticClass: "custom-control-input c-p",
-                                  attrs: {
-                                    type: "checkbox",
-                                    id: "show_markers_prices"
-                                  },
-                                  domProps: {
-                                    checked: Array.isArray(
-                                      _vm.show_markers_prices
-                                    )
-                                      ? _vm._i(_vm.show_markers_prices, null) >
-                                        -1
-                                      : _vm.show_markers_prices
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      var $$a = _vm.show_markers_prices,
-                                        $$el = $event.target,
-                                        $$c = $$el.checked ? true : false
-                                      if (Array.isArray($$a)) {
-                                        var $$v = null,
-                                          $$i = _vm._i($$a, $$v)
-                                        if ($$el.checked) {
-                                          $$i < 0 &&
-                                            (_vm.show_markers_prices = $$a.concat(
-                                              [$$v]
-                                            ))
-                                        } else {
-                                          $$i > -1 &&
-                                            (_vm.show_markers_prices = $$a
-                                              .slice(0, $$i)
-                                              .concat($$a.slice($$i + 1)))
-                                        }
-                                      } else {
-                                        _vm.show_markers_prices = $$c
-                                      }
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _vm._m(4)
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c("br"),
-                            _vm._v(" "),
                             _vm._l(_vm.marker_groups, function(marker_group) {
                               return _c(
                                 "div",
-                                { staticClass: "dropdown m-r-5" },
+                                {
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: marker_group.markers.length,
+                                      expression: "marker_group.markers.length"
+                                    }
+                                  ],
+                                  staticClass: "dropdown m-l-5 m-b-5"
+                                },
                                 [
                                   _c(
                                     "button",
                                     {
                                       staticClass:
-                                        "btn btn-secondary dropdown-toggle",
+                                        "btn btn-secondary btn-sm dropdown-toggle",
                                       attrs: {
                                         type: "button",
                                         id: "dropdownMenuButton",
@@ -76390,74 +76437,53 @@ var render = function() {
                                         "aria-labelledby": "dropdownMenuButton"
                                       }
                                     },
-                                    [
-                                      marker_group.markers.length
-                                        ? _vm._l(marker_group.markers, function(
-                                            marker
-                                          ) {
-                                            return _c(
-                                              "a",
-                                              {
-                                                staticClass: "dropdown-item",
-                                                attrs: { href: "#" },
-                                                on: {
-                                                  click: function($event) {
-                                                    $event.preventDefault()
-                                                    return _vm.addMarker(marker)
-                                                  }
+                                    _vm._l(marker_group.markers, function(
+                                      marker
+                                    ) {
+                                      return _c(
+                                        "a",
+                                        {
+                                          staticClass: "dropdown-item btn-sm",
+                                          attrs: { href: "#" },
+                                          on: {
+                                            click: function($event) {
+                                              $event.preventDefault()
+                                              return _vm.addMarker(marker)
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _vm._v(
+                                            "\r\n\t\t\t\t\t\t\t\t\t\t\t" +
+                                              _vm._s(marker.article.name) +
+                                              "\r\n\t\t\t\t\t\t\t\t\t\t\t"
+                                          ),
+                                          _c(
+                                            "span",
+                                            {
+                                              directives: [
+                                                {
+                                                  name: "show",
+                                                  rawName: "v-show",
+                                                  value:
+                                                    _vm.show_markers_prices,
+                                                  expression:
+                                                    "show_markers_prices"
                                                 }
-                                              },
-                                              [
-                                                _vm._v(
-                                                  "\r\n\t\t\t\t\t\t\t\t\t\t\t\t" +
-                                                    _vm._s(
-                                                      marker.article.name
-                                                    ) +
-                                                    "\r\n\t\t\t\t\t\t\t\t\t\t\t\t"
-                                                ),
-                                                _c(
-                                                  "span",
-                                                  {
-                                                    directives: [
-                                                      {
-                                                        name: "show",
-                                                        rawName: "v-show",
-                                                        value:
-                                                          _vm.show_markers_prices,
-                                                        expression:
-                                                          "show_markers_prices"
-                                                      }
-                                                    ]
-                                                  },
-                                                  [
-                                                    _vm._v(
-                                                      "\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t($" +
-                                                        _vm._s(
-                                                          marker.article.price
-                                                        ) +
-                                                        ")\r\n\t\t\t\t\t\t\t\t\t\t\t\t"
-                                                    )
-                                                  ]
-                                                )
                                               ]
-                                            )
-                                          })
-                                        : [
-                                            _c(
-                                              "a",
-                                              {
-                                                staticClass: "dropdown-item",
-                                                attrs: { href: "#" }
-                                              },
-                                              [
-                                                _vm._v(
-                                                  "\r\n\t\t\t\t\t\t\t\t\t\t\t\tSin marcadores\r\n\t\t\t\t\t\t\t\t\t\t\t"
-                                                )
-                                              ]
-                                            )
-                                          ]
-                                    ],
-                                    2
+                                            },
+                                            [
+                                              _vm._v(
+                                                "\r\n\t\t\t\t\t\t\t\t\t\t\t\t($" +
+                                                  _vm._s(marker.article.price) +
+                                                  ")\r\n\t\t\t\t\t\t\t\t\t\t\t"
+                                              )
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    }),
+                                    0
                                   )
                                 ]
                               )
@@ -76467,7 +76493,8 @@ var render = function() {
                               return _c(
                                 "button",
                                 {
-                                  staticClass: "btn btn-primary m-l-5 m-r-5",
+                                  staticClass:
+                                    "btn btn-primary btn-sm m-l-5 m-b-5",
                                   on: {
                                     click: function($event) {
                                       return _vm.addMarker(marker)
@@ -77059,6 +77086,21 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-6" }, [
+      _c("h6", { staticClass: "p-l-10 m-0 m-t-5" }, [
+        _c("strong", [
+          _c("i", { staticClass: "icon-star-1" }),
+          _vm._v(
+            "\r\n\t\t\t\t\t\t\t\t\t\t\t\tMarcadores\r\n\t\t\t\t\t\t\t\t\t\t\t"
+          )
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c(
       "label",
       {
@@ -77067,15 +77109,6 @@ var staticRenderFns = [
       },
       [_c("strong", [_vm._v("Mostrar marcadores")])]
     )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header" }, [
-      _c("i", { staticClass: "icon-star-1" }),
-      _vm._v("\r\n\t\t\t\t\t\t\t\tMarcadores\r\n\t\t\t\t\t\t\t")
-    ])
   },
   function() {
     var _vm = this

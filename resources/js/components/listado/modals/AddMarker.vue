@@ -105,6 +105,7 @@ export default {
 			})
 			.then(res => {
 				$('#add-marker').modal('hide')
+				this.$emit('updateArticlesList')
 				toastr.success('Marcador creado correctamente')
 			})
 			.catch(err => {

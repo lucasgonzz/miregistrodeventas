@@ -10,6 +10,7 @@
 						@clearArticle="clearArticle"></editar-articulo>
 		<add-marker @deleteMarkerGroup="deleteMarkerGroup"
 					@addMarkerToGroup="addMarkerToGroup"
+					@updateArticlesList="updateArticlesList"
 					:marker_groups="marker_groups"
 					:article="article"></add-marker>
 		<is-marker :article="article"
@@ -686,6 +687,7 @@ export default {
 					this.filter(this.filtro)
 				} else {
 					this.getArticles(this.pagination.current_page)
+					console.log('aca entro')
 				}
 			}
 			this.selected_articles.is_all_selected = false
@@ -701,29 +703,6 @@ export default {
 
 
 		// Marcadores
-		// createMarker(article) {
-		// 	if (article.marker) {
-		// 		axios.get(`articles/delete-marker/${article.id}`)
-		// 		.then(res => {
-		// 			$(`#marker-1-${article.id}`).removeClass('icon-star-1')
-		// 			$(`#marker-1-${article.id}`).addClass('icon-star-2')
-		// 			toastr.success('Marcador eliminado correctamente')
-		// 		})
-		// 		.catch(err => {
-		// 			console.log(err)
-		// 		})
-		// 	} else {
-		// 		axios.get(`articles/create-marker/${article.id}`)
-		// 		.then(res => {
-		// 			$(`#marker-2-${article.id}`).removeClass('icon-star-2')
-		// 			$(`#marker-2-${article.id}`).addClass('icon-star-1')
-		// 			toastr.success('Marcador añadido correctamente')
-		// 		})
-		// 		.catch(err => {
-		// 			console.log(err)
-		// 		})
-		// 	}
-		// },
 		deleteMarker(marker_id) {
 			axios.delete('markers/'+marker_id)
 			.then(res => {
